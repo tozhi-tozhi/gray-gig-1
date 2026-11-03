@@ -13,11 +13,20 @@ export function ActiveGigScreen() {
   return (
     <>
       <StatusBar />
-      <div className="flex-1 flex flex-col items-center justify-center p-6 gap-4">
-        <div className="text-5xl animate-bounce">🕶️</div>
+      <div className="active-gig-screen flex-1 flex flex-col items-center justify-center p-6 gap-4">
+        <div className="gig-orbit" aria-hidden="true">
+          <span className="gig-orbit-ring" />
+          <span className="text-5xl relative z-10">🕶️</span>
+        </div>
         <div className="text-center">
-          <div className="text-xs text-neutral-400">กำลังทำงาน...</div>
+          <div className="active-kicker text-[10px] uppercase tracking-[0.28em] text-emerald-400/70">Contract in progress</div>
+          <div className="text-xs text-neutral-400 mt-2">กำลังทำงาน...</div>
           <h2 className="text-lg font-bold mt-1">{gig.title}</h2>
+        </div>
+        <div className="active-progress" aria-label="งานกำลังดำเนินการ">
+          <span />
+          <span />
+          <span />
         </div>
         <Button variant="primary" onClick={() => resolveGig(gig)}>
           เสร็จงาน

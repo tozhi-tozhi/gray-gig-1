@@ -5,15 +5,15 @@ export function StatusBar() {
   const { time, stats } = useGame(s => ({ time: s.time, stats: s.stats }));
 
   return (
-    <div className="shrink-0 px-4 py-2.5 bg-black/50 border-b border-white/10 text-[11px] flex items-center justify-between">
-      <div className="font-semibold">
+    <div className="status-bar shrink-0 px-3 py-2.5 border-b border-white/10 text-[11px] flex items-center justify-between gap-2">
+      <div className="font-semibold tracking-wide whitespace-nowrap">
         Day {time.day} · {BLOCK_LABEL[time.block]}
       </div>
-      <div className="flex gap-3">
-        <span title="Money">💰 ${stats.money}</span>
-        <span title="Heat">🔥 {stats.heat}</span>
-        <span title="Sanity">🧠 {stats.sanity}</span>
-        <span title="Rep">⭐ {stats.rep}</span>
+      <div className="flex items-center gap-1.5 min-w-0">
+        <span className="status-stat" title="Money">💰 ${stats.money}</span>
+        <span className="status-stat" title="Heat">🔥 {stats.heat}</span>
+        <span className="status-stat" title="Sanity">🧠 {stats.sanity}</span>
+        <span className="status-stat" title="Rep">⭐ {stats.rep}</span>
       </div>
     </div>
   );

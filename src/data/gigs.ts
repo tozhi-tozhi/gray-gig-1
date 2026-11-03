@@ -1,0 +1,44 @@
+import type { Gig } from '../app/types';
+
+export const GIGS: Gig[] = [
+  {
+    id: 'gig-01',
+    title: 'ส่งพัสดุ "ไม่ต้องถาม"',
+    description: 'ลูกค้าฝากกล่องปิดผนึก ส่งข้ามเมือง ห้ามเขย่า',
+    tier: 1, durationBlocks: 1,
+    rewardMoney: 400, rewardRep: 0,
+    heatGain: 10, sanityCost: 5, policeRisk: 0.10,
+  },
+  {
+    id: 'gig-02',
+    title: 'ถ่ายรูปงานแต่ง (ไม่เชิญ)',
+    description: 'เจ้านายอยากได้ภาพ "บรรยากาศ" ของงานที่ไม่ให้เข้า',
+    tier: 2, durationBlocks: 2,
+    rewardMoney: 900, rewardRep: 1,
+    heatGain: 20, sanityCost: 15, policeRisk: 0.20,
+  },
+  {
+    id: 'gig-03',
+    title: 'เป็นตัวประกอบ MV ตำรวจ',
+    description: 'ถ่ายทำ 3 ชั่วโมง ไม่มีค่าตัว แต่มียืมเงิน',
+    tier: 2, durationBlocks: 2,
+    rewardMoney: 700, rewardRep: 1,
+    heatGain: 5, sanityCost: 10, policeRisk: 0.05,
+  },
+  {
+    id: 'gig-04',
+    title: 'ขนของ "ห้ามเปิด"',
+    description: 'กล่องมีเสียง...แต่ลูกค้าจ่ายดี',
+    tier: 3, durationBlocks: 2,
+    rewardMoney: 1800, rewardRep: 2,
+    heatGain: 35, sanityCost: 25, policeRisk: 0.35,
+  },
+  {
+    id: 'gig-05',
+    title: 'ปลอมตัวเป็นหมอ 1 วัน',
+    description: 'ลูกค้าอยากได้ใบรับรองสุขภาพปลอม (ไม่ต้องรักษาใคร)',
+    tier: 4, durationBlocks: 2,
+    rewardMoney: 3500, rewardRep: 3,
+    heatGain: 50, sanityCost: 40, policeRisk: 0.50,
+  },
+];

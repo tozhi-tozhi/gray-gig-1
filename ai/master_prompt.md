@@ -22,10 +22,10 @@ You are the **Game Director** of this project.
 
 | Setting | Value |
 |---|---|
-| Language for replies | [Thai] |
-| Language for code comments | [Thai] |
-| Explanation level | [1] (see below) |
-| Budget | [Free tools only] |
+| Language for replies | Thai |
+| Language for code comments | Thai |
+| Explanation level | 1 (see below) |
+| Budget | Free tools only |
 | Hours per week I can spend | [not decided] |
 
 **Explanation levels** (change anytime with `/level N`):
@@ -41,31 +41,28 @@ Fill in what you can. If you cannot yet, say `/brainstorm`.
 
 | Item | Answer |
 |---|---|
-| Game name | [not decided] |
-| Genre | [e.g. roguelike, auto-battler, card, puzzle, RPG, simulation] |
-| Elevator pitch (one sentence) | [not decided] |
-| What makes it different | [not decided] |
-| Target audience | [not decided] |
-| Reference games | [games you love or draw inspiration from] |
-| Mood and tone | [e.g. dark, funny, cute, serious, surreal] |
-| Main platform | [web / PC / mobile / Roblox / not sure] |
-| Camera or view | [top-down / side-scroll / isometric / first-person / other] |
-| Length of one play session | [e.g. 5 min / 30 min / open-ended] |
-| Scope | [small / medium / large] |
+| Game name | Gray Gig |
+| Genre | Simulation RPG / Survival |
+| Elevator pitch (one sentence) | รับจ็อบเทาเพื่อหาเงินใช้หนี้ 10,000 ดอลลาร์ ภายใน 14 วัน โดยต้องรักษาสติและหลบเลี่ยงตำรวจ |
+| What makes it different | เป็นเกมบริหารทรัพยากรที่กดดันเรื่องเวลาและสติ มีระบบ Heat ที่ยิ่งทำงานเสี่ยงมากตำรวจยิ่งจับตาดู |
+| Target audience | คนที่ชอบเกมแนวตัดสินใจ (Decision-making) และเกมเล่าเรื่องสไตล์ดาร์ก |
+| Reference games | Reigns, Papers Please, Text-based RPG |
+| Mood and tone | Dark, gritty, slightly humorous (ดาร์ก หม่นๆ แต่แอบขำ) |
+| Main platform | Web (Mobile-first UI) |
+| Camera or view | Phone Interface (หน้าจอแนวตั้งแบบมือถือ) |
+| Length of one play session | 10-15 นาที (จบใน 14 วัน) |
+| Scope | Small (Prototype) |
 
 ---
 
 ## 3. Architecture Philosophy
 
 **Local-first, multiplayer-optional.** If the game is 100% single-player, skip everything about multiplayer.
-
-```
 Phase 1: Single-player, fully playable alone
-   v
-Phase 2: Local co-op on one device        [optional]
-   v
-Phase 3: Online multiplayer, room-based   [optional]
-```
+v
+Phase 2: Local co-op on one device [optional]
+v
+Phase 3: Online multiplayer, room-based [optional]
 
 Rules (details in `skill_architecture.md`):
 1. Single-player must be complete and fun before any multiplayer work.
@@ -97,10 +94,6 @@ Adjust to fit your game. Details in `skill_game_design.md`.
 
 Example core loop (replace with yours):
 
-```
-Start -> Main activity -> Reward -> Upgrade or unlock -> Repeat
-```
-
 ---
 
 ## 5. Tech Stack Options
@@ -111,23 +104,11 @@ These are options, not decisions. Ask the Game Director to recommend one based o
 
 | Part | Options |
 |---|---|
-| Engine | Plain HTML + JavaScript Canvas, Phaser, PixiJS, Kaboom/Kaplay |
+| Engine | React 18 + Vite + TypeScript |
+| State Management | Zustand |
+| Styling | Tailwind CSS + Custom CSS Animations |
 | Online play (only if needed) | Firebase, Supabase, PeerJS, Socket.io |
 | Hosting | GitHub Pages, Netlify, Vercel, itch.io |
-
-**Desktop game** (requires installing software, so use only if the web cannot do the job)
-
-| Part | Options |
-|---|---|
-| Engine | Godot 4, Unity, GameMaker |
-| Release | itch.io, Steam |
-
-**Mobile**
-
-| Part | Options |
-|---|---|
-| Engine | Godot, Unity, Flutter, or a web game as a PWA |
-| Release | PWA, Google Play, App Store |
 
 ---
 
@@ -136,11 +117,11 @@ These are options, not decisions. Ask the Game Director to recommend one based o
 Adjust to fit your game.
 
 ### Phase 1: Core Gameplay MVP (rules in "Prototype mode")
-- [ ] Core loop playable from start to end of one session
-- [ ] Player character and controls
-- [ ] One basic enemy, obstacle, or challenge
-- [ ] Basic level, room, or stage
-- [ ] Minimal UI (start, pause, game over)
+- [x] Core loop playable from start to end of one session (จบได้ทั้ง Win/Lose)
+- [x] Player character and controls (กดเลือกการกระทำผ่าน UI)
+- [x] One basic enemy, obstacle, or challenge (ระบบเวลา, ค่าใช้จ่ายรายวัน)
+- [x] Basic level, room, or stage (หน้าจอหลักๆ ครบแล้ว)
+- [x] Minimal UI (start, pause, game over)
 - [ ] Placeholder art and sound are fine
 
 ### Phase 2: Content and Polish (rules in "Polish mode")
@@ -149,19 +130,6 @@ Adjust to fit your game.
 - [ ] Sound effects and music
 - [ ] Visual polish and animation
 - [ ] Playtests with other people
-
-### Phase 3: Local Co-op [optional]
-- [ ] Multiple inputs on one device
-- [ ] Balance for more than one player
-
-### Phase 4: Online Multiplayer [optional]
-- [ ] Room system
-- [ ] Network sync
-
-### Phase 5: Release
-- [ ] Final check on the target platform
-- [ ] Store or hosting page, screenshots, short description
-- [ ] Credits and license notes for all tools and assets used
 
 ---
 
@@ -195,7 +163,9 @@ Record every important decision. Use `/decide`.
 
 | Date | Decision | Reason | Impact |
 |---|---|---|---|
-| | | | |
+| 2026-11-04 | ใช้ React + Vite + Zustand | เบา รองรับ State Management ที่ซับซ้อนได้ดี และไม่ต้องติดตั้งอะไร | โค้ดแยกส่วนชัดเจน จัดการ State เกมง่าย |
+| 2026-11-04 | ใช้ FSM (Finite State Machine) ในการเปลี่ยนหน้าจอ | ป้องกันบั๊กการข้ามหน้าจอผิดปกติ | โค้ดใน `fsm.ts` บังคับทิศทางการเปลี่ยนหน้าจอที่ชัดเจน |
+| 2026-11-04 | ใช้ Repomix ในการแพ็คโค้ดส่ง AI | แก้ปัญหา AI อ่านไฟล์ ZIP ไม่ลึก | AI เห็นโค้ดทั้งโปรเจกต์และแก้ไขได้ตรงจุดขึ้น |
 
 ---
 
@@ -203,11 +173,11 @@ Record every important decision. Use `/decide`.
 
 | Item | Value |
 |---|---|
-| Palette (hex codes) | [not decided] |
-| Art style | [pixel art / vector / low-poly 3D / hand-drawn / other] |
-| Camera angle | [not decided] |
-| Font | [not decided] |
-| Mood keywords | [not decided] |
+| Palette (hex codes) | Dark theme (Emerald/Green accents, Neutral Dark backgrounds) |
+| Art style | UI based, minimal, glassmorphism |
+| Camera angle | N/A (2D UI) |
+| Font | Noto Sans Thai |
+| Mood keywords | Dark, Cyberpunk, Gritty, Tech |
 | Reference images | [links or file names] |
 
 ---
@@ -219,7 +189,7 @@ Use the naming convention from `skill_ai_artwork_generation.md`.
 - **Characters:** [ ]
 - **Enemies:** [ ]
 - **Backgrounds:** [ ]
-- **UI:** [ ]
+- **UI:** (ใช้ Emoji เป็น Placeholder ไปก่อน)
 - **Audio (SFX and music):** [ ]
 
 ---
@@ -227,14 +197,6 @@ Use the naming convention from `skill_ai_artwork_generation.md`.
 ## 11. Session Context
 
 Update this at the start of every new session. Details in `skill_session_manager.md`.
-
-```
-Current state:     [e.g. brainstorming / Phase 1 / fixing a bug]
-Done and working:  [list]
-In progress:       [what is being built or fixed right now]
-Blockers:          [problems that are stuck]
-Goal of this chat: [what I want finished in this session]
-```
 
 ---
 
@@ -282,5 +244,5 @@ The AI should update Session Context, add new Decision Log entries, adjust Core 
 
 ---
 
-**Version:** 3.0 (neutral template, English edition)
-**Based on:** version 2.0, created 2026-11-04
+**Version:** 3.1 (Updated for Gray Gig)
+**Based on:** version 3.0, updated on 2026-11-04

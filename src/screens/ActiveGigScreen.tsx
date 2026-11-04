@@ -6,9 +6,11 @@ import { resolveGig } from '../systems/gigSystem';
 
 export function ActiveGigScreen() {
   const activeId = useGame(s => s.activeGigId);
+  const screen = useGame(s => s.screen); // <-- เพิ่มบรรทัดนี้
   const gig = GIGS.find(g => g.id === activeId);
 
-  if (!gig) return null;
+  // ถ้าไม่มีงาน หรือหน้าจอไม่ใช่ activeGig แล้ว (เช่น เด้งไป Event) ให้หยุดแสดงผล
+  if (!gig || screen !== 'activeGig') return null;
 
   return (
     <>

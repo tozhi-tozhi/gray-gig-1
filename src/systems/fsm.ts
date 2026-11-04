@@ -3,13 +3,14 @@ import type { Screen } from '../app/types';
 
 const ALLOWED: Record<Screen, Screen[]> = {
   boot: ['home'],
-  home: ['gigBoard', 'endOfDay', 'gameOver', 'gameWin'],
+  home: ['gigBoard', 'endOfDay', 'gameOver', 'gameWin', 'event'],
   gigBoard: ['home', 'gigDetail'],
   gigDetail: ['gigBoard', 'activeGig'],
   activeGig: ['home', 'endOfDay', 'gameOver', 'gameWin'],
-  endOfDay: ['home', 'gameOver', 'gameWin'],
+  endOfDay: ['home', 'gameOver', 'gameWin', 'event'],
   gameOver: [],
   gameWin: [],
+  event: ['home', 'gameOver', 'gameWin'],
 };
 
 export function goTo(next: Screen): void {

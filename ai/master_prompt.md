@@ -93,6 +93,7 @@ Adjust to fit your game. Details in `skill_game_design.md`.
 5. **No needless complexity.** Simple is better.
 
 Example core loop (replace with yours):
+Start -> เลือกงานใน Gig Board -> ทำงาน -> อัปเดตค่าสถานะ -> เจอ Random Event -> จบวัน -> ตรวจสอบแพ้/ชนะ -> Repeat
 
 ---
 
@@ -119,10 +120,10 @@ Adjust to fit your game.
 ### Phase 1: Core Gameplay MVP (rules in "Prototype mode")
 - [x] Core loop playable from start to end of one session (จบได้ทั้ง Win/Lose)
 - [x] Player character and controls (กดเลือกการกระทำผ่าน UI)
-- [x] One basic enemy, obstacle, or challenge (ระบบเวลา, ค่าใช้จ่ายรายวัน)
+- [x] One basic enemy, obstacle, or challenge (ระบบเวลา, ค่าใช้จ่ายรายวัน, Random Events)
 - [x] Basic level, room, or stage (หน้าจอหลักๆ ครบแล้ว)
 - [x] Minimal UI (start, pause, game over)
-- [ ] Placeholder art and sound are fine
+- [x] Placeholder art and sound are fine
 
 ### Phase 2: Content and Polish (rules in "Polish mode")
 - [ ] Variety (characters, enemies, items, levels)
@@ -166,6 +167,7 @@ Record every important decision. Use `/decide`.
 | 2026-11-04 | ใช้ React + Vite + Zustand | เบา รองรับ State Management ที่ซับซ้อนได้ดี และไม่ต้องติดตั้งอะไร | โค้ดแยกส่วนชัดเจน จัดการ State เกมง่าย |
 | 2026-11-04 | ใช้ FSM (Finite State Machine) ในการเปลี่ยนหน้าจอ | ป้องกันบั๊กการข้ามหน้าจอผิดปกติ | โค้ดใน `fsm.ts` บังคับทิศทางการเปลี่ยนหน้าจอที่ชัดเจน |
 | 2026-11-04 | ใช้ Repomix ในการแพ็คโค้ดส่ง AI | แก้ปัญหา AI อ่านไฟล์ ZIP ไม่ลึก | AI เห็นโค้ดทั้งโปรเจกต์และแก้ไขได้ตรงจุดขึ้น |
+| 2026-11-04 | เพิ่มระบบสุ่มงาน (Gig Board) และระบบ Random Events | ทำให้เกมมี Replayability ไม่ซ้ำซาก และเพิ่มความกดดัน | เกมมีมิติขึ้น แต่ยังต้องปรับ Balance เรื่องความยาก |
 
 ---
 
@@ -197,6 +199,11 @@ Use the naming convention from `skill_ai_artwork_generation.md`.
 ## 11. Session Context
 
 Update this at the start of every new session. Details in `skill_session_manager.md`.
+Current state: Phase 1: Core Gameplay MVP (Gameplay Loop สมบูรณ์แล้ว แต่เกมง่ายเกินไป)
+Done and working: ระบบเวลา, ระบบสุ่มงานใน Gig Board (4 งาน/วัน), ระบบ Random Events (9 เหตุการณ์), UI แจ้งเตือนเป้าหมายและหลอดสถานะ
+In progress: กำลัง Brainstorm วิธีเพิ่มความยาก (Difficulty) และเพิ่มมิติของเกม
+Blockers: ยังไม่มีการลงโทษที่รุนแรงพอเมื่อผู้เล่นเลือกทางที่เสี่ยง หรือระบบที่บังคับให้ผู้เล่นต้องตัดสินใจภายใต้ความกดดัน
+Goal of this chat: หาไอเดียและเลือกแนวทาง (เช่น RNG ที่โหดขึ้น, QTE, ระบบหนี้สิน) เพื่อนำมาทำเป็นฟีเจอร์เพิ่มความยากใน Step ถัดไป
 
 ---
 
@@ -244,5 +251,5 @@ The AI should update Session Context, add new Decision Log entries, adjust Core 
 
 ---
 
-**Version:** 3.1 (Updated for Gray Gig)
-**Based on:** version 3.0, updated on 2026-11-04
+**Version:** 3.2 (Updated for Difficulty Brainstorming)
+**Based on:** version 3.1, updated on 2026-11-04

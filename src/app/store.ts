@@ -9,6 +9,7 @@ export const useGame = create<GameState>(() => ({
   activeGigId: null,
   lastResult: null,
   log: [],
+  activeEvent: null,
 }));
 
 export const patch = (p: Partial<GameState>) => useGame.setState(p);

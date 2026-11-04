@@ -2,7 +2,8 @@ export type TimeBlock = 'morning' | 'afternoon' | 'night';
 
 export type Screen =
   | 'boot' | 'home' | 'gigBoard' | 'gigDetail'
-  | 'activeGig' | 'endOfDay' | 'gameOver' | 'gameWin';
+  | 'activeGig' | 'endOfDay' | 'gameOver' | 'gameWin'
+  | 'event';
 
 export interface Stats {
   money: number;
@@ -38,4 +39,5 @@ export interface GameState {
   activeGigId: string | null;
   lastResult: LastResult | null;
   log: string[];
+  activeEvent: any | null;
 }

@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { useGame } from '../app/store';
 import { GIGS } from '../data/gigs';
+import type { Gig } from '../app/types';
 import { StatusBar } from '../ui/StatusBar';
 import { Button } from '../ui/Button';
 import { goTo } from '../systems/fsm';
@@ -7,9 +9,23 @@ import { remainingBlocksInDay } from '../systems/timeSystem';
 
 export function GigBoardScreen() {
   const rep = useGame(s => s.stats.rep);
+  const time = useGame(s => s.time);
   const remaining = remainingBlocksInDay();
+  
+  const [dailyGigs, setDailyGigs] = useState<Gig[]>([]);
 
-  const visible = GIGS.filter(g => g.tier <= rep + 1);
+  // สุ่มงานใหม่ทุกครั้งที่เข้าหน้านี้ หรือเปลี่ยนวัน/ช่วงเวลา
+  useEffect(() => {
+    const visible = GIGS.filter(g => g.tier <= rep + 1);
+    
+    // สลับลำดับ (Shuffle) แบบง่ายๆ
+    const shuffled = [...visible].sort(() => Math.random() - 0.5);
+    
+    // หยิบมาแค่ 4 งานแรก (ถ้างานมีไม่ถึง 4 ก็เอาทั้งหมด)
+    setDailyGigs(shuffled.slice(0, 4));
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time.day, time.block, rep]); // รีเฟรชเมื่อวันหรือ rep เปลี่ยน
 
   return (
     <>
@@ -28,10 +44,10 @@ export function GigBoardScreen() {
         <div className="board-caption">
           <span className="board-live-dot" />
           <span>AVAILABLE CONTRACTS</span>
-          <span className="ml-auto">{visible.length} LISTED</span>
+          <span className="ml-auto">{dailyGigs.length} LISTED</span>
         </div>
 
-        {visible.map(gig => {
+        {dailyGigs.map(gig => {
           const fits = gig.durationBlocks <= remaining;
           return (
             <button

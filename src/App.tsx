@@ -8,6 +8,7 @@ import { GigDetailScreen } from './screens/GigDetailScreen';
 import { ActiveGigScreen } from './screens/ActiveGigScreen';
 import { EndOfDayScreen } from './screens/EndOfDayScreen';
 import { GameOverScreen } from './screens/GameOverScreen';
+import { EventScreen } from './screens/EventScreen';
 
 export function App() {
   const screen = useGame(s => s.screen);
@@ -21,6 +22,7 @@ export function App() {
         {screen === 'gigDetail' && <GigDetailScreen />}
         {screen === 'activeGig' && <ActiveGigScreen />}
         {screen === 'endOfDay'  && <EndOfDayScreen />}
+        {screen === 'event'     && <EventScreen />}
         {(screen === 'gameOver' || screen === 'gameWin') && <GameOverScreen />}
       </ScreenMotion>
     </PhoneFrame>

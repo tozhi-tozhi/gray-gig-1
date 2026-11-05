@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useGame } from '../app/store';
 import { GIGS } from '../data/gigs';
 import type { Gig } from '../app/types';
@@ -6,26 +5,17 @@ import { StatusBar } from '../ui/StatusBar';
 import { Button } from '../ui/Button';
 import { goTo } from '../systems/fsm';
 import { remainingBlocksInDay } from '../systems/timeSystem';
+import { assessGigRisk, pct } from '../systems/gigRisk';
 
 export function GigBoardScreen() {
-  const rep = useGame(s => s.stats.rep);
-  const time = useGame(s => s.time);
+  const stats = useGame(s => s.stats);
+  const gigIds = useGame(s => s.dailyGigIds);
   const remaining = remainingBlocksInDay();
-  
-  const [dailyGigs, setDailyGigs] = useState<Gig[]>([]);
 
-  // สุ่มงานใหม่ทุกครั้งที่เข้าหน้านี้ หรือเปลี่ยนวัน/ช่วงเวลา
-  useEffect(() => {
-    const visible = GIGS.filter(g => g.tier <= rep + 1);
-    
-    // สลับลำดับ (Shuffle) แบบง่ายๆ
-    const shuffled = [...visible].sort(() => Math.random() - 0.5);
-    
-    // หยิบมาแค่ 4 งานแรก (ถ้างานมีไม่ถึง 4 ก็เอาทั้งหมด)
-    setDailyGigs(shuffled.slice(0, 4));
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [time.day, time.block, rep]); // รีเฟรชเมื่อวันหรือ rep เปลี่ยน
+  // งานของวันนี้ มาจาก store (ไม่สุ่มใหม่เมื่อเปิดหน้านี้)
+  const dailyGigs = gigIds
+    .map(id => GIGS.find(g => g.id === id))
+    .filter((g): g is Gig => !!g);
 
   return (
     <>
@@ -47,8 +37,15 @@ export function GigBoardScreen() {
           <span className="ml-auto">{dailyGigs.length} LISTED</span>
         </div>
 
+        {dailyGigs.length === 0 && (
+          <div className="rounded-xl bg-neutral-800/50 border border-white/5 p-4 text-sm text-neutral-400 text-center">
+            งานวันนี้หมดแล้ว รอพรุ่งนี้ค่อยมีงานใหม่เข้ามา
+          </div>
+        )}
+
         {dailyGigs.map(gig => {
           const fits = gig.durationBlocks <= remaining;
+          const risk = assessGigRisk(gig, stats);
           return (
             <button
               key={gig.id}
@@ -69,6 +66,11 @@ export function GigBoardScreen() {
                 <span>⏱ {gig.durationBlocks} ช่วง</span>
                 <span>🔥 +{gig.heatGain}</span>
               </div>
+              {risk.total > 0 && (
+                <div className={`text-[11px] mt-2 font-semibold ${risk.total >= 0.3 ? 'text-red-400' : 'text-amber-400'}`}>
+                  ⚠️ เสี่ยงแพ้ {pct(risk.total)}
+                </div>
+              )}
               {!fits && <div className="text-[11px] text-red-400 mt-2">เวลาเหลือไม่พอ</div>}
             </button>
           );

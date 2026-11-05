@@ -1,22 +1,39 @@
+import { useEffect, useRef } from 'react';
 import { useGame, patch } from '../app/store';
 import { StatusBar } from '../ui/StatusBar';
 import { Button } from '../ui/Button';
 import { goTo } from '../systems/fsm';
 import { applyEventEffect } from '../systems/eventSystem';
 import { applyDebtEffect } from '../systems/debtSystem';
+import { setFlags, markEventSeen, recordHistory } from '../systems/storySystem';
+import { useCountdown } from '../ui/useCountdown';
+import { beep, shake } from '../systems/feedback';
 
 export function EventScreen() {
   const activeEvent = useGame(s => s.activeEvent) as any;
-  if (!activeEvent) return null;
+  const doneRef = useRef(false);
+  const timeLimit: number = activeEvent?.timeLimit ?? 0;
 
-  const handleChoice = (choice: any) => {
-    // คำนวณค่าสถานะใหม่
+  // ใช้ได้ทั้งตัวเลือกปกติ และผลหมดเวลา (isTimeout = true)
+  const handleChoice = (choice: any, isTimeout = false) => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+
     const newStats = applyEventEffect(choice.effect);
+    if (choice.debtEffect) applyDebtEffect(choice.debtEffect);
+    if (choice.flags) setFlags(choice.flags);
+    markEventSeen(activeEvent.id);
 
-    // ถ้าตัวเลือกนี้มีผลต่อระบบหนี้ (เหตุการณ์เจ้าหนี้) ให้จัดการด้วย
-    if (choice.debtEffect) {
-      applyDebtEffect(choice.debtEffect);
-    }
+    // ตัดวงเล็บผลลัพธ์ท้ายป้ายตัวเลือกออก เช่น "จ่ายเงิน (💰 -100)" → "จ่ายเงิน"
+    const picked = isTimeout
+      ? 'ลังเลจนหมดเวลา'
+      : String(choice.label).replace(/\s*\([^)]*\)\s*$/, '');
+    recordHistory({
+      kind: 'event',
+      title: activeEvent.title,
+      detail: `${picked} — ${choice.resultText}`,
+      tag: isTimeout ? 'timeout' : activeEvent.requires ? 'story' : undefined,
+    });
 
     patch({
       stats: newStats,
@@ -24,12 +41,28 @@ export function EventScreen() {
       activeEvent: null,
     });
 
-    if (newStats.money < 0 || newStats.sanity <= 0) {
+    if (newStats.money < 0 || newStats.sanity <= 0 || newStats.heat >= 100) {
       goTo('gameOver');
       return;
     }
     goTo('home');
   };
+
+  const left = useCountdown(timeLimit, timeLimit > 0 && !!activeEvent, () => {
+    if (activeEvent?.timeout) {
+      beep('bad');
+      shake();
+      handleChoice(activeEvent.timeout, true);
+    }
+  });
+
+  // เตือนด้วยเสียงในช่วง 3 วินาทีสุดท้าย
+  const secLeft = Math.ceil(left);
+  useEffect(() => {
+    if (timeLimit > 0 && secLeft > 0 && secLeft <= 3) beep('warn');
+  }, [secLeft, timeLimit]);
+
+  if (!activeEvent) return null;
 
   return (
     <>
@@ -45,7 +78,20 @@ export function EventScreen() {
             {activeEvent.description}
           </p>
         </div>
-        <div className="w-full space-y-3 mt-4">
+
+        {timeLimit > 0 && (
+          <div className="w-full">
+            <div className="h-2 rounded-full bg-neutral-800 overflow-hidden">
+              <div
+                className={`h-full ${left <= 3 ? 'bg-red-500' : 'bg-amber-400'}`}
+                style={{ width: `${(left / timeLimit) * 100}%` }}
+              />
+            </div>
+            <div className="text-center text-xs text-neutral-400 mt-1">⏱️ {secLeft} วินาที</div>
+          </div>
+        )}
+
+        <div className="w-full space-y-3">
           {activeEvent.choices.map((choice: any, index: number) => (
             <Button
               key={index}

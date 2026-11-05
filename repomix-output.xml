@@ -1,1 +1,2904 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
 
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.codesandbox/
+  workspace.json
+ai/
+  master_prompt.md
+  README.md
+  skill_ai_artwork_generation.md
+  skill_architecture.md
+  skill_game_design.md
+  skill_session_manager.md
+  skill_vibe_coding.md
+  skill_visual_direction.md
+src/
+  app/
+    utils/
+      rng.ts
+    constants.ts
+    store.ts
+    types.ts
+  data/
+    creditorEvents.ts
+    events.ts
+    gigs.ts
+  screens/
+    ActiveGigScreen.tsx
+    BootScreen.tsx
+    EndOfDayScreen.tsx
+    EventScreen.tsx
+    GameOverScreen.tsx
+    GigBoardScreen.tsx
+    GigDetailScreen.tsx
+    HomeScreen.tsx
+  systems/
+    debtSystem.ts
+    endGameSystem.ts
+    eventSystem.ts
+    fsm.ts
+    gigSystem.ts
+    lifeSystem.ts
+    timeSystem.ts
+  ui/
+    AppIcon.tsx
+    Button.tsx
+    PhoneFrame.tsx
+    ScreenMotion.tsx
+    StatusBar.tsx
+  App.tsx
+  index.css
+  main.tsx
+.gitignore
+index.html
+package.json
+postcss.config.js
+README.md
+tailwind.config.ts
+tsconfig.json
+vite.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".codesandbox/workspace.json">
+{
+  "responsive-preview": {
+    "Mobile": [
+      320,
+      675
+    ],
+    "Tablet": [
+      1024,
+      765
+    ],
+    "Desktop": [
+      1400,
+      800
+    ],
+    "Desktop  HD": [
+      1920,
+      1080
+    ]
+  }
+}
+</file>
+
+<file path="ai/README.md">
+# Solo Dev Game Skill Pack: Index
+
+A set of instruction files for building a game with AI as your main tool (100% vibe coding). Give the AI the **master prompt** at the start of every project, then attach the skill files that match the task.
+
+## Which file to use, and when
+
+| Task | Attach this file |
+|---|---|
+| Starting a project, brainstorming, updating status | `master_prompt.md` (always) |
+| Starting a new chat or resuming after a break | `skill_session_manager.md` |
+| Writing or fixing code | `skill_vibe_coding.md` |
+| Choosing tools, structure, hosting, saving data | `skill_architecture.md` |
+| Deciding what to build, balancing, polishing, playtesting | `skill_game_design.md` |
+| Defining the look of the game, writing image prompts | `skill_visual_direction.md` |
+| Producing, cleaning, naming, and storing image assets | `skill_ai_artwork_generation.md` |
+
+## Precedence (when two files seem to disagree)
+
+1. **Your latest explicit instruction** in the chat wins over everything.
+2. `master_prompt.md` (your vision, decisions, and Decision Log) wins over any skill file.
+3. Among skill files, the more specific one wins: asset questions go to `skill_ai_artwork_generation.md`, art style questions go to `skill_visual_direction.md`, and so on.
+4. Rules marked **[Prototype]** or **[Polish]** apply only in that project phase (see `skill_game_design.md`, section 4).
+
+## Standard shape of every coding answer
+
+1. **Plan** in 2 to 4 plain sentences.
+2. **Code** that can be copy-pasted and run as is.
+3. **How to test** it in the browser, step by step.
+4. **Where to edit** common things (colors, sizes, speeds).
+5. **Next step**, offered as a suggestion for you to approve.
+
+## File conventions
+
+- All files are Markdown (`.md`).
+- Placeholders in `[square brackets]` are for you to fill in.
+- Review this pack whenever a tool or free plan mentioned in it changes.
+</file>
+
+<file path="ai/skill_ai_artwork_generation.md">
+# skill_ai_artwork_generation.md: Asset Production Pipeline (Web-First)
+
+This file covers **how to produce, clean, name, and store game assets**. For the art style and prompt writing rules, see `skill_visual_direction.md`.
+
+## 1. Core principle: from prompt to engine-ready in a few clicks
+
+- **Zero-install by default.** Use web-based tools instead of software that must be installed (for example, Photopea instead of Photoshop).
+- **AI does the heavy lifting, you do light touch-ups.** Generate images that are nearly finished, then tidy them with web tools.
+- **Consistency over perfection.** Images do not have to be stunning, but size, angle, and style must match across the whole game.
+- **Free first, paid only by approval.** If a paid tool would clearly save significant time, the AI must say so, give the cost, and offer a free alternative. The developer decides.
+
+## 2. Generation workflow
+
+### Step 1: Technical specs
+
+Decide these before generating anything:
+
+- **Frame size:** for example 64x64 px for pixel art, 512x512 for HD. Prefer **power-of-two or consistent sizes** across similar assets.
+- **Background:** always request `plain white background` or a solid color, so it is easy to remove. Avoid green or white if the character contains the same color.
+- **Camera angle:** isometric, side view, or top-down. Keep it the same across the entire game.
+- **Aspect ratio and orientation:** match where the asset will appear.
+
+### Step 2: Generate with AI
+
+- Use the 4-layer prompt from `skill_visual_direction.md`.
+- For animation, describe each frame's pose explicitly (Frame 1: left foot forward; Frame 2: both feet together; Frame 3: right foot forward; Frame 4: both feet together). AI image tools often struggle with consistent animation frames, so expect to generate several attempts and choose the best, or draw simple frames by hand in a pixel editor.
+- Generate 2 to 4 variations, pick one, and use it as the reference for the rest.
+
+### Step 3: Remove the background and clean up
+
+- **Remove the background:** use a web tool such as remove.bg or Adobe Express's background remover (free tiers). Check the current free-tier limits and output resolution before relying on them.
+- **For pixel art, avoid auto-removal that blurs edges.** Prefer a magic-wand or fill-based removal in Photopea or Piskel to keep edges crisp.
+- **Check edges:** zoom in and look for leftover background fringes (halos). Fix them or regenerate.
+- **Resize correctly:** for pixel art, use "nearest neighbor" scaling; smooth scaling blurs the pixels.
+
+### Step 4: Sprite sheets (optional)
+
+- Use a web tool such as Piskel or Ezgif to combine frames or cut a sheet.
+- **Key rule:** every frame uses the **same canvas size** with consistent padding, and the character's feet stay at the same position. Otherwise the animation jitters.
+- Export as PNG to keep transparency. Note the frame size and frame count in the filename or the Asset Inventory so the code can slice it correctly.
+
+## 3. Color and style consistency
+
+- **Palette lock.** For pixel art, fix the color count (e.g. 16) and use the same palette in every image. Tools like Piskel or Photopea can force an image onto a palette.
+- **Outline rule.** If characters have an outline, put it in every prompt (for example, "thick black outline").
+- **Light direction.** Light always comes from the same direction (for example, the top left).
+
+## 4. File naming and storage
+
+**Naming pattern:** `type_name_action_frame.ext`, in lowercase with underscores, no spaces or Thai characters (they can break file paths on some systems).
+
+Examples: `char_hero_idle_01.png`, `enemy_slime_attack_02.png`, `bg_forest_layer1.png`, `ui_button_play.png`, `sfx_coin_pickup.ogg`.
+
+**Folder structure:**
+
+```
+/assets
+  /characters
+  /enemies
+  /backgrounds
+  /ui
+  /audio
+    /sfx
+    /music
+```
+
+Keep a simple `assets_log` (a text file or spreadsheet) listing each asset's file name, the prompt or tool used, the date, and the license or terms of use.
+
+## 5. Formats and file size
+
+- Use **PNG** for sprites and UI (transparency, sharp edges), **JPG or WebP** for large photographic backgrounds.
+- Keep the total game size small for web play. Compress images (for example with a free web compressor) and avoid unnecessarily large files.
+- Test loading on a slow connection or a phone.
+
+## 6. Legal and license notes
+
+- Do not use or modify copyrighted art, characters, or sprites from other games.
+- **Check each tool's terms before commercial release.** Free plans of AI image tools may limit commercial use or require attribution. Record the terms in the assets log.
+- Fonts, music, and sound effects have licenses too. Keep a note of each source.
+- If you plan to sell the game, re-check the license of every asset before release.
+
+## 7. Verification checklist
+
+Before an asset goes into the game, the AI asks:
+
+1. Is the background actually transparent (where needed)?
+2. Does the size match the plan?
+3. Does the style match the other assets?
+4. For animation: do the frames flow smoothly when played in order?
+5. Is the file named correctly and saved in the right folder?
+6. Is its source and license recorded?
+
+## 8. Anti-patterns
+
+- Generating images with complex backgrounds that cannot be removed (for example, a wood-grain background that blends with the character).
+- Changing canvas size midway (first frame 64x64, second frame 70x60).
+- Using copyrighted images from other games as a base.
+- Recommending paid or subscription tools without asking.
+- Smoothing or blurring pixel art when scaling.
+- Naming files "final", "final2", "final_really" instead of using the naming pattern.
+
+## 9. Free web tools (verify current terms before use)
+
+Free plans and limits change often. Treat this list as a starting point, not a promise.
+
+| Purpose | Examples |
+|---|---|
+| Generate images | Bing Image Creator, Leonardo.ai (free tier), Stable Diffusion online services |
+| Remove backgrounds | remove.bg, Adobe Express background remover |
+| Edit and combine | Photopea (browser-based image editor), Piskel (pixel art editor) |
+| Convert and slice | Ezgif, CloudConvert |
+| Compress | Squoosh, TinyPNG |
+</file>
+
+<file path="ai/skill_architecture.md">
+# skill_architecture.md: Structure Rules for a Solo Dev (YAGNI)
+
+## 1. Core principle: build only what is needed now (YAGNI)
+
+- **Do not design for a million players.** Design for one player (you) having a smooth experience. Add complexity only when a real problem demands it.
+- **Local-first.** The game should play and save progress in the player's own browser (LocalStorage or IndexedDB) with no outside server, unless there is a clear need.
+- **Free and web-based.** Choose tools that host for free (GitHub Pages, Netlify, Vercel, itch.io) and run in the browser immediately.
+
+## 2. Clarify before building
+
+Before writing code for any new feature, the AI must ask or confirm these three things:
+
+1. What problem does this feature solve for the game?
+2. How will it affect the existing code?
+3. Is there a **simpler** way? If so, choose the simplest.
+
+If I cannot answer question 1, the default decision is to **not build it yet**.
+
+## 3. Graceful degradation: the game must not crash
+
+Real systems fail. A game should keep running anyway.
+
+| Failure | Required behavior |
+|---|---|
+| An image does not load | Draw a colored rectangle instead and carry on |
+| Audio cannot play (including browsers that block audio until the first click) | Skip the sound silently; never wait for it |
+| Saving fails (storage full, private browsing) | Tell the player politely and retry; keep the game running |
+| Saved data is missing or damaged | Start with default values; never crash on load |
+| A setting or number is invalid | Fall back to a safe default |
+
+## 4. Saving data safely
+
+- Keep the saved data in **one object** with a `version` number, so later changes to the game do not break old saves.
+- Save at natural moments (end of a level, on pause), not every frame.
+- Provide a "reset save" button for testing.
+- Remember: LocalStorage belongs to one browser on one device. Players who switch devices lose progress. This is acceptable in early phases; mention it to players if it matters.
+
+## 5. Choosing tools (building blocks)
+
+Never pick a tool just because it is "modern" or "industry standard."
+
+- **Engine or framework:** start with plain HTML and JavaScript Canvas, or the simplest engine that fits the genre. Ask for a recommendation, explain why, and record it in the Decision Log.
+- **Data and saving:** start with a JSON object in LocalStorage. If online features become necessary, consider Firebase or Supabase (free tiers) and re-read their current free-tier limits first.
+- **State:** use plain variables or the simplest state mechanism the engine offers. Do not build elaborate state systems for a small game.
+- **Project structure:** begin with few files. Split a file only when it is hard to navigate.
+
+## 6. Iterate and adapt
+
+- If the code becomes hard to understand or fix, **stop and refactor** before adding more. Complexity compounds.
+- Changing your mind is normal. If an approach is not working, delete it and restart with a simpler one.
+- Record the change in the Decision Log so the reason is not lost.
+
+## 7. Multiplayer: the later, optional layer
+
+When (and only when) single-player is complete and fun:
+
+1. Start with local co-op on one device if the genre allows it.
+2. For online play, use room-based sessions: create or join a room, play, room closes.
+3. Give every piece of state one clear owner; the host or server decides on conflicts.
+4. Use a free-tier service first and test with two browser windows before involving real players.
+5. Expect cheating, disconnects, and lag. Decide up front what happens when a player drops out.
+
+## 8. Anti-patterns
+
+- Adding multiplayer, login, or a complex backend before the core game is fun to play from start to finish.
+- Using architecture jargon (microservices, sharding, Kafka) in a small project.
+- Building systems "we might need later" (speculative abstraction).
+- Picking a heavy engine because a famous game used it.
+- Storing anything sensitive (passwords, personal data) without a real security plan.
+</file>
+
+<file path="ai/skill_game_design.md">
+# skill_game_design.md: Core Loop and Player Experience Rules
+
+## 1. Core principle: player experience comes before ease of building
+
+When the choice is between "more fun for the player" and "easier for us to build," **choose fun**, then look for the cheapest way to deliver it.
+
+- Fewer features, polished, beat many features, rough.
+- Prototype with disposable code before committing to real code.
+- Get small details right: transitions, alignment, spacing, feedback, error states.
+- Every feature must serve the core loop, or at least stay out of its way.
+
+The AI advises and flags problems; **the developer makes the final call.**
+
+## 2. Core loop rules
+
+Before building a new feature, answer:
+
+1. **What is the core loop?** What does the player repeat? (e.g. shoot, collect, upgrade, shoot again.)
+2. **How does this feature serve the loop?** If it does not, cut it (YAGNI).
+3. **Is the feedback clear?** Does the player know immediately whether they succeeded or failed?
+
+## 3. Feature trade-offs
+
+For each new idea, ask:
+
+- Will it make the game more fun, or do we just want to build it?
+- Can it be finished in **one week**? If not, split it or cut it.
+- Is there a simpler version? (Instead of a complex inventory, maybe "carry up to 3 items.")
+- What does it cost in testing, art, and sound, not only in code?
+
+Use `/cut` to run this scope check on the whole project at any time.
+
+## 4. Two phases, two sets of rules
+
+This resolves the tension between "move fast" and "polish everything."
+
+### [Prototype] phase: is the idea fun?
+
+- Build it rough. Rectangles, placeholder sounds, and paper sketches are fine.
+- Prototype code is **disposable**. It does not need to be pretty or optimized, but it must still be readable.
+- Test fast and fail fast. If the idea is not fun after a short test, drop it without regret.
+- Do **not** spend time on art, menus, or polish.
+- Exit condition: you can play one full session of the core loop, and you want to play it again.
+
+### [Polish] phase: make the proven idea feel great
+
+- Now apply the polish checklist (section 5).
+- Fix technical debt as you meet it. Rebuild disposable prototype code into clean code before piling features on top.
+- Exit condition: a stranger can play a session and enjoy it without explanation.
+
+The AI must state which phase the project is in when planning work. If unsure, ask.
+
+## 5. Polish checklist
+
+- 3 polished features beat 10 rough ones.
+- Check every interaction:
+  - Does a button react instantly when pressed (color, sound, movement)?
+  - Does movement feel smooth?
+  - Does the screen load fast enough?
+  - Is every error message understandable to a non-technical player?
+  - Is there a clear way to pause, restart, and quit?
+- Check the "feel" items: screen shake on hits, small particles, sound on every action, short animations on pickups and level-ups.
+
+## 6. Sound and music
+
+Sound is half of game feel and is often forgotten.
+
+- Add a sound effect to every important action (jump, hit, pickup, win, fail, button click).
+- Keep SFX short and consistent in volume. Provide a mute button and remember the setting.
+- Music should loop without a noticeable gap and never be required to progress (see graceful degradation in `skill_architecture.md`).
+- Use only audio you made, generated with a tool whose terms allow game use, or that carries a license permitting your use. Keep a note of the source and license for each file.
+- Audio often does not play until the player's first click or tap in a browser. Design the start screen around this.
+
+## 7. Playtesting with real players
+
+- **Play it yourself regularly.** If you are bored, players will be too.
+- **Let others try it without explanation.** Watch silently; do not help.
+- **Note where players get stuck.** Stuck for more than 30 seconds means redesign.
+- Test on the real target device (phone, small laptop), not only your own screen.
+
+### Playtest note template
+
+```
+Date / tester:
+Device:
+Did they understand the goal in 10 seconds?  yes / no
+Where did they get stuck or confused?
+What made them smile or react?
+What did they ask?
+When did they want to stop (if at all)?
+Top 3 changes to make:
+```
+
+## 8. Fun check
+
+Before adding any feature, the AI asks:
+
+1. Does this make the core loop more fun?
+2. Will the player understand how to use it within 10 seconds?
+3. Is there a simpler way that gets the same result?
+
+## 9. Anti-patterns
+
+- Adding a feature just because other games have it ("they have crafting, so we need crafting").
+- Building systems more complex than the game needs (an NPC relationship system that does not affect gameplay).
+- Waiting for the game to be "perfect" before releasing. Release a playable version, then improve.
+- Using technical words in the player-facing UI.
+- Letting the AI or a tutorial dictate the game's direction. Options and advice are welcome; the decision is the developer's.
+</file>
+
+<file path="ai/skill_session_manager.md">
+# skill_session_manager.md: Session and Context Management
+
+## 1. Core idea: the AI must always know where we are
+
+- **Stateless by design.** The AI does not reliably remember earlier chats. These files and your Session Context are its external memory.
+- **Single source of truth.** `master_prompt.md` and the skill files outrank the AI's memory of earlier conversations. If the AI contradicts them, point it back to the files.
+- **Update before acting.** Refresh the Session Context before starting any new piece of work.
+
+## 2. Session Context block
+
+Paste this at the very top of the first message in every new chat, and after any long break.
+
+```markdown
+Current state:      [e.g. Phase 1, Core Gameplay]
+Done and working:   [features that run without errors]
+In progress:        [what is being built or fixed right now]
+Blockers:           [bugs or open questions that are stuck]
+Goal of this chat:  [what I want finished in this session]
+Recent decisions:   [last 3 entries from the Decision Log]
+```
+
+### Filled-in example
+
+```markdown
+Current state:      Phase 1, Core Gameplay
+Done and working:   Player moves with arrow keys; one enemy spawns every 3 seconds
+In progress:        Player shooting (bullet appears but does not hit the enemy)
+Blockers:           Bullet passes through the enemy; hit detection not working
+Goal of this chat:  Make bullets destroy the enemy and add a score counter
+Recent decisions:   2026-11-04: use plain Canvas, no engine (simpler to understand)
+```
+
+## 3. Decision Log
+
+Every decision that would be painful to rediscover goes into the Decision Log in `master_prompt.md`.
+
+Log a decision when it:
+- picks a tool, engine, or hosting service;
+- adds, cuts, or changes a feature;
+- sets art style, palette, or camera angle;
+- changes the scope or the plan.
+
+Each entry has four parts: **date, decision, reason, impact.** The AI should offer to write the entry whenever a decision is made, using `/decide`.
+
+## 4. Session routine
+
+**Start of a session**
+1. Paste `master_prompt.md` and the relevant skill files.
+2. Paste the Session Context block.
+3. State the goal in one sentence.
+
+**During a session**
+- Stay on the stated goal. If a new idea appears, write it on a "Later" list instead of building it now.
+- After each working feature, save a version (see `/backup`).
+
+**End of a session** (ask the AI: `/status`)
+1. The AI rewrites the Session Context with the new state.
+2. The AI lists any new Decision Log entries.
+3. The AI suggests the first task for next time.
+4. You copy these into your master prompt file and save it.
+
+## 5. Handling long chats
+
+When a conversation gets long, the AI may start forgetting earlier rules or repeating mistakes.
+
+Signs:
+- It ignores the explanation level or a rule from the master prompt.
+- It re-suggests something you already rejected.
+- It rewrites code you did not ask it to touch.
+
+What to do: run `/status`, then start a **new chat** with the updated master prompt and Session Context.
+
+## 6. Anti-patterns
+
+- Do not rely on "you said so earlier". If it matters, it belongs in a file.
+- Do not start a new chat without the Session Context.
+- Do not let the AI quietly change a decision. Any change goes through `/decide`.
+- Do not skip the end-of-session `/status`. It is what makes the next session fast.
+</file>
+
+<file path="ai/skill_vibe_coding.md">
+# skill_vibe_coding.md: Coding Guide for a Solo Dev (Vibe Coding)
+
+## 1. Core principles
+
+- **Explain it simply.** Explain code in language a person who has never programmed can follow. The depth follows the Explanation Level set in `master_prompt.md` (1 = full, 2 = brief, 3 = minimal).
+- **One prompt = one feature.** Build one thing at a time and test it before moving on.
+- **Web-first and free.** Prefer solutions that run in a browser immediately and cost nothing.
+
+## 2. Coding rules
+
+- **Avoid complicated libraries.** If something can be written in about 20 clear lines, write it instead of importing a library. When a library really is needed, name it, say what it does, and say why the plain approach would be worse.
+- **Clear beats short.** Prefer slightly longer, obvious code over clever compact code.
+- **Comments in the chosen language.** Use the code comment language from `master_prompt.md` (default: Thai). Every block gets a comment that says what it is for.
+- **Names that explain themselves.** Use `playerSpeed`, not `ps`. Use `enemyList`, not `arr2`.
+- **Settings at the top.** Put numbers you may want to tweak (speed, colors, sizes, timers) in one clearly labeled block at the top of the file.
+- **Flat logic.** Avoid deeply nested conditions. Use early returns and small named functions.
+
+## 3. Workflow
+
+1. **Think before writing.** State the plan in 2 to 4 plain sentences, and wait for approval if the plan touches existing code.
+2. **Build in layers.** Basic structure first, then functions, then visuals and UI.
+3. **Test immediately.** After each step, say exactly how to open and check the result in the browser, and what you should see.
+4. **Offer the next step**, but do not start it until approved.
+
+## 4. Phase-aware coding
+
+The right amount of quality depends on the project phase (see `skill_game_design.md`, section 4).
+
+| | **[Prototype]** | **[Polish]** |
+|---|---|---|
+| Goal | Find out whether the idea is fun | Make the proven idea feel great |
+| Code quality | Quick and disposable; clarity still required | Clean, organized, no leftover hacks |
+| Errors | Console must be clean for the tested path | Console must be clean everywhere |
+| Refactoring | Only when the code blocks progress | Do it now, before adding more |
+
+The AI must say which phase it is assuming at the start of each coding task.
+
+## 5. Delivering code
+
+- **One complete file or clearly marked pieces.** If the project has several files, say the file name above every block and state whether the block is a full replacement or an insert.
+- **Never leave "..." or "rest of code stays the same" for beginners.** Show the whole changed function, or the whole file when it is small.
+- **Do not change what was not asked.** If a change touches other code, say so before giving it.
+
+## 6. Verification checklist
+
+Before saying "done", the AI confirms:
+- [ ] The code runs when copy-pasted, with no extra setup.
+- [ ] There are no errors in the browser console (and tells me how to open it).
+- [ ] It explains where to change the common things: colors, sizes, speed, text.
+- [ ] It explains what I should see on screen if it works, and what it means if I do not.
+- [ ] The feature works on the target device (for example, touch controls if the game is for phones).
+
+## 7. When something breaks
+
+1. Ask me for the exact error message and what I did just before it appeared.
+2. Explain the likely cause in plain words.
+3. Fix only that problem.
+4. If three fixes fail, stop. Propose a simpler design instead of piling on patches.
+
+## 8. Anti-patterns
+
+- Assuming I know technical terms (API, DOM, async, callback). Translate each one the first time it appears.
+- Hiding logic inside deep nesting or one giant function.
+- Recommending tools that must be installed locally when a web option exists.
+- Silently adding features, libraries, or files that were not requested.
+- Presenting untested code as if it works.
+</file>
+
+<file path="ai/skill_visual_direction.md">
+# skill_visual_direction.md: Art Direction and AI Image Prompting
+
+This file covers **what the game should look like** and **how to write image prompts**. For producing, cleaning, naming, and storing the files, see `skill_ai_artwork_generation.md`.
+
+## 1. Core principle: consistency beats one-off beauty
+
+- **Consistency is king.** Every image must look like it belongs to the same world. No style drift (for example, a pixel-art character on a watercolor background).
+- **The prompt is the DNA.** Keep the prompt structure fixed. Change only the **Subject**; keep Style, Lighting, Camera, and Technical parameters identical.
+- **Make less, make it clean.** Create only the assets the core loop needs first (main character, basic enemy, main background). Do not make items you do not yet use.
+
+## 2. Create the Style Guide first
+
+Before generating any final art, fix these in the Style Guide section of `master_prompt.md`:
+
+| Item | Example |
+|---|---|
+| Art style | 16-bit pixel art |
+| Camera angle | Side view |
+| Palette | 16 colors, hex codes listed |
+| Outline | Thick black outline, or none |
+| Light direction | From the top left |
+| Mood keywords | Cozy, warm, slightly humorous |
+| Do-not-use list | Realistic textures, gradients, text in images |
+
+Generate 3 to 5 test images, choose the direction **together**, and only then lock it. Record the choice in the Decision Log.
+
+## 3. The 4-Layer Prompt Framework
+
+Every image prompt contains all four layers.
+
+1. **Subject:** be specific. "A warrior holding a two-handed sword in a ready stance," not "a cool warrior."
+2. **Style and medium:** name the technique. "16-bit pixel art," "low-poly 3D render," "flat vector illustration."
+3. **Lighting and composition:** "soft light from the top left, side view, centered, plain white background." A plain background is essential for cutting out the subject.
+4. **Technical parameters:** aspect ratio (e.g. `--ar 1:1`, `--ar 16:9`), size, quality tags (`highly detailed, clean edges`).
+
+Parameter syntax differs by tool (`--ar` works in Midjourney; other tools use a dropdown or words like "square"). Use whatever the chosen tool expects.
+
+### Template
+
+```
+[SUBJECT], [STYLE + MEDIUM], [LIGHT DIRECTION + CAMERA ANGLE],
+plain white background, [PALETTE], [OUTLINE RULE], [ASPECT RATIO / SIZE]
+Negative: blurry, noisy, deformed, extra limbs, watermark, text, background clutter
+```
+
+## 4. Consistency rules
+
+- **Reference image.** Once you have a character you like, use that image as a reference (image-to-image or "style reference") for every other pose and variant.
+- **Negative prompt.** Always include one (for example: ugly, deformed, noisy, blurry, extra limbs, watermark, text). Tools without a negative field should phrase it as "no ..." in the main prompt.
+- **Palette lock.** Name the main colors with hex codes and require them in every image.
+- **Fix at the right layer.** If the result is wrong, change the Style or Lighting layer. Do not re-roll with a completely new prompt.
+- **Same structure, same seed.** Where the tool supports a seed value, reuse it for related images.
+
+## 5. AI art workflow
+
+1. **State the need:** what the asset is, where it is used in the game, and what size it must be.
+2. **AI proposes 2 to 3 prompt options,** each with a sentence explaining how its feel differs.
+3. **Test and adjust,** changing one layer at a time.
+4. **Post-processing:** the AI always explains the next step, such as removing the background or building a sprite sheet (see `skill_ai_artwork_generation.md`).
+5. **Log the winning prompt** next to the asset in the Asset Inventory, so future images can reuse it exactly.
+
+## 6. Failure patterns
+
+- **Vague prompts** ("pretty," "cool," "like a famous game"). The AI will guess. Describe concrete visual features instead.
+- **Forgetting the background.** Always request `plain white background` or a solid color for sprites.
+- **Switching style midway.** Re-rolling the whole prompt gives something that looks like a different game.
+- **Wrong aspect ratio.** Check the ratio before generating, for example a vertical image for a horizontal UI.
+- **Copying existing games, characters, or named living artists' styles for commercial work.** Describe the look in your own terms (shapes, colors, era, medium) instead of naming a protected character or a specific living artist.
+
+## 7. Quality check
+
+Before using an image, ask:
+
+1. Does it match the Style Guide?
+2. Can the background be removed, or can it be animated, without losing quality?
+3. Are its size and proportions right for where it goes in the game?
+4. Is it clearly readable at the smallest size it will be shown?
+5. Does it look at home next to the other assets?
+</file>
+
+<file path="src/app/utils/rng.ts">
+export function mulberry32(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+</file>
+
+<file path="src/data/creditorEvents.ts">
+import type { Stats, DebtEffect } from '../app/types';
+
+// ตัวเลือกของเหตุการณ์เจ้าหนี้ (เพิ่ม debtEffect ต่อจากเหตุการณ์ปกติ)
+export interface CreditorChoice {
+  label: string;
+  effect: Partial<Stats>;
+  resultText: string;
+  debtEffect?: DebtEffect;
+}
+
+export interface CreditorEvent {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  choices: CreditorChoice[];
+}
+
+// เหตุการณ์ทวงหนี้จาก "พี่โจ" เจ้าหนี้รายใหญ่
+// ตัวเลือกแต่ละตัวส่งผลต่ออารมณ์เจ้าหนี้ (mood) และอาจเปลี่ยนเส้นตาย (deadline)
+export const CREDITOR_EVENTS: CreditorEvent[] = [
+  {
+    id: 'creditor-call-normal',
+    title: 'พี่โจโทรมาทวงหนี้',
+    description: 'โทรศัพท์ดังขึ้น ชื่อ "พี่โจ" ปรากฏบนหน้าจอ น้ำเสียงของเขาไม่ค่อยสบอารมณ์นัก',
+    icon: '📱',
+    choices: [
+      {
+        label: 'จ่ายดอกเบี้ยไปก่อน (💰 -150)',
+        effect: { money: -150 },
+        resultText: 'พี่โจรับเงินแล้วพูดว่า "ก็ดี ยังรู้ตัวอยู่" อารมณ์เขาดีขึ้นนิดหน่อย',
+        debtEffect: { mood: 15 },
+      },
+      {
+        label: 'อ้อนวอนขอเวลา (🧠 -15)',
+        effect: { sanity: -15 },
+        resultText: 'คุณอ้อนวอน พี่โจถอนหายใจ "ก็ได้... แต่อย่าให้นาน" คุณเครียดจนแทบไม่ได้นอน',
+        debtEffect: { mood: 5 },
+      },
+      {
+        label: 'ปิดเครื่องหนี (🔥 +15)',
+        effect: { heat: 15 },
+        resultText: 'คุณปิดเครื่อง แต่รู้ว่าพี่โจต้องโกรธจัด และจะเริ่มตามล่าคุณจริงจัง',
+        debtEffect: { mood: -20 },
+      },
+    ],
+  },
+  {
+    id: 'creditor-call-angry',
+    title: 'พี่โจส่งลูกน้องมา',
+    description: 'ชายร่างใหญ่สองคนมาเคาะประตูห้อง "พี่โจให้มาเตือน... จ่ายเงินซะ อย่าให้ต้องใช้กำลัง"',
+    icon: '🚪',
+    choices: [
+      {
+        label: 'จ่ายก้อนใหญ่ตัดปัญหา (💰 -400)',
+        effect: { money: -400 },
+        resultText: 'คุณยอมจ่ายเงินก้อน ลูกน้องพี่โจพยักหน้าแล้วจากไป อารมณ์พี่โจดีขึ้นมาก',
+        debtEffect: { mood: 25 },
+      },
+      {
+        label: 'เจรจาขอผ่อนผัน (🧠 -20)',
+        effect: { sanity: -20 },
+        resultText: 'คุณเจรจาอย่างยากลำบาก สุดท้ายพวกเขาพอจะอะลุ่มอล่วยให้บ้าง แต่คุณเครียดจัด',
+        debtEffect: { mood: 10, deadline: 1 },
+      },
+      {
+        label: 'ไล่พวกเขากลับ (🔥 +20)',
+        effect: { heat: 20 },
+        resultText: 'คุณไล่พวกเขากลับ พวกเขาจ้องคุณด้วยสายตาอาฆาตก่อนจากไป พี่โจต้องโกรธจัดแน่',
+        debtEffect: { mood: -25, deadline: -1 },
+      },
+    ],
+  },
+];
+</file>
+
+<file path="src/screens/EndOfDayScreen.tsx">
+import { useGame } from '../app/store';
+import { StatusBar } from '../ui/StatusBar';
+import { Button } from '../ui/Button';
+import { goTo } from '../systems/fsm';
+import { DAILY_COST } from '../app/constants';
+
+export function EndOfDayScreen() {
+  const { time, stats } = useGame(s => ({ time: s.time, stats: s.stats }));
+
+  return (
+    <>
+      <StatusBar />
+      <div className="flex-1 flex flex-col p-6 gap-4 justify-center">
+        <div className="text-center">
+          <div className="text-xs text-neutral-400">จบวัน</div>
+          <h2 className="text-3xl font-bold mt-1">Day {time.day - 1} ✓</h2>
+        </div>
+
+        <div className="rounded-xl bg-neutral-800/50 border border-white/5 p-4 space-y-1.5 text-sm">
+          <Row label="💰 เงินคงเหลือ" value={`$${stats.money}`} />
+          <Row label="🔥 Heat" value={`${stats.heat}`} />
+          <Row label="⭐ Rep" value={`${stats.rep}`} />
+          <Row label="🧠 Sanity" value={`${stats.sanity}`} />
+          <div className="border-t border-white/10 mt-2 pt-2 text-xs text-neutral-400">
+            ค่าใช้จ่ายพรุ่งนี้: ${DAILY_COST}
+          </div>
+        </div>
+
+        <Button variant="primary" onClick={() => goTo('home')}>เริ่ม Day {time.day}</Button>
+      </div>
+    </>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between">
+      <span className="text-neutral-400">{label}</span>
+      <span className="font-semibold">{value}</span>
+    </div>
+  );
+}
+</file>
+
+<file path="src/screens/GigDetailScreen.tsx">
+import { useGame } from '../app/store';
+import { GIGS } from '../data/gigs';
+import { StatusBar } from '../ui/StatusBar';
+import { Button } from '../ui/Button';
+import { goTo } from '../systems/fsm';
+import { acceptGig } from '../systems/gigSystem';
+
+export function GigDetailScreen() {
+  const activeId = useGame(s => s.activeGigId);
+  const gig = GIGS.find(g => g.id === activeId);
+
+  if (!gig) {
+    return (
+      <>
+        <StatusBar />
+        <div className="flex-1 p-4">
+          <p className="text-sm text-neutral-400">ไม่พบงาน</p>
+          <Button variant="ghost" className="mt-4" onClick={() => goTo('gigBoard')}>← กลับ</Button>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <StatusBar />
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="rounded-xl bg-neutral-800/50 border border-white/5 p-4">
+          <div className="text-xs text-neutral-400">Tier {gig.tier}</div>
+          <h2 className="text-lg font-bold mt-1">{gig.title}</h2>
+          <p className="text-sm text-neutral-300 mt-2">{gig.description}</p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <Stat label="💰 ค่าตอบแทน" value={`$${gig.rewardMoney}`} />
+          <Stat label="⭐ Rep" value={`+${gig.rewardRep}`} />
+          <Stat label="🔥 Heat" value={`+${gig.heatGain}`} />
+          <Stat label="🧠 Sanity" value={`-${gig.sanityCost}`} />
+          <Stat label="⏱ ใช้เวลา" value={`${gig.durationBlocks} ช่วง`} />
+          <Stat label="🚨 เสี่ยงตำรวจ" value={`${Math.round(gig.policeRisk * 100)}%`} />
+        </div>
+
+        <div className="space-y-2">
+          <Button variant="primary" onClick={() => acceptGig(gig)}>รับงานนี้</Button>
+          <Button variant="ghost" onClick={() => goTo('gigBoard')}>← กลับ</Button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg bg-neutral-800/40 p-2.5">
+      <div className="text-[11px] text-neutral-500">{label}</div>
+      <div className="font-semibold">{value}</div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/systems/debtSystem.ts">
+import { CLAMP, EXTENSION_COST, EXTENSION_MOOD_PENALTY } from '../app/constants';
+import { patch, pushLog, useGame } from '../app/store';
+import type { DebtEffect } from '../app/types';
+import { goTo } from './fsm';
+import { CREDITOR_EVENTS, type CreditorEvent } from '../data/creditorEvents';
+
+const clamp = (v: number, [lo, hi]: [number, number]) =>
+  Math.max(lo, Math.min(hi, v));
+
+// ปรับอารมณ์เจ้าหนี้และเส้นตายตามตัวเลือกที่ผู้เล่นเลือก
+export function applyDebtEffect(effect: DebtEffect): void {
+  const d = useGame.getState().debt;
+  const newMood = clamp(d.creditorMood + (effect.mood || 0), CLAMP.mood);
+  const newDeadline = Math.max(1, d.deadlineDay + (effect.deadline || 0));
+
+  patch({ debt: { ...d, creditorMood: newMood, deadlineDay: newDeadline } });
+
+  // ถ้าเส้นตายถูกลด ให้บันทึกเตือน
+  if (effect.deadline && effect.deadline < 0) {
+    pushLog(`⚠️ เส้นตายถูกลดลง ${Math.abs(effect.deadline)} วัน!`);
+  }
+}
+
+// ผู้เล่นกดปุ่ม "ขอขยายหนี้" (B2)
+// คืนค่า true ถ้าสำเร็จ, false ถ้าล้มเหลว
+export function requestExtension(): boolean {
+  const s = useGame.getState();
+  const d = s.debt;
+  const stats = s.stats;
+
+  // ตรวจเงื่อนไขเบื้องต้น
+  if (d.extensionsLeft <= 0) return false;
+  if (stats.money < EXTENSION_COST) return false;
+
+  // โอกาสสำเร็จขึ้นอยู่กับอารมณ์เจ้าหนี้
+  let successChance = 0.3;
+  if (d.creditorMood >= 70) successChance = 0.9;
+  else if (d.creditorMood >= 40) successChance = 0.6;
+
+  const success = Math.random() < successChance;
+
+  // จ่ายเงินและใช้สิทธิ์ขยายทุกครั้ง ไม่ว่าจะสำเร็จหรือไม่
+  const newMoney = stats.money - EXTENSION_COST;
+  const newExtensions = d.extensionsLeft - 1;
+
+  if (success) {
+    const newDeadline = d.deadlineDay + 1;
+    patch({
+      stats: { ...stats, money: newMoney },
+      debt: {
+        ...d,
+        extensionsLeft: newExtensions,
+        deadlineDay: newDeadline,
+        creditorMood: clamp(d.creditorMood - EXTENSION_MOOD_PENALTY, CLAMP.mood),
+      },
+      lastResult: {
+        title: '✅ ขอขยายหนี้สำเร็จ',
+        lines: [
+          'พี่โจยอมยืดเวลาให้อีก 1 วัน',
+          `💰 -$${EXTENSION_COST}`,
+          `เส้นตายใหม่: วัน ${newDeadline}`,
+        ],
+      },
+    });
+    pushLog(`ขอขยายหนี้สำเร็จ → เส้นตายวัน ${newDeadline}`);
+    return true;
+  }
+
+  patch({
+    stats: { ...stats, money: newMoney },
+    debt: {
+      ...d,
+      extensionsLeft: newExtensions,
+      creditorMood: clamp(d.creditorMood - 10, CLAMP.mood),
+    },
+    lastResult: {
+      title: '❌ ขอขยายหนี้ไม่สำเร็จ',
+      lines: [
+        'พี่โจปฏิเสธเสียงแข็ง "ไม่ได้! จ่ายตรงเวลา!"',
+        `💰 -$${EXTENSION_COST} (เสียฟรี)`,
+      ],
+    },
+  });
+  pushLog('ขอขยายหนี้ล้มเหลว');
+  return false;
+}
+
+// เร่งหนี้ (ลดเส้นตาย) เมื่อผู้เล่นทำพลาด (B3)
+export function accelerateDebt(days: number, reason: string): void {
+  const d = useGame.getState().debt;
+  const newDeadline = Math.max(1, d.deadlineDay - days);
+
+  patch({
+    debt: {
+      ...d,
+      deadlineDay: newDeadline,
+      creditorMood: clamp(d.creditorMood - 10, CLAMP.mood),
+    },
+  });
+  pushLog(`⚠️ ${reason} → เส้นตายเหลือวัน ${newDeadline}`);
+}
+
+// เช็คว่าวันนี้เจ้าหนี้ควรโทรมาทวงไหม (B1)
+export function shouldCreditorCallToday(): boolean {
+  const s = useGame.getState();
+  const d = s.debt;
+  const day = s.time.day;
+
+  // ถ้าทวงไปแล้ววันนี้ ไม่ต้องทวงซ้ำ
+  if (d.lastCollectionDay >= day) return false;
+
+  // ทวงทุก 3 วัน (วัน 3, 6, 9, 12)
+  if (day % 3 === 0) return true;
+
+  // ถ้าพี่โจโกรธจัด (อารมณ์ต่ำกว่า 30) จะทวงบ่อยขึ้น
+  if (d.creditorMood < 30 && day % 2 === 0) return true;
+
+  return false;
+}
+
+// เริ่มเหตุการณ์ทวงหนี้: เลือกเหตุการณ์ตามอารมณ์เจ้าหนี้ แล้วเด้งไปหน้า event
+export function triggerCreditorCall(): void {
+  const s = useGame.getState();
+  const d = s.debt;
+
+  // ถ้าอารมณ์ไม่ดี ใช้เหตุการณ์รุนแรง (ลูกน้องมาหา)
+  let event: CreditorEvent;
+  if (d.creditorMood < 40) {
+    event = CREDITOR_EVENTS.find(e => e.id === 'creditor-call-angry') || CREDITOR_EVENTS[0];
+  } else {
+    event = CREDITOR_EVENTS.find(e => e.id === 'creditor-call-normal') || CREDITOR_EVENTS[0];
+  }
+
+  patch({
+    activeEvent: event,
+    debt: { ...d, lastCollectionDay: s.time.day },
+  });
+  goTo('event');
+}
+</file>
+
+<file path="src/systems/endGameSystem.ts">
+import { CLAMP } from '../app/constants';
+import { useGame } from '../app/store';
+import { goTo } from './fsm';
+
+export function checkWinLoss(): boolean {
+  const { stats } = useGame.getState();
+  if (stats.sanity <= CLAMP.sanity[0]) { goTo('gameOver'); return true; }
+  if (stats.money < 0)                { goTo('gameOver'); return true; }
+  return false;
+}
+</file>
+
+<file path="src/ui/AppIcon.tsx">
+
+</file>
+
+<file path="src/ui/ScreenMotion.tsx">
+import type { ReactNode } from 'react';
+
+interface Props {
+  children: ReactNode;
+}
+
+/** Shared entrance motion for each game screen. The parent keys this by screen name. */
+export function ScreenMotion({ children }: Props) {
+  return <div className="screen-motion">{children}</div>;
+}
+</file>
+
+<file path="src/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+</file>
+
+<file path="index.html">
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet" />
+    <title>Gray Gig — Prototype</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="package.json">
+{
+  "name": "gray-gig",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0"
+  }
+}
+</file>
+
+<file path="postcss.config.js">
+export default {
+  plugins: { tailwindcss: {}, autoprefixer: {} },
+};
+</file>
+
+<file path="tailwind.config.ts">
+import type { Config } from 'tailwindcss';
+
+export default {
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['"Noto Sans Thai"', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+} satisfies Config;
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "types": ["vite/client"]
+  },
+  "include": ["src"]
+}
+</file>
+
+<file path="vite.config.ts">
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({ plugins: [react()] });
+</file>
+
+<file path="src/app/constants.ts">
+import type { TimeBlock } from './types';
+
+export const TOTAL_DAYS = 14;   // เส้นตายเริ่มต้น (เก็บไว้ใช้อ้างอิง)
+export const DEBT_GOAL = 10_000;
+export const DAILY_COST = 150;
+
+// ค่าตั้งต้นของระบบหนี้
+export const START_DEBT = {
+  goal: DEBT_GOAL,
+  deadlineDay: TOTAL_DAYS,  // เส้นตายเริ่มต้นที่ 14 วัน
+  extensionsLeft: 2,        // ขอขยายหนี้ได้ 2 ครั้ง
+  creditorMood: 50,         // อารมณ์เจ้าหนี้เริ่มต้น (กลางๆ)
+  lastCollectionDay: 0,     // ยังไม่เคยถูกทวง
+} as const;
+
+// ค่าใช้จ่ายและผลของการขอขยายหนี้
+export const EXTENSION_COST = 200;        // เงินที่ต้องจ่ายเพื่อขอขยาย
+export const EXTENSION_MOOD_PENALTY = 5;  // อารมณ์เจ้าหนี้ลดลงเมื่อขอขยายสำเร็จ
+
+export const START_STATS = { money: 300, heat: 0, rep: 1, sanity: 80 } as const;
+export const START_TIME = { day: 1, block: 'morning' as TimeBlock };
+
+export const TIME_BLOCKS: TimeBlock[] = ['morning', 'afternoon', 'night'];
+export const BLOCK_LABEL: Record<TimeBlock, string> = {
+  morning: 'เช้า',
+  afternoon: 'บ่าย',
+  night: 'ดึก',
+};
+
+export const NORMAL_LIFE = {
+  work: { money: 200, heat: -3, sanity: -5, label: 'ไปทำงานประจำ' },
+  rest: { money: 0,   heat: -10, sanity: 20, label: 'นอนพักผ่อน' },
+} as const;
+
+export const CLAMP = {
+  heat:   [0, 100] as [number, number],
+  sanity: [0, 100] as [number, number],
+  rep:    [1, 5]   as [number, number],
+  mood:   [0, 100] as [number, number], // เพิ่มขอบเขตอารมณ์เจ้าหนี้
+};
+</file>
+
+<file path="src/data/events.ts">
+import type { Stats } from '../app/types';
+
+export interface GameEvent {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  choices: {
+    label: string;
+    effect: Partial<Stats>;
+    resultText: string;
+  }[];
+}
+
+export const RANDOM_EVENTS: GameEvent[] = [
+  {
+    id: 'event-cop-bribe',
+    title: 'ตำรวจเรียกตรวจ',
+    description: 'คุณกำลังเดินอยู่ดีๆ ตำรวจก็เข้ามาขวางหน้าและขอตรวจกระเป๋า',
+    icon: '👮',
+    choices: [
+      { label: 'จ่ายเงินใต้โต๊ะ (💰 -100)', effect: { money: -100, heat: -20 }, resultText: 'คุณรอดตัวไปได้ แต่กระเป๋าแบนลง' },
+      { label: 'วิ่งหนี! (🧠 -15, 🔥 +20)', effect: { sanity: -15, heat: 20 }, resultText: 'คุณวิ่งสุดชีวิตจนปอดแทบแตก รอดมาได้แต่ตำรวจจำหน้าได้' },
+    ],
+  },
+  {
+    id: 'event-found-wallet',
+    title: 'เก็บกระเป๋าสตางค์ได้',
+    description: 'คุณเจอกระเป๋าสตางค์ตกอยู่บนพื้น ข้างในมีเงินสดและบัตรประชาชน',
+    icon: '👛',
+    choices: [
+      { label: 'เก็บเงินแล้วทิ้งกระเป๋า (💰 +200, 🔥 +10)', effect: { money: 200, heat: 10 }, resultText: 'คุณได้เงินมาใช้ แต่รู้สึกผิดนิดหน่อย' },
+      { label: 'นำไปส่งคืนตำรวจ (⭐ +1, 🧠 +10)', effect: { rep: 1, sanity: 10 }, resultText: 'เจ้าของกระเป๋าขอบคุณคุณมาก คุณรู้สึกดีกับตัวเอง' },
+    ],
+  },
+  {
+    id: 'event-nightmare',
+    title: 'ฝันร้ายเรื่องหนี้สิน',
+    description: 'คุณฝันเห็นเจ้าหนี้มาจ่อปืนที่หัว เพราะคุณส่งเงินไม่ตรงเวลา',
+    icon: '💤',
+    choices: [
+      { label: 'ตื่นขึ้นมาทำงานทั้งคืน (🧠 -20, 💰 +50)', effect: { sanity: -20, money: 50 }, resultText: 'คุณตื่นมาและทำงานจนเช้า ได้เงินมาเพิ่มแต่สภาพจิตใจย่ำแย่' },
+      { label: 'กินยานอนหลับต่อ (🧠 +10, 🔥 +5)', effect: { sanity: 10, heat: 5 }, resultText: 'คุณหลับต่อจนเช้า รู้สึกสดชื่นขึ้น แต่เริ่มติดยา' },
+    ],
+  },
+  // --- เพิ่มใหม่ ---
+  {
+    id: 'event-dumpster',
+    title: 'ข้าวกล่องข้างถังขยะ',
+    description: 'คุณหิวมาก และเห็นข้าวกล่องที่ยังดูดีวางอยู่ข้างถังขยะหลังร้านสะดวกซื้อ',
+    icon: '🍱',
+    choices: [
+      { label: 'กินมันเข้าไป (💰 +50, 🧠 -15)', effect: { money: 50, sanity: -15 }, resultText: 'คุณประหยัดค่าข้าวได้ แต่รู้สึกแย่กับตัวเองและท้องเสียเล็กน้อย' },
+      { label: 'ทิ้งไปและซื้อข้าวใหม่ (💰 -80)', effect: { money: -80 }, resultText: 'คุณยอมจ่ายแพงเพื่อรักษาศักดิ์ศรีและสุขภาพ' },
+    ],
+  },
+  {
+    id: 'event-loan-shark',
+    title: 'เจ้าหนี้โทรมา',
+    description: 'เสียงโทรศัพท์ดังขึ้น คุณเห็นชื่อ "พี่โจ" เจ้าหนี้รายใหญ่ที่คุณยังค้างเงินอยู่',
+    icon: '📱',
+    choices: [
+      { label: 'รับสายและอ้อนวอน (🧠 -20)', effect: { sanity: -20 }, resultText: 'พี่โจด่าคุณยกใหญ่ แต่ให้เวลาอีก 2 วัน' },
+      { label: 'ปิดเครื่องหนี (🔥 +15)', effect: { heat: 15 }, resultText: 'คุณปิดเครื่อง แต่รู้ว่าพี่โจต้องตามหาคุณเจอแน่' },
+    ],
+  },
+  {
+    id: 'event-cat',
+    title: 'แมวจรข้างทาง',
+    description: 'มีแมวจรสีดำตัวหนึ่งเดินเข้ามาถูขาคุณ มันดูหิวและหนาว',
+    icon: '🐈‍⬛',
+    choices: [
+      { label: 'ซื้ออาหารให้มัน (💰 -30, 🧠 +20)', effect: { money: -30, sanity: 20 }, resultText: 'แมวกินอาหารอย่างมีความสุข คุณรู้สึกใจฟูขึ้นมาก' },
+      { label: 'เตะมันออกไป (🔥 +5, 🧠 -10)', effect: { heat: 5, sanity: -10 }, resultText: 'คุณระบายความหงุดหงิดใส่แมว แต่รู้สึกผิดในใจ' },
+    ],
+  },
+  {
+    id: 'event-blood-money',
+    title: 'งานด่วนค่าเหนื่อยสูง',
+    description: 'มีสายปริศนาโทรมา เสนองานด่วนให้ "ขนของ" ในคืนนี้ จ่ายเงินสด 1,000 เหรียญ แต่ไม่บอกว่าเป็นอะไร',
+    icon: '📞',
+    choices: [
+      { label: 'รับงานทันที (💰 +1000, 🔥 +30)', effect: { money: 1000, heat: 30 }, resultText: 'คุณได้เงินก้อนโตมา แต่ต้องระแวงตลอดคืน' },
+      { label: 'ปฏิเสธ (🧠 +5)', effect: { sanity: 5 }, resultText: 'คุณวางสาย รู้สึกโล่งใจที่ไม่ต้องเสี่ยง' },
+    ],
+  },
+  {
+    id: 'event-hospital',
+    title: 'ปวดหัวอย่างรุนแรง',
+    description: 'คุณเริ่มปวดหัวตุบๆ จนมองเห็นภาพซ้อน อาจเป็นเพราะความเครียดสะสม',
+    icon: '💊',
+    choices: [
+      { label: 'ไปหาหมอ (💰 -200, 🧠 +30)', effect: { money: -200, sanity: 30 }, resultText: 'หมอให้ยาและแนะนำให้พักผ่อน คุณรู้สึกดีขึ้นเยอะ' },
+      { label: 'อดทนไว้ (🧠 -25, 💰 +0)', effect: { sanity: -25 }, resultText: 'คุณกินพาราเซตามอลและฝืนทำงานต่อ สติเริ่มหลุดลอย' },
+    ],
+  },
+  {
+    id: 'event-free-food',
+    title: 'ร้านอาหารแจกฟรี',
+    description: 'คุณเดินผ่านร้านก๋วยเตี๋ยว ร้านกำลังฉลองเปิดสาขาใหม่และแจกอาหารฟรี 1 มื้อ',
+    icon: '🍜',
+    choices: [
+      { label: 'ต่อคิวรับอาหาร (🧠 +15, 💰 +20)', effect: { sanity: 15, money: 20 }, resultText: 'คุณได้กินฟรีและประหยัดค่าข้าวไปได้ 1 มื้อ' },
+      { label: 'รีบไปทำงานต่อ (💰 +0, 🔥 -5)', effect: { heat: -5 }, resultText: 'คุณไม่สนใจอาหาร แต่ก็เดินเลี่ยงไปได้เร็วขึ้น' },
+    ],
+  },
+];
+</file>
+
+<file path="src/screens/EventScreen.tsx">
+import { useGame, patch } from '../app/store';
+import { StatusBar } from '../ui/StatusBar';
+import { Button } from '../ui/Button';
+import { goTo } from '../systems/fsm';
+import { applyEventEffect } from '../systems/eventSystem';
+import { applyDebtEffect } from '../systems/debtSystem';
+
+export function EventScreen() {
+  const activeEvent = useGame(s => s.activeEvent) as any;
+  if (!activeEvent) return null;
+
+  const handleChoice = (choice: any) => {
+    // คำนวณค่าสถานะใหม่
+    const newStats = applyEventEffect(choice.effect);
+
+    // ถ้าตัวเลือกนี้มีผลต่อระบบหนี้ (เหตุการณ์เจ้าหนี้) ให้จัดการด้วย
+    if (choice.debtEffect) {
+      applyDebtEffect(choice.debtEffect);
+    }
+
+    patch({
+      stats: newStats,
+      lastResult: { title: activeEvent.title, lines: [choice.resultText] },
+      activeEvent: null,
+    });
+
+    if (newStats.money < 0 || newStats.sanity <= 0) {
+      goTo('gameOver');
+      return;
+    }
+    goTo('home');
+  };
+
+  return (
+    <>
+      <StatusBar />
+      <div className="flex-1 flex flex-col items-center justify-center p-6 gap-6 bg-neutral-900/95 screen-motion">
+        <div className="w-24 h-24 rounded-full bg-neutral-800 border-2 border-red-500/30 flex items-center justify-center text-5xl shadow-[0_0_30px_rgba(239,68,68,0.2)] animate-pulse">
+          {activeEvent.icon}
+        </div>
+        <div className="text-center space-y-2">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-red-400 font-bold">Unexpected Event</div>
+          <h2 className="text-xl font-bold text-white">{activeEvent.title}</h2>
+          <p className="text-sm text-neutral-300 leading-relaxed px-2">
+            {activeEvent.description}
+          </p>
+        </div>
+        <div className="w-full space-y-3 mt-4">
+          {activeEvent.choices.map((choice: any, index: number) => (
+            <Button
+              key={index}
+              variant={index === 0 ? 'primary' : 'secondary'}
+              onClick={() => handleChoice(choice)}
+              className="text-left justify-start !py-4"
+            >
+              {choice.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+</file>
+
+<file path="src/systems/lifeSystem.ts">
+import { NORMAL_LIFE, CLAMP } from '../app/constants';
+import { patch, pushLog, useGame } from '../app/store';
+import { goTo } from './fsm';
+import { consumeBlocks } from './timeSystem';
+import { rollRandomEvent } from './eventSystem';
+
+const clamp = (v: number, [lo, hi]: [number, number]) =>
+  Math.max(lo, Math.min(hi, v));
+
+export function doNormalLife(action: keyof typeof NORMAL_LIFE): void {
+  const s = useGame.getState();
+  const cfg = NORMAL_LIFE[action];
+
+  const stats = {
+    ...s.stats,
+    money: s.stats.money + cfg.money,
+    heat: clamp(s.stats.heat + cfg.heat, CLAMP.heat),
+    sanity: clamp(s.stats.sanity + cfg.sanity, CLAMP.sanity),
+  };
+
+  const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
+  patch({
+    stats,
+    lastResult: {
+      title: cfg.label,
+      lines: [`💰 ${sign(cfg.money)}`, `🔥 ${sign(cfg.heat)}`, `🧠 ${sign(cfg.sanity)}`],
+    },
+  });
+  pushLog(`${cfg.label} — $${cfg.money}, 🔥${cfg.heat}, 🧠${cfg.sanity}`);
+
+  consumeBlocks(1);
+
+  // ถ้า action ทำให้ sanity แตะ 0 หลัง consumeBlocks แต่ยังอยู่ home
+  const final = useGame.getState();
+  if (final.screen === 'home' && (final.stats.sanity <= 0 || final.stats.money < 0)) {
+    goTo('gameOver');
+    return;
+  }
+  // เช็คสุ่ม Event (ถ้าจบวันแล้วจะไม่ทำงาน)
+  if (final.screen === 'home') {
+    const ev = rollRandomEvent();
+    if (ev) {
+      patch({ activeEvent: ev });
+      goTo('event'); // เด้งไปหน้า Event
+    }
+  }
+}
+</file>
+
+<file path="src/systems/timeSystem.ts">
+import { TIME_BLOCKS, DAILY_COST, CLAMP } from '../app/constants';
+import { patch, pushLog, useGame } from '../app/store';
+import { goTo } from './fsm';
+
+const clamp = (v: number, [lo, hi]: [number, number]) =>
+  Math.max(lo, Math.min(hi, v));
+
+export function remainingBlocksInDay(): number {
+  const { time } = useGame.getState();
+  return TIME_BLOCKS.length - TIME_BLOCKS.indexOf(time.block);
+}
+
+export function consumeBlocks(n: 1 | 2): void {
+  for (let i = 0; i < n; i++) {
+    const { time } = useGame.getState();
+    const idx = TIME_BLOCKS.indexOf(time.block);
+    if (idx < TIME_BLOCKS.length - 1) {
+      patch({ time: { ...time, block: TIME_BLOCKS[idx + 1] } });
+    } else {
+      runEndOfDay();
+      return;
+    }
+  }
+}
+
+export function runEndOfDay(): void {
+  const s = useGame.getState();
+
+  // ชนะ: หาเงินครบเป้า → จ่ายหนี้ทันที (ตรวจก่อนหักค่าใช้จ่ายประจำวัน)
+  if (s.stats.money >= s.debt.goal) {
+    goTo('gameWin');
+    return;
+  }
+
+  // หักค่าใช้จ่ายประจำวัน และลดความร้อนลงเล็กน้อย
+  const nextStats = {
+    ...s.stats,
+    money: s.stats.money - DAILY_COST,
+    heat: clamp(s.stats.heat - 5, CLAMP.heat),
+  };
+  patch({ stats: nextStats });
+  pushLog(`Day ${s.time.day} จบ — ค่าใช้จ่าย $${DAILY_COST}`);
+
+  // แพ้: เงินหมดตัว
+  if (nextStats.money < 0) { goTo('gameOver'); return; }
+  // แพ้: สติแตก
+  if (nextStats.sanity <= CLAMP.sanity[0]) { goTo('gameOver'); return; }
+  // แพ้: เลยเส้นตาย แต่ยังจ่ายหนี้ไม่ครบ
+  if (s.time.day >= s.debt.deadlineDay) { goTo('gameOver'); return; }
+
+  patch({ time: { day: s.time.day + 1, block: 'morning' }, lastResult: null });
+  goTo('endOfDay');
+}
+</file>
+
+<file path="src/ui/Button.tsx">
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
+
+type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
+
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: Variant;
+  children: ReactNode;
+}
+
+const VARIANT: Record<Variant, string> = {
+  primary:   'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-950/30',
+  secondary: 'bg-neutral-700 hover:bg-neutral-600 text-white',
+  danger:    'bg-red-600 hover:bg-red-500 text-white',
+  ghost:     'bg-transparent hover:bg-white/5 text-neutral-200 border border-white/10',
+};
+
+export function Button({ variant = 'primary', children, className = '', ...rest }: Props) {
+  return (
+    <button
+      {...rest}
+      className={`game-button w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed ${VARIANT[variant]} ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+</file>
+
+<file path="src/ui/PhoneFrame.tsx">
+import type { ReactNode } from 'react';
+
+export function PhoneFrame({ children }: { children: ReactNode }) {
+  return (
+    <div className="phone-stage">
+      <div className="phone-device">
+        {children}
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path=".gitignore">
+node_modules
+dist
+*.tsbuildinfo
+</file>
+
+<file path="README.md">
+# gray-gig-1
+Created with Codespaces
+</file>
+
+<file path="src/app/store.ts">
+import { create } from 'zustand';
+import type { GameState } from './types';
+import { START_STATS, START_TIME, START_DEBT } from './constants';
+
+export const useGame = create<GameState>(() => ({
+  screen: 'boot',
+  stats: { ...START_STATS },
+  time: { ...START_TIME },
+  activeGigId: null,
+  lastResult: null,
+  log: [],
+  activeEvent: null,
+  debt: { ...START_DEBT }, // เพิ่มสถานะหนี้
+}));
+
+export const patch = (p: Partial<GameState>) => useGame.setState(p);
+
+export const pushLog = (line: string) =>
+  useGame.setState(s => ({ log: [...s.log, line].slice(-50) }));
+</file>
+
+<file path="src/app/types.ts">
+export type TimeBlock = 'morning' | 'afternoon' | 'night';
+
+export type Screen =
+  | 'boot' | 'home' | 'gigBoard' | 'gigDetail'
+  | 'activeGig' | 'endOfDay' | 'gameOver' | 'gameWin'
+  | 'event';
+
+export interface Stats {
+  money: number;
+  heat: number;   // 0..100
+  rep: number;    // 1..5
+  sanity: number; // 0..100
+}
+
+export interface TimeState { day: number; block: TimeBlock; }
+
+export interface Gig {
+  id: string;
+  title: string;
+  description: string;
+  tier: 1 | 2 | 3 | 4 | 5;
+  durationBlocks: 1 | 2;
+  rewardMoney: number;
+  rewardRep: number;
+  heatGain: number;
+  sanityCost: number;
+  policeRisk: number;
+}
+
+export interface LastResult {
+  title: string;
+  lines: string[];
+}
+
+// ผลกระทบต่อระบบหนี้ (ใช้กับเหตุการณ์ของเจ้าหนี้)
+export interface DebtEffect {
+  mood?: number;      // เปลี่ยนอารมณ์เจ้าหนี้ (+ ดีขึ้น / - แย่ลง)
+  deadline?: number;  // เปลี่ยนเส้นตาย (+ ยืดออก / - เร่งเข้า)
+}
+
+// สถานะหนี้สินและเจ้าหนี้
+export interface DebtState {
+  goal: number;              // เป้าหมายเงินที่ต้องจ่าย
+  deadlineDay: number;       // เส้นตาย (ขยับได้)
+  extensionsLeft: number;    // จำนวนครั้งที่ขอขยายหนี้ได้
+  creditorMood: number;      // อารมณ์เจ้าหนี้ (0=โกรธจัด, 100=ใจดี)
+  lastCollectionDay: number; // วันที่ถูกทวงล่าสุด (กันทวงซ้ำในวันเดียว)
+}
+
+export interface GameState {
+  screen: Screen;
+  stats: Stats;
+  time: TimeState;
+  activeGigId: string | null;
+  lastResult: LastResult | null;
+  log: string[];
+  activeEvent: any | null;
+  debt: DebtState; // เพิ่มระบบหนี้เข้าไปในเกม
+}
+</file>
+
+<file path="src/data/gigs.ts">
+import type { Gig } from '../app/types';
+
+export const GIGS: Gig[] = [
+  {
+    id: 'gig-01',
+    title: 'ส่งพัสดุ "ไม่ต้องถาม"',
+    description: 'ลูกค้าฝากกล่องปิดผนึก ส่งข้ามเมือง ห้ามเขย่า',
+    tier: 1, durationBlocks: 1,
+    rewardMoney: 400, rewardRep: 0,
+    heatGain: 10, sanityCost: 5, policeRisk: 0.10,
+  },
+  {
+    id: 'gig-02',
+    title: 'ถ่ายรูปงานแต่ง (ไม่เชิญ)',
+    description: 'เจ้านายอยากได้ภาพ "บรรยากาศ" ของงานที่ไม่ให้เข้า',
+    tier: 2, durationBlocks: 2,
+    rewardMoney: 900, rewardRep: 1,
+    heatGain: 20, sanityCost: 15, policeRisk: 0.20,
+  },
+  {
+    id: 'gig-03',
+    title: 'เป็นตัวประกอบ MV ตำรวจ',
+    description: 'ถ่ายทำ 3 ชั่วโมง ไม่มีค่าตัว แต่มียืมเงิน',
+    tier: 2, durationBlocks: 2,
+    rewardMoney: 700, rewardRep: 1,
+    heatGain: 5, sanityCost: 10, policeRisk: 0.05,
+  },
+  {
+    id: 'gig-04',
+    title: 'ขนของ "ห้ามเปิด"',
+    description: 'กล่องมีเสียง...แต่ลูกค้าจ่ายดี',
+    tier: 3, durationBlocks: 2,
+    rewardMoney: 1800, rewardRep: 2,
+    heatGain: 35, sanityCost: 25, policeRisk: 0.35,
+  },
+  {
+    id: 'gig-05',
+    title: 'ปลอมตัวเป็นหมอ 1 วัน',
+    description: 'ลูกค้าอยากได้ใบรับรองสุขภาพปลอม (ไม่ต้องรักษาใคร)',
+    tier: 4, durationBlocks: 2,
+    rewardMoney: 3500, rewardRep: 3,
+    heatGain: 50, sanityCost: 40, policeRisk: 0.50,
+  },
+  // --- เพิ่มใหม่ ---
+  {
+    id: 'gig-06',
+    title: 'ล้วงกระเป๋าในตลาดนัด',
+    description: 'เป้าหมายคือนักท่องเที่ยวต่างชาติที่เดินชมตลาดเพลินๆ',
+    tier: 1, durationBlocks: 1,
+    rewardMoney: 500, rewardRep: 1,
+    heatGain: 25, sanityCost: 15, policeRisk: 0.20,
+  },
+  {
+    id: 'gig-07',
+    title: 'เป็นหน้าม้าในบ่อนเถื่อน',
+    description: 'แค่ยืนถือไพ่และทำหน้าตาเฉยๆ ไม่ให้ใครจับได้',
+    tier: 3, durationBlocks: 2,
+    rewardMoney: 2000, rewardRep: 2,
+    heatGain: 40, sanityCost: 30, policeRisk: 0.40,
+  },
+  {
+    id: 'gig-08',
+    title: 'ขับรถพาหนี (Getaway Driver)',
+    description: 'รอรับคนที่วิ่งออกมาจากตึก แล้วเหยียบมิดไมล์ทันที',
+    tier: 4, durationBlocks: 2,
+    rewardMoney: 4000, rewardRep: 4,
+    heatGain: 60, sanityCost: 45, policeRisk: 0.60,
+  },
+  {
+    id: 'gig-09',
+    title: 'ส่งสารขู่เจ้าหนี้',
+    description: 'แค่เอากล่องปริศนาไปวางหน้าบ้าน ไม่ต้องพูดอะไร',
+    tier: 2, durationBlocks: 1,
+    rewardMoney: 800, rewardRep: 1,
+    heatGain: 15, sanityCost: 20, policeRisk: 0.15,
+  },
+  {
+    id: 'gig-10',
+    title: 'ลักลอบขน SIM Card',
+    description: 'ซ่อนซิมการ์ดในรองเท้า แล้วเดินผ่านด่านตรวจ',
+    tier: 5, durationBlocks: 2,
+    rewardMoney: 5500, rewardRep: 5,
+    heatGain: 75, sanityCost: 50, policeRisk: 0.70,
+  },
+];
+</file>
+
+<file path="src/screens/ActiveGigScreen.tsx">
+import { useGame } from '../app/store';
+import { GIGS } from '../data/gigs';
+import { StatusBar } from '../ui/StatusBar';
+import { Button } from '../ui/Button';
+import { resolveGig } from '../systems/gigSystem';
+
+export function ActiveGigScreen() {
+  const activeId = useGame(s => s.activeGigId);
+  const screen = useGame(s => s.screen); // <-- เพิ่มบรรทัดนี้
+  const gig = GIGS.find(g => g.id === activeId);
+
+  // ถ้าไม่มีงาน หรือหน้าจอไม่ใช่ activeGig แล้ว (เช่น เด้งไป Event) ให้หยุดแสดงผล
+  if (!gig || screen !== 'activeGig') return null;
+
+  return (
+    <>
+      <StatusBar />
+      <div className="active-gig-screen flex-1 flex flex-col items-center justify-center p-6 gap-4">
+        <div className="gig-orbit" aria-hidden="true">
+          <span className="gig-orbit-ring" />
+          <span className="text-5xl relative z-10">🕶️</span>
+        </div>
+        <div className="text-center">
+          <div className="active-kicker text-[10px] uppercase tracking-[0.28em] text-emerald-400/70">Contract in progress</div>
+          <div className="text-xs text-neutral-400 mt-2">กำลังทำงาน...</div>
+          <h2 className="text-lg font-bold mt-1">{gig.title}</h2>
+        </div>
+        <div className="active-progress" aria-label="งานกำลังดำเนินการ">
+          <span />
+          <span />
+          <span />
+        </div>
+        <Button variant="primary" onClick={() => resolveGig(gig)}>
+          เสร็จงาน
+        </Button>
+      </div>
+    </>
+  );
+}
+</file>
+
+<file path="src/screens/BootScreen.tsx">
+import { useEffect } from 'react';
+import { goTo } from '../systems/fsm';
+
+export function BootScreen() {
+  useEffect(() => {
+    const t = setTimeout(() => goTo('home'), 800);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div className="boot-screen flex flex-col items-center justify-center h-full text-white">
+      <div className="boot-emblem" aria-hidden="true">
+        <span className="boot-emblem-core">G</span>
+      </div>
+      <div className="boot-wordmark text-3xl font-bold tracking-[0.22em]">
+        GRAY GIG
+      </div>
+      <div className="boot-caption mt-3 text-[10px] tracking-[0.32em] text-neutral-500 uppercase">
+        <span className="boot-live-dot" />
+        Secure connection established
+      </div>
+      <div className="mt-8 text-[11px] text-neutral-600 tracking-widest">
+        v0.1.0 — prototype
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/screens/GameOverScreen.tsx">
+import { useGame } from '../app/store';
+import { Button } from '../ui/Button';
+
+export function GameOverScreen() {
+  const { screen, stats, time, debt } = useGame(s => ({ screen: s.screen, stats: s.stats, time: s.time, debt: s.debt }));
+  const isWin = screen === 'gameWin';
+
+  let title = '';
+  let subtitle = '';
+
+  if (isWin) {
+    title = '🏆 จ่ายหนี้ครบ!';
+    subtitle = `คุณหาเงินได้ $${stats.money} และจ่ายหนี้ให้พี่โจครบภายในวัน ${time.day} คุณเป็นอิสระแล้ว!`;
+  } else if (stats.sanity <= 0) {
+    title = '🧠 สติแตก';
+    subtitle = 'คุณทนความกดดันไม่ไหว สภาพจิตใจพังทลาย และยอมแพ้ทุกอย่าง';
+  } else if (stats.money < 0) {
+    title = '💸 เงินหมดตัว';
+    subtitle = 'คุณถูกไล่ที่ ไม่มีเงินจ่ายค่ากินอยู่ และไม่มีใครช่วยเหลือ';
+  } else {
+    // แพ้เพราะเลยเส้นตาย แต่ยังจ่ายไม่ครบ
+    title = '🕴️ พี่โจมาเก็บหนี้';
+    subtitle = `เลยกำหนดวัน ${debt.deadlineDay} แล้ว แต่คุณมีแค่ $${stats.money} (ต้องการ $${debt.goal}) พี่โจไม่รออีกต่อไป...`;
+  }
+
+  return (
+    <div className={`flex-1 flex flex-col items-center justify-center p-6 gap-6 ${isWin ? 'bg-emerald-950/40' : 'bg-red-950/40'}`}>
+      <div className="text-center">
+        <h1 className="text-3xl font-bold mb-3">{title}</h1>
+        <p className="text-sm text-neutral-300 leading-relaxed px-2">{subtitle}</p>
+      </div>
+      <div className="bg-black/30 rounded-xl p-4 w-full max-w-xs text-sm space-y-2 border border-white/10">
+        <div className="flex justify-between"><span className="text-neutral-400">วันที่ไปถึง:</span> <span>Day {time.day} / {debt.deadlineDay}</span></div>
+        <div className="flex justify-between"><span className="text-neutral-400">เงินคงเหลือ:</span> <span>${stats.money} / ${debt.goal}</span></div>
+        <div className="flex justify-between"><span className="text-neutral-400">สติคงเหลือ:</span> <span>{stats.sanity}</span></div>
+        <div className="flex justify-between"><span className="text-neutral-400">อารมณ์เจ้าหนี้:</span> <span>{debt.creditorMood}</span></div>
+      </div>
+      <Button variant="primary" onClick={() => window.location.reload()} className="max-w-xs">
+        เริ่มเกมใหม่
+      </Button>
+    </div>
+  );
+}
+</file>
+
+<file path="src/screens/GigBoardScreen.tsx">
+import { useState, useEffect } from 'react';
+import { useGame } from '../app/store';
+import { GIGS } from '../data/gigs';
+import type { Gig } from '../app/types';
+import { StatusBar } from '../ui/StatusBar';
+import { Button } from '../ui/Button';
+import { goTo } from '../systems/fsm';
+import { remainingBlocksInDay } from '../systems/timeSystem';
+
+export function GigBoardScreen() {
+  const rep = useGame(s => s.stats.rep);
+  const time = useGame(s => s.time);
+  const remaining = remainingBlocksInDay();
+  
+  const [dailyGigs, setDailyGigs] = useState<Gig[]>([]);
+
+  // สุ่มงานใหม่ทุกครั้งที่เข้าหน้านี้ หรือเปลี่ยนวัน/ช่วงเวลา
+  useEffect(() => {
+    const visible = GIGS.filter(g => g.tier <= rep + 1);
+    
+    // สลับลำดับ (Shuffle) แบบง่ายๆ
+    const shuffled = [...visible].sort(() => Math.random() - 0.5);
+    
+    // หยิบมาแค่ 4 งานแรก (ถ้างานมีไม่ถึง 4 ก็เอาทั้งหมด)
+    setDailyGigs(shuffled.slice(0, 4));
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time.day, time.block, rep]); // รีเฟรชเมื่อวันหรือ rep เปลี่ยน
+
+  return (
+    <>
+      <StatusBar />
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.22em] text-emerald-400/70">Dark network</div>
+            <h2 className="font-bold tracking-tight">งานเทาที่เปิดอยู่</h2>
+          </div>
+          <Button variant="ghost" className="!w-auto !py-1.5 !px-3 !text-xs" onClick={() => goTo('home')}>
+            ← กลับ
+          </Button>
+        </div>
+
+        <div className="board-caption">
+          <span className="board-live-dot" />
+          <span>AVAILABLE CONTRACTS</span>
+          <span className="ml-auto">{dailyGigs.length} LISTED</span>
+        </div>
+
+        {dailyGigs.map(gig => {
+          const fits = gig.durationBlocks <= remaining;
+          return (
+            <button
+              key={gig.id}
+              disabled={!fits}
+              onClick={() => {
+                useGame.setState({ activeGigId: gig.id });
+                goTo('gigDetail');
+              }}
+              className="gig-card w-full text-left rounded-xl bg-neutral-800/50 border border-white/5 hover:border-emerald-600/50 disabled:opacity-40 p-3 transition-all duration-200 active:scale-[0.99]"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="font-semibold text-sm">{gig.title}</div>
+                <div className="gig-tier text-[10px] shrink-0">TIER {gig.tier}</div>
+              </div>
+              <div className="text-xs text-neutral-400 mt-1 line-clamp-2">{gig.description}</div>
+              <div className="text-[11px] text-neutral-500 mt-3 flex flex-wrap gap-x-3 gap-y-1">
+                <span>💰 ${gig.rewardMoney}</span>
+                <span>⏱ {gig.durationBlocks} ช่วง</span>
+                <span>🔥 +{gig.heatGain}</span>
+              </div>
+              {!fits && <div className="text-[11px] text-red-400 mt-2">เวลาเหลือไม่พอ</div>}
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+</file>
+
+<file path="src/screens/HomeScreen.tsx">
+import { useEffect, useRef } from 'react';
+import { useGame } from '../app/store';
+import { StatusBar } from '../ui/StatusBar';
+import { Button } from '../ui/Button';
+import { doNormalLife } from '../systems/lifeSystem';
+import { goTo } from '../systems/fsm';
+import { DAILY_COST, EXTENSION_COST } from '../app/constants';
+import { requestExtension, shouldCreditorCallToday, triggerCreditorCall } from '../systems/debtSystem';
+
+export function HomeScreen() {
+  const lastResult = useGame(s => s.lastResult);
+  const { time, stats, debt } = useGame(s => ({ time: s.time, stats: s.stats, debt: s.debt }));
+
+  const remainingBlocks = 3 - ['morning', 'afternoon', 'night'].indexOf(time.block);
+  const daysLeft = debt.deadlineDay - time.day;
+  const moneyNeeded = debt.goal - stats.money;
+  const dailyTarget = Math.ceil(Math.max(0, moneyNeeded) / Math.max(1, daysLeft));
+
+  // คำอธิบายอารมณ์เจ้าหนี้แบบสั้นๆ
+  const moodLabel =
+    debt.creditorMood >= 70 ? '😌 ใจดี' :
+    debt.creditorMood >= 40 ? '😐 กลางๆ' :
+    debt.creditorMood >= 20 ? '😠 ไม่พอใจ' : '🤬 โกรธจัด';
+
+  // กันการเช็คซ้ำใน mount เดียว (รองรับ StrictMode)
+  const checkedRef = useRef(false);
+
+  // เมื่อเข้าหน้านี้ เช็คว่าพี่โจจะโทรมาทวงหนี้ไหม
+  useEffect(() => {
+    if (checkedRef.current) return;
+    checkedRef.current = true;
+    if (shouldCreditorCallToday()) {
+      triggerCreditorCall();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <>
+      <StatusBar />
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {/* แจ้งเตือนอันตราย */}
+        {(stats.sanity <= 20 || stats.heat >= 80 || stats.money < DAILY_COST) && (
+          <div className="rounded-xl bg-red-950/60 border border-red-500/50 p-3 text-red-200 animate-pulse">
+            <div className="font-bold text-xs flex items-center gap-1">⚠️ คำเตือนอันตราย</div>
+            <ul className="text-[11px] mt-1 space-y-0.5 opacity-90">
+              {stats.sanity <= 20 && <li>- สติคุณใกล้แตก (เหลือ {stats.sanity}) ถ้าถึง 0 คุณจะแพ้ทันที</li>}
+              {stats.heat >= 80 && <li>- ตำรวจกำลังจับตาคุณอย่างหนัก (Heat {stats.heat}/100) ระวังตัวด้วย</li>}
+              {stats.money < DAILY_COST && <li>- เงินคุณไม่พอจ่ายค่ากินอยู่พรุ่งนี้ (${DAILY_COST})!</li>}
+            </ul>
+          </div>
+        )}
+
+        {/* ผลลัพธ์จาก action ล่าสุด */}
+        {lastResult && (
+          <div className="rounded-xl bg-emerald-900/30 border border-emerald-700/40 p-3">
+            <div className="font-semibold text-sm text-emerald-300">{lastResult.title}</div>
+            <ul className="mt-1 text-xs text-emerald-100/80 space-y-0.5">
+              {lastResult.lines.map((l, i) => <li key={i}>{l}</li>)}
+            </ul>
+          </div>
+        )}
+
+        {/* การ์ดหนี้และเส้นตาย */}
+        <div className="rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700 p-4 shadow-lg">
+          <div className="flex justify-between items-start">
+            <div>
+              <div className="text-[10px] uppercase tracking-wider text-red-400 font-bold mb-1">Deadline</div>
+              <div className="text-xl font-bold text-white">เป้าหมาย: จ่ายหนี้ ${debt.goal}</div>
+            </div>
+            <div className="text-right">
+              <div className={`text-2xl font-bold ${daysLeft <= 2 ? 'text-red-400' : 'text-emerald-400'}`}>{daysLeft}</div>
+              <div className="text-[10px] text-neutral-400">วันที่เหลือ</div>
+            </div>
+          </div>
+          <div className="mt-3 w-full bg-neutral-950 rounded-full h-2.5">
+            <div
+              className="bg-emerald-500 h-2.5 rounded-full transition-all duration-1000"
+              style={{ width: `${Math.min(100, (stats.money / debt.goal) * 100)}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-[11px] text-neutral-400 mt-1.5">
+            <span>เก็บได้แล้ว ${stats.money}</span>
+            <span>ต้องหาเพิ่มวันละ ~${dailyTarget}</span>
+          </div>
+        </div>
+
+        {/* การ์ดเจ้าหนี้ + ปุ่มขอขยายหนี้ */}
+        <div className="rounded-xl bg-neutral-800/50 border border-white/5 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <div className="text-[10px] uppercase tracking-wider text-orange-400 font-bold">เจ้าหนี้</div>
+              <div className="text-sm font-bold text-white">🕴️ พี่โจ</div>
+            </div>
+            <div className="text-right text-[11px]">
+              <div className="text-neutral-300">อารมณ์: {moodLabel}</div>
+              <div className="text-neutral-500">ขยายหนี้ได้อีก {debt.extensionsLeft} ครั้ง</div>
+            </div>
+          </div>
+          <Button
+            variant="secondary"
+            onClick={() => requestExtension()}
+            disabled={debt.extensionsLeft <= 0 || stats.money < EXTENSION_COST}
+          >
+            📞 ขอขยายหนี้ (-${EXTENSION_COST} / เส้นตาย +1 วัน)
+          </Button>
+        </div>
+
+        {/* ปุ่มแอคชัน */}
+        <div className="space-y-2 mt-4">
+          <div className="text-[10px] uppercase tracking-widest text-neutral-500 mb-2">เหลือเวลาวันนี้ {remainingBlocks} ช่วง</div>
+          <Button variant="secondary" onClick={() => doNormalLife('work')}>
+            💼 ไปทำงานประจำ (+$200, -5🧠)
+          </Button>
+          <Button variant="secondary" onClick={() => doNormalLife('rest')}>
+            🛏️ นอนพักผ่อน (+20🧠, -10🔥)
+          </Button>
+          <Button variant="primary" onClick={() => goTo('gigBoard')} className="mt-2">
+            🕶️ เปิดแอปงานเทา (หาเงินก้อนโต)
+          </Button>
+        </div>
+      </div>
+    </>
+  );
+}
+</file>
+
+<file path="src/systems/eventSystem.ts">
+import { mulberry32 } from '../app/utils/rng';
+import { useGame } from '../app/store';
+import { CLAMP } from '../app/constants';
+import { RANDOM_EVENTS, type GameEvent } from '../data/events';
+import type { Stats, Gig } from '../app/types';
+
+// ตั้งค่าตัวสุ่มใหม่ทุกครั้งที่โหลดเกม เพื่อให้ผลลัพธ์ไม่ซ้ำเดิม
+let rng = mulberry32(Date.now());
+
+export function seedRandom(seed: number): void {
+  rng = mulberry32(seed);
+}
+
+export function rollPolice(risk: number): boolean {
+  return rng() < risk;
+}
+
+// สุ่มเหตุการณ์แทรกซ้อน (โอกาส 30%)
+export function rollRandomEvent(): GameEvent | null {
+  const chance = 0.3;
+  if (rng() > chance) return null;
+  if (RANDOM_EVENTS.length === 0) return null;
+  const randomIndex = Math.floor(rng() * RANDOM_EVENTS.length);
+  return RANDOM_EVENTS[randomIndex];
+}
+
+// ===== ระบบสุ่มผลลัพธ์หลังเสร็จงาน (Idea 2 เดิม) =====
+export interface GigOutcome {
+  id: 'normal' | 'bonus' | 'underpaid' | 'police' | 'disaster';
+  weight: number;
+  moneyMultiplier: number;
+  extraHeat: number;
+  extraSanity: number;
+  text: string | null;
+}
+
+export function rollGigOutcome(gig: Gig): GigOutcome {
+  // ความเสี่ยงตำรวจของงานนี้ ถูกแปลงเป็นน้ำหนักของเหตุการณ์ "โดนตำรวจตรวจ"
+  const policeWeight = Math.round(gig.policeRisk * 100);
+
+  const table = [
+    { id: 'normal', weight: 55, moneyMultiplier: 1, extraHeat: 0, extraSanity: 0, text: null },
+    { id: 'bonus', weight: 15, moneyMultiplier: 1.25, extraHeat: 0, extraSanity: 5, text: '😊 ลูกค้าถูกใจ ให้เงินเพิ่มเล็กน้อย' },
+    { id: 'underpaid', weight: 10, moneyMultiplier: 0.5, extraHeat: 0, extraSanity: -5, text: '😤 ลูกค้าเบี้ยว ได้เงินแค่ครึ่งเดียว' },
+    { id: 'police', weight: policeWeight, moneyMultiplier: 0.75, extraHeat: 15, extraSanity: 0, text: '🚨 ตำรวจตรวจงานนี้! เงินลดลง และค่าความร้อนเพิ่ม' },
+    { id: 'disaster', weight: 5, moneyMultiplier: 0.25, extraHeat: 5, extraSanity: -15, text: '💥 งานพัง ได้เงินน้อยมาก และเสียสติเพิ่ม' },
+  ].filter((item) => item.weight > 0) as GigOutcome[];
+
+  const totalWeight = table.reduce((sum, item) => sum + item.weight, 0);
+  let roll = rng() * totalWeight;
+
+  for (const outcome of table) {
+    if (roll < outcome.weight) return outcome;
+    roll -= outcome.weight;
+  }
+  return table[0];
+}
+
+// คำนวณค่าสถานะเมื่อผู้เล่นเลือกเหตุการณ์
+export function applyEventEffect(effect: Partial<Stats>): Stats {
+  const s = useGame.getState().stats;
+  const clamp = (v: number, [lo, hi]: [number, number]) =>
+    Math.max(lo, Math.min(hi, v));
+
+  return {
+    money: s.money + (effect.money || 0),
+    heat: clamp(s.heat + (effect.heat || 0), CLAMP.heat),
+    rep: clamp(s.rep + (effect.rep || 0), CLAMP.rep),
+    sanity: clamp(s.sanity + (effect.sanity || 0), CLAMP.sanity),
+  };
+}
+</file>
+
+<file path="src/systems/fsm.ts">
+import { useGame } from '../app/store';
+import type { Screen } from '../app/types';
+
+const ALLOWED: Record<Screen, Screen[]> = {
+  boot: ['home'],
+  home: ['gigBoard', 'endOfDay', 'gameOver', 'gameWin', 'event'],
+  gigBoard: ['home', 'gigDetail'],
+  gigDetail: ['gigBoard', 'activeGig'],
+  activeGig: ['home', 'endOfDay', 'gameOver', 'gameWin', 'event'],
+  endOfDay: ['home', 'gameOver', 'gameWin', 'event'],
+  gameOver: [],
+  gameWin: [],
+  event: ['home', 'gameOver', 'gameWin'],
+};
+
+export function goTo(next: Screen): void {
+  const cur = useGame.getState().screen;
+  if (!ALLOWED[cur] || !ALLOWED[cur].includes(next)) {
+    console.warn(`[FSM] illegal transition: ${cur} → ${next}`);
+    return;
+  }
+  console.log(`[FSM] เปลี่ยนจาก ${cur} ไป ${next} สำเร็จ!`);
+  useGame.setState({ screen: next });
+}
+</file>
+
+<file path="src/systems/gigSystem.ts">
+import { CLAMP } from '../app/constants';
+import { patch, pushLog, useGame } from '../app/store';
+import type { Gig } from '../app/types';
+import { goTo } from './fsm';
+import { consumeBlocks } from './timeSystem';
+import { rollRandomEvent, rollGigOutcome } from './eventSystem';
+import { accelerateDebt } from './debtSystem';
+
+const clamp = (v: number, [lo, hi]: [number, number]) =>
+  Math.max(lo, Math.min(hi, v));
+
+export function acceptGig(gig: Gig): void {
+  patch({ activeGigId: gig.id });
+  goTo('activeGig');
+}
+
+export function resolveGig(gig: Gig): void {
+  const s = useGame.getState();
+
+  // 1) สุ่มผลลัพธ์ของงาน
+  const outcome = rollGigOutcome(gig);
+  const rewardMoney = Math.round(gig.rewardMoney * outcome.moneyMultiplier);
+  const heatGain = gig.heatGain + outcome.extraHeat;
+  const sanityChange = -gig.sanityCost + outcome.extraSanity;
+  const sanitySign = sanityChange >= 0 ? `+${sanityChange}` : `${sanityChange}`;
+
+  const lines = [
+    `💰 +$${rewardMoney}`,
+    `⭐ +${gig.rewardRep}`,
+    `🔥 +${heatGain}`,
+    `🧠 ${sanitySign}`,
+  ];
+  if (outcome.text) lines.push(outcome.text);
+
+  const stats = {
+    money: s.stats.money + rewardMoney,
+    heat: clamp(s.stats.heat + heatGain, CLAMP.heat),
+    rep: clamp(s.stats.rep + gig.rewardRep, CLAMP.rep),
+    sanity: clamp(s.stats.sanity + sanityChange, CLAMP.sanity),
+  };
+
+  patch({
+    stats,
+    activeGigId: null,
+    lastResult: { title: `เสร็จ: ${gig.title}`, lines },
+  });
+  pushLog(`Gig "${gig.title}" เสร็จ (+$${rewardMoney})`);
+
+  // 2) ถ้างานพัง → เจ้าหนี้เสียความเชื่อมั่น → เร่งหนี้ (B3)
+  if (outcome.id === 'disaster') {
+    accelerateDebt(1, 'งานพัง เจ้าหนี้เสียความเชื่อมั่น');
+  }
+
+  consumeBlocks(gig.durationBlocks);
+
+  // ถ้าระบบเวลาเปลี่ยนหน้าจอไปแล้ว (เช่น จบวัน / แพ้) ให้หยุดตรงนี้
+  const currentScreen = useGame.getState().screen;
+  if (currentScreen !== 'activeGig') return;
+
+  const final = useGame.getState();
+  if (final.stats.sanity <= 0 || final.stats.money < 0) {
+    goTo('gameOver');
+    return;
+  }
+
+  // ถ้าผลลัพธ์ไม่ปกติ ให้เห็นผลลัพธ์ก่อน ไม่สุ่มเหตุการณ์ซ้ำ
+  if (outcome.id !== 'normal') {
+    goTo('home');
+    return;
+  }
+
+  // ถ้าผลลัพธ์ปกติ อาจเจอเหตุการณ์แทรกซ้อน
+  const ev = rollRandomEvent();
+  if (ev) {
+    patch({ activeEvent: ev });
+    goTo('event');
+    return;
+  }
+
+  goTo('home');
+}
+</file>
+
+<file path="src/ui/StatusBar.tsx">
+import { useGame } from '../app/store';
+import { BLOCK_LABEL, DEBT_GOAL } from '../app/constants';
+
+export function StatusBar() {
+  const { time, stats } = useGame(s => ({ time: s.time, stats: s.stats }));
+
+  // ฟังก์ชันช่วยเลือกสีตามค่าสถานะ
+  const getSanityColor = (v: number) => v <= 20 ? 'text-red-400' : v <= 50 ? 'text-yellow-400' : 'text-emerald-400';
+  const getHeatColor = (v: number) => v >= 80 ? 'text-red-400' : v >= 50 ? 'text-orange-400' : 'text-neutral-400';
+
+  return (
+    <div className="status-bar shrink-0 px-3 py-2.5 border-b border-white/10 text-[11px] flex flex-col gap-1.5 bg-neutral-900/90 backdrop-blur-sm z-50">
+      {/* แถวบน: เวลา และเป้าหมายเงิน */}
+      <div className="flex items-center justify-between">
+        <div className="font-semibold tracking-wide whitespace-nowrap text-emerald-400">
+          Day {time.day} · {BLOCK_LABEL[time.block]}
+        </div>
+        <div className="font-semibold text-emerald-300">
+          🎯 เป้าหมาย: ${stats.money} / ${DEBT_GOAL}
+        </div>
+      </div>
+
+      {/* แถวล่าง: หลอดสถานะ */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className={`font-bold ${getHeatColor(stats.heat)}`}>🔥 {stats.heat}</span>
+          <div className="w-12 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+            <div className="h-full bg-orange-500" style={{ width: `${stats.heat}%` }} />
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <span className={`font-bold ${getSanityColor(stats.sanity)}`}>🧠 {stats.sanity}</span>
+          <div className="w-12 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+            <div className={`h-full ${stats.sanity <= 20 ? 'bg-red-500' : 'bg-blue-400'}`} style={{ width: `${stats.sanity}%` }} />
+          </div>
+        </div>
+
+        <div className="font-bold text-neutral-300">⭐ Rep {stats.rep}</div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/App.tsx">
+import { useGame } from './app/store';
+import { PhoneFrame } from './ui/PhoneFrame';
+import { ScreenMotion } from './ui/ScreenMotion';
+import { BootScreen } from './screens/BootScreen';
+import { HomeScreen } from './screens/HomeScreen';
+import { GigBoardScreen } from './screens/GigBoardScreen';
+import { GigDetailScreen } from './screens/GigDetailScreen';
+import { ActiveGigScreen } from './screens/ActiveGigScreen';
+import { EndOfDayScreen } from './screens/EndOfDayScreen';
+import { GameOverScreen } from './screens/GameOverScreen';
+import { EventScreen } from './screens/EventScreen';
+
+export function App() {
+  const screen = useGame(s => s.screen);
+
+  return (
+    <PhoneFrame>
+      <ScreenMotion key={screen}>
+        {screen === 'boot'      && <BootScreen />}
+        {screen === 'home'      && <HomeScreen />}
+        {screen === 'gigBoard'  && <GigBoardScreen />}
+        {screen === 'gigDetail' && <GigDetailScreen />}
+        {screen === 'activeGig' && <ActiveGigScreen />}
+        {screen === 'endOfDay'  && <EndOfDayScreen />}
+        {screen === 'event'     && <EventScreen />}
+        {(screen === 'gameOver' || screen === 'gameWin') && <GameOverScreen />}
+      </ScreenMotion>
+    </PhoneFrame>
+  );
+}
+</file>
+
+<file path="src/index.css">
+/* Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-family: 'Noto Sans Thai', system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #070a09;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(16, 65, 46, 0.22), transparent 38%),
+    radial-gradient(ellipse at 50% 100%, rgba(12, 34, 27, 0.2), transparent 42%),
+    #070a09;
+  color: #f5f7f5;
+  overflow-x: hidden;
+}
+
+button { -webkit-tap-highlight-color: transparent; }
+button:focus-visible {
+  outline: 2px solid rgba(74, 222, 128, 0.9);
+  outline-offset: 3px;
+}
+
+.phone-stage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.phone-stage::before,
+.phone-stage::after {
+  content: '';
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 999px;
+  filter: blur(90px);
+  opacity: 0.13;
+  pointer-events: none;
+  z-index: -1;
+}
+.phone-stage::before {
+  background: #16a36a;
+  top: -260px;
+  left: calc(50% - 420px);
+}
+.phone-stage::after {
+  background: #397b5c;
+  bottom: -300px;
+  right: calc(50% - 420px);
+}
+
+.phone-device {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  height: min(900px, calc(100vh - 32px));
+  height: min(900px, calc(100dvh - 32px));
+  min-height: 520px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(185, 205, 192, 0.19);
+  border-radius: 34px;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(40, 85, 64, 0.16), transparent 46%),
+    linear-gradient(160deg, #151b18 0%, #101512 54%, #0d110f 100%);
+  box-shadow:
+    0 34px 100px rgba(0, 0, 0, 0.72),
+    0 0 0 5px rgba(255, 255, 255, 0.025),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.phone-device::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.035), transparent 28%, transparent 72%, rgba(255,255,255,0.018));
+}
+
+.screen-motion {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  animation: screen-enter 360ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  transform-origin: center 58%;
+}
+
+.status-bar {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(90deg, rgba(6, 11, 8, 0.96), rgba(14, 22, 17, 0.9));
+  color: #d3ddd6;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+}
+.status-stat {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: 4px 6px;
+  border: 1px solid rgba(255,255,255,0.055);
+  border-radius: 7px;
+  background: rgba(255,255,255,0.035);
+  font-variant-numeric: tabular-nums;
+}
+
+.game-button {
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 5px 14px rgba(0,0,0,0.16);
+}
+.game-button:not(:disabled):hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 20px rgba(0,0,0,0.24);
+}
+.game-button:not(:disabled):active {
+  transform: translateY(1px) scale(0.985);
+  filter: brightness(0.96);
+}
+.game-button:disabled { box-shadow: none; }
+
+.screen-motion .overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(116, 145, 127, 0.28) transparent;
+  overscroll-behavior: contain;
+}
+.screen-motion .overflow-y-auto::-webkit-scrollbar { width: 5px; }
+.screen-motion .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(116, 145, 127, 0.28);
+  border-radius: 99px;
+}
+
+.screen-motion .rounded-xl.border,
+.screen-motion .rounded-lg {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.025), 0 8px 22px rgba(0,0,0,0.08);
+}
+
+.gig-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(115deg, rgba(36, 46, 40, 0.8), rgba(22, 29, 24, 0.82));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), 0 6px 18px rgba(0,0,0,0.12);
+}
+.gig-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(74, 222, 128, 0.75), transparent);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.gig-card:not(:disabled):hover {
+  transform: translateY(-2px);
+  border-color: rgba(74, 222, 128, 0.32);
+  background: linear-gradient(115deg, rgba(39, 57, 45, 0.96), rgba(22, 31, 25, 0.96));
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2), 0 0 20px rgba(16, 185, 129, 0.055);
+}
+.gig-card:not(:disabled):hover::before { opacity: 1; }
+.gig-tier {
+  padding: 3px 7px;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 6px;
+  color: #86cba0;
+  background: rgba(16, 185, 129, 0.08);
+  letter-spacing: 0.08em;
+}
+.board-caption {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 9px;
+  background: rgba(255,255,255,0.025);
+  color: #829188;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+.board-live-dot, .boot-live-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.8);
+  animation: live-pulse 1.8s ease-in-out infinite;
+}
+
+.boot-screen {
+  position: relative;
+  gap: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 43%, rgba(20, 119, 74, 0.2), transparent 36%),
+    radial-gradient(ellipse at 50% 100%, rgba(20, 48, 33, 0.22), transparent 44%),
+    #070a08;
+}
+.boot-emblem {
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 78px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(74, 222, 128, 0.38);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(30, 78, 51, 0.72), rgba(10, 24, 16, 0.95));
+  box-shadow: 0 0 45px rgba(16, 185, 129, 0.14), inset 0 1px 0 rgba(255,255,255,0.1);
+  transform: rotate(-8deg);
+  animation: emblem-float 3s ease-in-out infinite;
+}
+.boot-emblem-core {
+  color: #b7f7c9;
+  font-size: 39px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 0 25px rgba(74, 222, 128, 0.5);
+  transform: rotate(8deg);
+}
+.boot-wordmark {
+  text-shadow: 0 3px 24px rgba(74, 222, 128, 0.12);
+  animation: wordmark-in 550ms ease-out both;
+}
+.boot-caption {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.active-gig-screen {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 42%, rgba(16, 100, 60, 0.13), transparent 42%);
+}
+.gig-orbit {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+  margin-bottom: 8px;
+}
+.gig-orbit-ring {
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(74, 222, 128, 0.18);
+  border-radius: 50%;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.07), inset 0 0 24px rgba(16, 185, 129, 0.04);
+  animation: orbit-breathe 2.8s ease-in-out infinite;
+}
+.gig-orbit-ring::before,
+.gig-orbit-ring::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.9);
+}
+.gig-orbit-ring::before { top: 18px; right: 13px; }
+.gig-orbit-ring::after { bottom: 20px; left: 11px; opacity: 0.45; }
+.active-progress {
+  display: flex;
+  gap: 6px;
+  width: 82px;
+  margin: 7px 0 12px;
+}
+.active-progress span {
+  display: block;
+  height: 3px;
+  flex: 1;
+  border-radius: 99px;
+  background: #3d9a68;
+  animation: progress-glow 1.5s ease-in-out infinite;
+}
+.active-progress span:nth-child(2) { animation-delay: 180ms; }
+.active-progress span:nth-child(3) { animation-delay: 360ms; }
+
+@keyframes screen-enter {
+  from { opacity: 0; transform: translateY(10px) scale(0.992); filter: blur(2px); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 0.55; box-shadow: 0 0 4px rgba(74, 222, 128, 0.35); }
+  50% { opacity: 1; box-shadow: 0 0 11px rgba(74, 222, 128, 0.95); }
+}
+@keyframes emblem-float {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-7px) rotate(-5deg); }
+}
+@keyframes wordmark-in {
+  from { opacity: 0; letter-spacing: 0.34em; transform: translateY(7px); }
+  to { opacity: 1; letter-spacing: 0.22em; transform: translateY(0); }
+}
+@keyframes orbit-breathe {
+  0%, 100% { transform: scale(0.94); opacity: 0.62; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+@keyframes progress-glow {
+  0%, 100% { opacity: 0.38; box-shadow: none; }
+  50% { opacity: 1; box-shadow: 0 0 10px rgba(74, 222, 128, 0.35); }
+}
+
+/* Preserve a readable interface without motion for users who request it. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .phone-stage { padding: 0; }
+  .phone-device {
+    width: 100%;
+    max-width: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .phone-device::before { border-radius: 0; }
+  .status-stat { padding: 3px 4px; font-size: 10px; }
+}
+</file>
+
+<file path="ai/master_prompt.md">
+# Game Director: Master Prompt Template
+
+For a solo developer who builds a game entirely with AI (100% vibe coding).
+This template is neutral. It does not push any genre or direction.
+
+How to use: Paste this whole file at the start of a project, and again in any new chat. Fill in what you know. Anything left as `[not decided]` is something the AI should help you decide, not decide for you.
+
+## 1. Role and Identity
+
+You are the Game Director of this project.
+I am a solo developer with no coding background. I use AI as my main tool.
+You think through the technical side for me, but you decide according to my vision, and I make every final decision.
+Explain everything so that someone who has never coded can follow it.
+Always recommend the simplest and fastest option that works.
+Never assume the direction of the game. Offer options and trade-offs, then let me choose.
+If you spot a risk (scope too big, a feature that does not serve the core loop, a tool that costs money), say so clearly and briefly, then follow my decision.
+
+### My preferences
+
+| Setting | Value |
+| --- | --- |
+| Language for replies | Thai |
+| Language for code comments | Thai |
+| Explanation level | 1 (see below) |
+| Budget | Free tools only |
+| Hours per week I can spend | [not decided] |
+
+Explanation levels (change anytime with `/level N`):
+- Level 1, Beginner: explain every step and every technical term in plain words.
+- Level 2, Brief: explain only new concepts and anything risky.
+- Level 3, Minimal: code and test steps only. I will ask if I need more.
+
+## 2. Core Concept
+
+| Item | Answer |
+| --- | --- |
+| Game name | Gray Gig |
+| Genre | Simulation RPG / Survival |
+| Elevator pitch (one sentence) | รับจ็อบเทาเพื่อหาเงินใช้หนี้ 10,000 ดอลลาร์ ภายใน 14 วัน โดยต้องรักษาสติและหลบเลี่ยงตำรวจ |
+| What makes it different | เป็นเกมบริหารทรัพยากรที่กดดันเรื่องเวลาและสติ มีระบบ Heat ที่ยิ่งทำงานเสี่ยงมากตำรวจยิ่งจับตาดู มีระบบหนี้สินที่เจ้าหนี้เป็นตัวละครกดดันจริง และระบบ QTE ที่ทำให้การทำงานมีจังหวะตื่นเต้น |
+| Target audience | คนที่ชอบเกมแนวตัดสินใจ (Decision-making) และเกมเล่าเรื่องสไตล์ดาร์ก |
+| Reference games | Reigns, Papers Please, Text-based RPG |
+| Mood and tone | Dark, gritty, slightly humorous (ดาร์ก หม่นๆ แต่แอบขำ) |
+| Main platform | Web (Mobile-first UI) |
+| Camera or view | Phone Interface (หน้าจอแนวตั้งแบบมือถือ) |
+| Length of one play session | 10-15 นาที (จบใน 14 วัน) |
+| Scope | Small (Prototype) |
+
+## 3. Architecture Philosophy
+
+Local-first, multiplayer-optional. If the game is 100% single-player, skip everything about multiplayer.
+
+Phase 1: Single-player, fully playable alone
+Phase 2: Local co-op on one device [optional]
+Phase 3: Online multiplayer, room-based [optional]
+
+Rules (details in `skill_architecture.md`):
+- Single-player must be complete and fun before any multiplayer work.
+- Multiplayer is a layer added later, never a rewrite.
+- Use room-based sessions, not a persistent world.
+- Every piece of game state has one clear owner.
+- In online play, the host or server has the final say.
+
+Multiplayer model [optional, delete if unused]: N/A (เกมนี้เป็น single-player 100%)
+
+## 4. Game Design Principles
+
+- Fun is the main goal.
+- The core loop is clear. The player always knows what to do next.
+- Immediate feedback. Every action has a visible, audible, or felt result.
+- Progression. The player feels they are getting somewhere.
+- No needless complexity. Simple is better.
+
+### Core loop:
+เริ่มวัน → เลือกงานใน Gig Board → ทำงาน (มี QTE กดจังหวะ) → สุ่มผลลัพธ์งาน
+→ อัปเดตค่าสถานะ → เจอ Random Event / เจ้าหนี้โทรมา → จบวัน
+→ ตรวจหนี้/เส้นตาย → ตรวจสอบแพ้/ชนะ → Repeat
+
+### ระบบหลักที่มีแล้ว:
+- **Gig Outcome Roulette**: ผลลัพธ์งานสุ่ม 5 แบบ (ปกติ, โบนัส, ลูกค้าเบี้ยว, ตำรวจตรวจ, งานพัง) — ใช้ `policeRisk` ของงานเป็นน้ำหนัก
+- **ระบบหนี้สินและเจ้าหนี้ "พี่โจ"**: ทวงหนี้เป็นระยะ (ทุก 3 วัน + บ่อยขึ้นถ้าอารมณ์ต่ำ), ขอขยายหนี้ (มีต้นทุน + จำกัดครั้ง), เร่งหนี้ (งานพัง/เลือกตอบแย่ → เส้นตายลด)
+- **อารมณ์เจ้าหนี้ (creditorMood)**: ส่งผลต่อความถี่การทวง, โอกาสขยายหนี้สำเร็จ, และความรุนแรงของเหตุการณ์
+
+### แผนที่วางไว้ (ยังไม่ได้ทำ):
+- **Visual Feedback (A)**: Screen shake, Flash สี, เสียง Beep
+- **QTE System (B)**: 4-5 รูปแบบ, เชื่อมกับ RNG แบบปรับน้ำหนัก (แนวทาง B)
+  - รูปแบบชุดแรก: 🔢 รหัสผ่าน + ⏱️ จับจังหวะ
+  - รูปแบบเพิ่มเติม: 👁️ สังเกตการณ์, 💪 กดค้าง, 🎯 เล็งเป้า
+- **Countdown Timer**: ใน Event บางตัวที่ต้องกดดัน
+- **เจ้าหนี้เป็น Active Threat**: ส่งผลต่อ Heat, ค่าใช้จ่าย, งานที่เปิด (ไม่ใช่แค่ข้อความ)
+- **กราฟิกและตัวละคร**: ฉากหลัง, ตัวละครพี่โจ, ไอคอนเหตุการณ์
+
+## 5. Tech Stack
+
+| Part | Choice |
+| --- | --- |
+| Engine | React 18 + Vite + TypeScript |
+| State Management | Zustand |
+| Styling | Tailwind CSS + Custom CSS Animations |
+| Online play | N/A (single-player) |
+| Hosting | [not decided] |
+
+## 6. Development Phases
+
+### Phase 1: Core Gameplay MVP (rules in "Prototype mode")
+- [x] Core loop playable from start to end of one session (จบได้ทั้ง Win/Lose)
+- [x] Player character and controls (กดเลือกการกระทำผ่าน UI)
+- [x] One basic enemy, obstacle, or challenge (ระบบเวลา, ค่าใช้จ่ายรายวัน, Random Events)
+- [x] Basic level, room, or stage (หน้าจอหลักๆ ครบแล้ว)
+- [x] Minimal UI (start, pause, game over)
+- [x] Placeholder art and sound are fine
+- [x] ระบบสุ่มผลลัพธ์งาน (Gig Outcome Roulette)
+- [x] ระบบหนี้สินและเจ้าหนี้ (ทวงหนี้, ขยายหนี้, เร่งหนี้)
+- [ ] ระบบหนี้แบบ Active (เจ้าหนี้ส่งผลต่อ gameplay จริง)
+- [ ] Visual Feedback (Screen shake, Flash สี, เสียง)
+- [ ] QTE System (รหัสผ่าน + จับจังหวะ)
+- [ ] Countdown Timer ใน Event
+
+### Phase 2: Content and Polish (rules in "Polish mode")
+- [ ] กราฟิก: ฉากหลัง, ตัวละคร, ไอคอนเหตุการณ์
+- [ ] Variety (งานเพิ่ม, เหตุการณ์เพิ่ม, รูปแบบ QTE เพิ่ม)
+- [ ] Progression system
+- [ ] Sound effects and music
+- [ ] Visual polish and animation
+- [ ] Playtests with other people
+
+## 7. AI Workflow Rules
+
+One prompt = one feature.
+Test after every step. Do not stack features on untested code.
+Keep it simple. If a solution looks complicated, propose a simpler one first.
+Explain at my chosen level (see section 1).
+Save a working version after every feature. The simplest way is to download the project as a ZIP and name it with the date and a short note (e.g. `game_2026-11-04_player-moves.zip`). If I later choose to use Git, set it up for me step by step.
+Ask before building. For any new feature, confirm: what problem it solves, what existing code it touches, and whether a simpler way exists.
+
+### The AI must:
+- Say what each part of the code does.
+- Say exactly how to run and test it.
+- State limits and trade-offs honestly, including when something might not work.
+- Suggest the next step, and wait for my approval.
+
+### The AI must not:
+- Write code without explaining it (unless I am on Level 3).
+- Use complicated libraries when a simple solution exists.
+- Assume I know technical terms.
+- Steer the direction of the game. Advise, then let me decide.
+- Recommend paid tools or tools that need local installation without asking first.
+
+## 8. Decision Log
+
+| Date | Decision | Reason | Impact |
+| --- | --- | --- | --- |
+| 2026-11-04 | ใช้ React + Vite + Zustand | เบา รองรับ State Management ที่ซับซ้อนได้ดี และไม่ต้องติดตั้งอะไร | โค้ดแยกส่วนชัดเจน จัดการ State เกมง่าย |
+| 2026-11-04 | ใช้ FSM (Finite State Machine) ในการเปลี่ยนหน้าจอ | ป้องกันบั๊กการข้ามหน้าจอผิดปกติ | โค้ดใน `fsm.ts` บังคับทิศทางการเปลี่ยนหน้าจอที่ชัดเจน |
+| 2026-11-04 | ใช้ Repomix ในการแพ็คโค้ดส่ง AI | แก้ปัญหา AI อ่านไฟล์ ZIP ไม่ลึก | AI เห็นโค้ดทั้งโปรเจกต์และแก้ไขได้ตรงจุดขึ้น |
+| 2026-11-04 | เพิ่มระบบสุ่มงาน (Gig Board) และระบบ Random Events | ทำให้เกมมี Replayability ไม่ซ้ำซาก และเพิ่มความกดดัน | เกมมีมิติขึ้น แต่ยังต้องปรับ Balance เรื่องความยาก |
+| 2026-11-05 | เพิ่มระบบสุ่มผลลัพธ์หลังเสร็จงาน (Gig Outcome Roulette) | ทำให้การทำงานไม่การันตีผลลัพธ์ เพิ่มความลุ้นและลดการวางแผนตายตัว | ผลลัพธ์งานสุ่ม 5 แบบ เชื่อมกับ policeRisk ของงาน |
+| 2026-11-05 | เพิ่มระบบหนี้สินและเจ้าหนี้ "พี่โจ" (ทวงหนี้, ขยายหนี้, เร่งหนี้) | ทำให้เส้นตายมีพลวัต และสร้างแรงกดดันจากตัวละคร ไม่ใช่แค่ตัวเลข | เพิ่ม DebtState, ระบบอารมณ์เจ้าหนี้, เหตุการณ์ทวงหนี้, ปุ่มขยายหนี้ |
+| 2026-11-05 | เลือกแนวทาง B สำหรับ QTE+RNG (QTE ปรับน้ำหนัก RNG) | รักษาความไม่แน่นอนของเกม แต่ยังให้ผู้เล่นรู้สึกว่าฝีมือมีผล | ยังไม่ได้ทำ — วางแผนแล้ว |
+| 2026-11-05 | เลือก Visual Feedback + QTE ทำพร้อมกัน | ยกระดับเกมทั้งการรับรู้และความตื่นเต้นในคราวเดียว | ยังไม่ได้ทำ — วางแผนแล้ว |
+| 2026-11-05 | ไม่ทำ Push-your-luck | มี QTE แล้ว ซึ่งให้ความตื่นเต้นเพียงพอ | ตัดออกจากแผน |
+
+## 9. Style Guide
+
+| Item | Value |
+| --- | --- |
+| Palette (hex codes) | Dark theme (Emerald/Green accents, Neutral Dark backgrounds) |
+| Art style | UI based, minimal, glassmorphism (ปัจจุบัน) → วางแผนเพิ่มกราฟิกตัวละคร/ฉาก |
+| Camera angle | N/A (2D UI) |
+| Font | Noto Sans Thai |
+| Mood keywords | Dark, Cyberpunk, Gritty, Tech |
+| Reference images | [not decided] |
+
+## 10. Asset Inventory
+
+Use the naming convention from `skill_ai_artwork_generation.md`.
+
+Characters: [ ] (วางแผน: พี่โจ, ตำรวจ)
+Enemies: [ ]
+Backgrounds: [ ] (วางแผน: ฉากหลังหลัก)
+UI: (ใช้ Emoji เป็น Placeholder ไปก่อน)
+Audio (SFX and music): [ ] (วางแผน: เสียง Beep ดี/ร้าย/เตือน)
+
+## 11. Session Context
+
+Current state: Phase 1: Core Gameplay MVP (ระบบหลักครบแล้ว แต่ยังขาดความตื่นเต้นและการรับรู้)
+Done and working: ระบบเวลา, ระบบสุ่มงานใน Gig Board (4 งาน/วัน), ระบบ Random Events (9 เหตุการณ์), ระบบสุ่มผลลัพธ์งาน (Gig Outcome Roulette 5 แบบ), ระบบหนี้สินและเจ้าหนี้ "พี่โจ" (ทวงหนี้, ขยายหนี้, เร่งหนี้)
+In progress: วางแผนระบบ Visual Feedback (A) + QTE (B) — ยังไม่ได้เริ่มเขียนโค้ด
+Blockers: เจ้าหนี้ยังเป็นแค่ "อีเวนต์มากด" ไม่ได้ส่งผลต่อ gameplay จริง / เกมยังไม่มีกราฟิกทำให้ขาดอารมณ์ร่วม
+Goal of this chat: ✅ สำเร็จแล้ว — ตัดสินใจแนวทางทั้งหมดเรียบร้อย ยกการเขียนโค้ดไปเซสชันหน้า
+
+## 12. Modes
+
+### Brainstorming Mode (no idea yet)
+Say: "I do not have a game idea yet. Help me brainstorm using this template."
+
+### Update Mode (existing project)
+Say: "Update this master prompt to match the current status," and paste what has changed.
+
+## 13. Quick Commands
+
+| Command | What it does |
+| --- | --- |
+| /status | Rewrite the Session Context from what we have done |
+| /decide [decision] | Add an entry to the Decision Log |
+| /next | Recommend the next step (with reasons) |
+| /explain [code or feature] | Explain in detail at Level 1 |
+| /level [1-3] | Change how much the AI explains |
+| /simplify | Find a simpler way to do the current thing |
+| /cut | Run the scope check: what could be removed without hurting the core loop? |
+| /review | Run the quality checklist on the current work |
+| /backup | Remind me how to save a working version, and suggest a file name |
+| /brainstorm | Start Brainstorming Mode |
+| /update | Start Update Mode |
+
+---
+Version: 3.3 (Updated after Debt System + QTE Planning)
+Based on: version 3.2, updated on 2026-11-05
+</file>
+
+</files>

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { GameState } from './types';
 import { START_STATS, START_TIME, START_DEBT } from './constants';
+import { rollDailyGigIds } from '../systems/gigBoard';
 
 export const useGame = create<GameState>(() => ({
   screen: 'boot',
@@ -10,7 +11,10 @@ export const useGame = create<GameState>(() => ({
   lastResult: null,
   log: [],
   activeEvent: null,
-  debt: { ...START_DEBT }, // เพิ่มสถานะหนี้
+  debt: { ...START_DEBT },
+  dailyGigIds: rollDailyGigIds(START_STATS.rep),
+  flags: {},
+  history: [],
 }));
 
 export const patch = (p: Partial<GameState>) => useGame.setState(p);

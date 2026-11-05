@@ -45,7 +45,7 @@ export function HomeScreen() {
             <div className="font-bold text-xs flex items-center gap-1">⚠️ คำเตือนอันตราย</div>
             <ul className="text-[11px] mt-1 space-y-0.5 opacity-90">
               {stats.sanity <= 20 && <li>- สติคุณใกล้แตก (เหลือ {stats.sanity}) ถ้าถึง 0 คุณจะแพ้ทันที</li>}
-              {stats.heat >= 80 && <li>- ตำรวจกำลังจับตาคุณอย่างหนัก (Heat {stats.heat}/100) ระวังตัวด้วย</li>}
+              {stats.heat >= 80 && <li>- ตำรวจกำลังจับตาคุณอย่างหนัก (Heat {stats.heat}/100) ถ้าถึง 100 คุณจะถูกจับและแพ้ทันที</li>}
               {stats.money < DAILY_COST && <li>- เงินคุณไม่พอจ่ายค่ากินอยู่พรุ่งนี้ (${DAILY_COST})!</li>}
             </ul>
           </div>

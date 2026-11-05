@@ -1,14 +1,25 @@
-import type { Stats } from '../app/types';
+import type { Stats, DebtEffect } from '../app/types';
+
+type FlagMap = Record<string, boolean | number>;
 
 export interface GameEvent {
   id: string;
   title: string;
   description: string;
   icon: string;
+  timeLimit?: number; // วินาที ถ้ามีค่า = ต้องรีบเลือก
+  timeout?: { effect: Partial<Stats>; resultText: string; debtEffect?: DebtEffect; flags?: FlagMap }; // ผลถ้าหมดเวลา
+  // --- เงื่อนไขการปรากฏ (ใช้กับเหตุการณ์ต่อเนื่อง) ---
+  requires?: string[]; // ต้องมีธงเหล่านี้ครบ
+  blocks?: string[];   // ห้ามมีธงเหล่านี้
+  minDay?: number;     // ขึ้นได้ตั้งแต่วันที่เท่าไร
+  once?: boolean;      // ขึ้นได้ครั้งเดียว (ค่าเริ่มต้น: true ถ้ามี requires)
   choices: {
     label: string;
     effect: Partial<Stats>;
     resultText: string;
+    debtEffect?: DebtEffect;
+    flags?: FlagMap; // ธงที่ตั้งเมื่อเลือกข้อนี้
   }[];
 }
 
@@ -18,9 +29,12 @@ export const RANDOM_EVENTS: GameEvent[] = [
     title: 'ตำรวจเรียกตรวจ',
     description: 'คุณกำลังเดินอยู่ดีๆ ตำรวจก็เข้ามาขวางหน้าและขอตรวจกระเป๋า',
     icon: '👮',
+    once: true,
+    timeLimit: 8,
+    timeout: { effect: { money: -150, heat: 10, sanity: -5 }, resultText: 'คุณอึกอักจนตำรวจหมดความอดทน ค้นกระเป๋าและยึดเงินไปส่วนหนึ่ง' },
     choices: [
-      { label: 'จ่ายเงินใต้โต๊ะ (💰 -100)', effect: { money: -100, heat: -20 }, resultText: 'คุณรอดตัวไปได้ แต่กระเป๋าแบนลง' },
-      { label: 'วิ่งหนี! (🧠 -15, 🔥 +20)', effect: { sanity: -15, heat: 20 }, resultText: 'คุณวิ่งสุดชีวิตจนปอดแทบแตก รอดมาได้แต่ตำรวจจำหน้าได้' },
+      { label: 'จ่ายเงินใต้โต๊ะ (💰 -100)', effect: { money: -100, heat: -20 }, resultText: 'คุณรอดตัวไปได้ แต่กระเป๋าแบนลง', flags: { bribedCop: true } },
+      { label: 'วิ่งหนี! (🧠 -15, 🔥 +20)', effect: { sanity: -15, heat: 20 }, resultText: 'คุณวิ่งสุดชีวิตจนปอดแทบแตก รอดมาได้แต่ตำรวจจำหน้าได้', flags: { ranFromCop: true } },
     ],
   },
   {
@@ -28,9 +42,10 @@ export const RANDOM_EVENTS: GameEvent[] = [
     title: 'เก็บกระเป๋าสตางค์ได้',
     description: 'คุณเจอกระเป๋าสตางค์ตกอยู่บนพื้น ข้างในมีเงินสดและบัตรประชาชน',
     icon: '👛',
+    once: true,
     choices: [
-      { label: 'เก็บเงินแล้วทิ้งกระเป๋า (💰 +200, 🔥 +10)', effect: { money: 200, heat: 10 }, resultText: 'คุณได้เงินมาใช้ แต่รู้สึกผิดนิดหน่อย' },
-      { label: 'นำไปส่งคืนตำรวจ (⭐ +1, 🧠 +10)', effect: { rep: 1, sanity: 10 }, resultText: 'เจ้าของกระเป๋าขอบคุณคุณมาก คุณรู้สึกดีกับตัวเอง' },
+      { label: 'เก็บเงินแล้วทิ้งกระเป๋า (💰 +200, 🔥 +10)', effect: { money: 200, heat: 10 }, resultText: 'คุณได้เงินมาใช้ แต่รู้สึกผิดนิดหน่อย', flags: { keptWallet: true } },
+      { label: 'นำไปส่งคืนตำรวจ (⭐ +1, 🧠 +10)', effect: { rep: 1, sanity: 10 }, resultText: 'เจ้าของกระเป๋าขอบคุณคุณมาก คุณรู้สึกดีกับตัวเอง', flags: { returnedWallet: true } },
     ],
   },
   {
@@ -43,7 +58,6 @@ export const RANDOM_EVENTS: GameEvent[] = [
       { label: 'กินยานอนหลับต่อ (🧠 +10, 🔥 +5)', effect: { sanity: 10, heat: 5 }, resultText: 'คุณหลับต่อจนเช้า รู้สึกสดชื่นขึ้น แต่เริ่มติดยา' },
     ],
   },
-  // --- เพิ่มใหม่ ---
   {
     id: 'event-dumpster',
     title: 'ข้าวกล่องข้างถังขยะ',
@@ -59,9 +73,12 @@ export const RANDOM_EVENTS: GameEvent[] = [
     title: 'เจ้าหนี้โทรมา',
     description: 'เสียงโทรศัพท์ดังขึ้น คุณเห็นชื่อ "พี่โจ" เจ้าหนี้รายใหญ่ที่คุณยังค้างเงินอยู่',
     icon: '📱',
+    once: true,
+    timeLimit: 7,
+    timeout: { effect: { sanity: -10 }, debtEffect: { mood: -10 }, resultText: 'คุณไม่กล้ารับสาย พี่โจโมโหหนักกว่าเดิม', flags: { dodgedJoe: true } },
     choices: [
-      { label: 'รับสายและอ้อนวอน (🧠 -20)', effect: { sanity: -20 }, resultText: 'พี่โจด่าคุณยกใหญ่ แต่ให้เวลาอีก 2 วัน' },
-      { label: 'ปิดเครื่องหนี (🔥 +15)', effect: { heat: 15 }, resultText: 'คุณปิดเครื่อง แต่รู้ว่าพี่โจต้องตามหาคุณเจอแน่' },
+      { label: 'รับสายและอ้อนวอน (🧠 -20)', effect: { sanity: -20 }, resultText: 'พี่โจด่าคุณยกใหญ่ แต่ให้เวลาอีก 2 วัน', flags: { begJoe: true } },
+      { label: 'ปิดเครื่องหนี (🔥 +15)', effect: { heat: 15 }, resultText: 'คุณปิดเครื่อง แต่รู้ว่าพี่โจต้องตามหาคุณเจอแน่', flags: { dodgedJoe: true } },
     ],
   },
   {
@@ -69,9 +86,10 @@ export const RANDOM_EVENTS: GameEvent[] = [
     title: 'แมวจรข้างทาง',
     description: 'มีแมวจรสีดำตัวหนึ่งเดินเข้ามาถูขาคุณ มันดูหิวและหนาว',
     icon: '🐈‍⬛',
+    once: true,
     choices: [
-      { label: 'ซื้ออาหารให้มัน (💰 -30, 🧠 +20)', effect: { money: -30, sanity: 20 }, resultText: 'แมวกินอาหารอย่างมีความสุข คุณรู้สึกใจฟูขึ้นมาก' },
-      { label: 'เตะมันออกไป (🔥 +5, 🧠 -10)', effect: { heat: 5, sanity: -10 }, resultText: 'คุณระบายความหงุดหงิดใส่แมว แต่รู้สึกผิดในใจ' },
+      { label: 'ซื้ออาหารให้มัน (💰 -30, 🧠 +20)', effect: { money: -30, sanity: 20 }, resultText: 'แมวกินอาหารอย่างมีความสุข คุณรู้สึกใจฟูขึ้นมาก', flags: { fedCat: true } },
+      { label: 'เตะมันออกไป (🔥 +5, 🧠 -10)', effect: { heat: 5, sanity: -10 }, resultText: 'คุณระบายความหงุดหงิดใส่แมว แต่รู้สึกผิดในใจ', flags: { kickedCat: true } },
     ],
   },
   {
@@ -79,9 +97,12 @@ export const RANDOM_EVENTS: GameEvent[] = [
     title: 'งานด่วนค่าเหนื่อยสูง',
     description: 'มีสายปริศนาโทรมา เสนองานด่วนให้ "ขนของ" ในคืนนี้ จ่ายเงินสด 1,000 เหรียญ แต่ไม่บอกว่าเป็นอะไร',
     icon: '📞',
+    once: true,
+    timeLimit: 6,
+    timeout: { effect: { sanity: -5 }, resultText: 'คุณลังเลนานเกินไป อีกฝ่ายวางสายไป โอกาสหลุดมือ' },
     choices: [
-      { label: 'รับงานทันที (💰 +1000, 🔥 +30)', effect: { money: 1000, heat: 30 }, resultText: 'คุณได้เงินก้อนโตมา แต่ต้องระแวงตลอดคืน' },
-      { label: 'ปฏิเสธ (🧠 +5)', effect: { sanity: 5 }, resultText: 'คุณวางสาย รู้สึกโล่งใจที่ไม่ต้องเสี่ยง' },
+      { label: 'รับงานทันที (💰 +1000, 🔥 +30)', effect: { money: 1000, heat: 30 }, resultText: 'คุณได้เงินก้อนโตมา แต่ต้องระแวงตลอดคืน', flags: { tookBloodJob: true } },
+      { label: 'ปฏิเสธ (🧠 +5)', effect: { sanity: 5 }, resultText: 'คุณวางสาย รู้สึกโล่งใจที่ไม่ต้องเสี่ยง', flags: { refusedBloodJob: true } },
     ],
   },
   {

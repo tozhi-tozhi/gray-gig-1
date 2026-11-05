@@ -1,6 +1,7 @@
 import { TIME_BLOCKS, DAILY_COST, CLAMP } from '../app/constants';
 import { patch, pushLog, useGame } from '../app/store';
 import { goTo } from './fsm';
+import { rollDailyGigIds } from './gigBoard';
 
 const clamp = (v: number, [lo, hi]: [number, number]) =>
   Math.max(lo, Math.min(hi, v));
@@ -48,6 +49,10 @@ export function runEndOfDay(): void {
   // แพ้: เลยเส้นตาย แต่ยังจ่ายหนี้ไม่ครบ
   if (s.time.day >= s.debt.deadlineDay) { goTo('gameOver'); return; }
 
-  patch({ time: { day: s.time.day + 1, block: 'morning' }, lastResult: null });
+  patch({
+    time: { day: s.time.day + 1, block: 'morning' },
+    lastResult: null,
+    dailyGigIds: rollDailyGigIds(nextStats.rep), // ขึ้นวันใหม่ = สุ่มงานใหม่
+  });
   goTo('endOfDay');
 }

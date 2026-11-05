@@ -358,3 +358,24 @@ button:focus-visible {
   .phone-device::before { border-radius: 0; }
   .status-stat { padding: 3px 4px; font-size: 10px; }
 }
+/* ===== Visual Feedback ===== */
+@keyframes fx-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.fx-shake { animation: fx-shake 0.35s ease-in-out; }
+
+@keyframes fx-flash-out {
+  from { opacity: 0.5; }
+  to { opacity: 0; }
+}
+.fx-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  animation: fx-flash-out 0.4s ease-out forwards;
+}

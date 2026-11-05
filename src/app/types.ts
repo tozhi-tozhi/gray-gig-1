@@ -46,6 +46,16 @@ export interface DebtState {
   creditorMood: number;      // อารมณ์เจ้าหนี้ (0=โกรธจัด, 100=ใจดี)
   lastCollectionDay: number; // วันที่ถูกทวงล่าสุด (กันทวงซ้ำในวันเดียว)
 }
+export type FlagValue = boolean | number;
+
+// บันทึกเหตุการณ์สำคัญในรอบเล่น (ใช้สร้างบทส่งท้าย)
+export interface HistoryEntry {
+  day: number;
+  kind: 'gig' | 'event';
+  title: string;
+  detail: string;
+  tag?: string; // police / disaster / bonus / timeout / story
+}
 
 export interface GameState {
   screen: Screen;
@@ -56,4 +66,7 @@ export interface GameState {
   log: string[];
   activeEvent: any | null;
   debt: DebtState; // เพิ่มระบบหนี้เข้าไปในเกม
+    dailyGigIds: string[]; // งานที่เปิดอยู่วันนี้ (สุ่มใหม่เมื่อขึ้นวันใหม่ ทำแล้วหายไป)
+      flags: Record<string, FlagValue>; // ธงเรื่องราว + ตัวนับ
+  history: HistoryEntry[];
 }

@@ -65,6 +65,7 @@ src/
     ActiveGigScreen.tsx
     BootScreen.tsx
     EndOfDayScreen.tsx
+    EventScreen.tsx
     GameOverScreen.tsx
     GigBoardScreen.tsx
     GigDetailScreen.tsx
@@ -119,295 +120,6 @@ This section contains the contents of the repository's files.
     ]
   }
 }
-</file>
-
-<file path="ai/master_prompt.md">
-# Game Director: Master Prompt Template
-
-> For a solo developer who builds a game entirely with AI (100% vibe coding).
-> This template is neutral. It does not push any genre or direction.
-
-**How to use:** Paste this whole file at the start of a project, and again in any new chat. Fill in what you know. Anything left as `[not decided]` is something the AI should help you decide, not decide for you.
-
----
-
-## 1. Role and Identity
-
-You are the **Game Director** of this project.
-
-- I am a **solo developer with no coding background**. I use AI as my main tool.
-- You think through the **technical side for me**, but you **decide according to my vision**, and I make every final decision.
-- Explain everything so that someone who has never coded can follow it.
-- Always recommend the **simplest and fastest** option that works.
-- **Never assume the direction of the game.** Offer options and trade-offs, then let me choose.
-- If you spot a risk (scope too big, a feature that does not serve the core loop, a tool that costs money), say so clearly and briefly, then follow my decision.
-
-### My preferences (edit these)
-
-| Setting | Value |
-|---|---|
-| Language for replies | [Thai] |
-| Language for code comments | [Thai] |
-| Explanation level | [1] (see below) |
-| Budget | [Free tools only] |
-| Hours per week I can spend | [not decided] |
-
-**Explanation levels** (change anytime with `/level N`):
-- **Level 1, Beginner:** explain every step and every technical term in plain words.
-- **Level 2, Brief:** explain only new concepts and anything risky.
-- **Level 3, Minimal:** code and test steps only. I will ask if I need more.
-
----
-
-## 2. Core Concept
-
-Fill in what you can. If you cannot yet, say `/brainstorm`.
-
-| Item | Answer |
-|---|---|
-| Game name | [not decided] |
-| Genre | [e.g. roguelike, auto-battler, card, puzzle, RPG, simulation] |
-| Elevator pitch (one sentence) | [not decided] |
-| What makes it different | [not decided] |
-| Target audience | [not decided] |
-| Reference games | [games you love or draw inspiration from] |
-| Mood and tone | [e.g. dark, funny, cute, serious, surreal] |
-| Main platform | [web / PC / mobile / Roblox / not sure] |
-| Camera or view | [top-down / side-scroll / isometric / first-person / other] |
-| Length of one play session | [e.g. 5 min / 30 min / open-ended] |
-| Scope | [small / medium / large] |
-
----
-
-## 3. Architecture Philosophy
-
-**Local-first, multiplayer-optional.** If the game is 100% single-player, skip everything about multiplayer.
-
-```
-Phase 1: Single-player, fully playable alone
-   v
-Phase 2: Local co-op on one device        [optional]
-   v
-Phase 3: Online multiplayer, room-based   [optional]
-```
-
-Rules (details in `skill_architecture.md`):
-1. Single-player must be complete and fun before any multiplayer work.
-2. Multiplayer is a layer added later, never a rewrite.
-3. Use room-based sessions, not a persistent world.
-4. Every piece of game state has one clear owner.
-5. In online play, the host or server has the final say.
-
-### Multiplayer model [optional, delete if unused]
-
-- [ ] Co-op, 2 to 4 players
-- [ ] Competitive, 2 to 8 players
-- [ ] Team-based (2v2, 5v5, etc.)
-- [ ] Asynchronous (turn-taking, no need to be online together)
-
-Session flow: `Create/Join room -> Wait for players -> Start -> Play to the end -> Room closes`
-
----
-
-## 4. Game Design Principles
-
-Adjust to fit your game. Details in `skill_game_design.md`.
-
-1. **Fun is the main goal.**
-2. **The core loop is clear.** The player always knows what to do next.
-3. **Immediate feedback.** Every action has a visible, audible, or felt result.
-4. **Progression.** The player feels they are getting somewhere.
-5. **No needless complexity.** Simple is better.
-
-Example core loop (replace with yours):
-
-```
-Start -> Main activity -> Reward -> Upgrade or unlock -> Repeat
-```
-
----
-
-## 5. Tech Stack Options
-
-These are options, not decisions. Ask the Game Director to recommend one based on my game, then record the choice in the Decision Log.
-
-**Web game (easiest to vibe code, nothing to install)**
-
-| Part | Options |
-|---|---|
-| Engine | Plain HTML + JavaScript Canvas, Phaser, PixiJS, Kaboom/Kaplay |
-| Online play (only if needed) | Firebase, Supabase, PeerJS, Socket.io |
-| Hosting | GitHub Pages, Netlify, Vercel, itch.io |
-
-**Desktop game** (requires installing software, so use only if the web cannot do the job)
-
-| Part | Options |
-|---|---|
-| Engine | Godot 4, Unity, GameMaker |
-| Release | itch.io, Steam |
-
-**Mobile**
-
-| Part | Options |
-|---|---|
-| Engine | Godot, Unity, Flutter, or a web game as a PWA |
-| Release | PWA, Google Play, App Store |
-
----
-
-## 6. Development Phases
-
-Adjust to fit your game.
-
-### Phase 1: Core Gameplay MVP (rules in "Prototype mode")
-- [ ] Core loop playable from start to end of one session
-- [ ] Player character and controls
-- [ ] One basic enemy, obstacle, or challenge
-- [ ] Basic level, room, or stage
-- [ ] Minimal UI (start, pause, game over)
-- [ ] Placeholder art and sound are fine
-
-### Phase 2: Content and Polish (rules in "Polish mode")
-- [ ] Variety (characters, enemies, items, levels)
-- [ ] Progression system
-- [ ] Sound effects and music
-- [ ] Visual polish and animation
-- [ ] Playtests with other people
-
-### Phase 3: Local Co-op [optional]
-- [ ] Multiple inputs on one device
-- [ ] Balance for more than one player
-
-### Phase 4: Online Multiplayer [optional]
-- [ ] Room system
-- [ ] Network sync
-
-### Phase 5: Release
-- [ ] Final check on the target platform
-- [ ] Store or hosting page, screenshots, short description
-- [ ] Credits and license notes for all tools and assets used
-
----
-
-## 7. AI Workflow Rules
-
-1. **One prompt = one feature.**
-2. **Test after every step.** Do not stack features on untested code.
-3. **Keep it simple.** If a solution looks complicated, propose a simpler one first.
-4. **Explain at my chosen level** (see section 1).
-5. **Save a working version after every feature.** The simplest way is to download the project as a ZIP and name it with the date and a short note (e.g. `game_2026-11-04_player-moves.zip`). If I later choose to use Git, set it up for me step by step.
-6. **Ask before building.** For any new feature, confirm: what problem it solves, what existing code it touches, and whether a simpler way exists.
-
-### The AI must
-- Say what each part of the code does.
-- Say exactly how to run and test it.
-- State limits and trade-offs honestly, including when something might not work.
-- Suggest the next step, and wait for my approval.
-
-### The AI must not
-- Write code without explaining it (unless I am on Level 3).
-- Use complicated libraries when a simple solution exists.
-- Assume I know technical terms.
-- Steer the direction of the game. Advise, then let me decide.
-- Recommend paid tools or tools that need local installation without asking first.
-
----
-
-## 8. Decision Log
-
-Record every important decision. Use `/decide`.
-
-| Date | Decision | Reason | Impact |
-|---|---|---|---|
-| | | | |
-
----
-
-## 9. Style Guide [optional, fill in when your vision is clear]
-
-| Item | Value |
-|---|---|
-| Palette (hex codes) | [not decided] |
-| Art style | [pixel art / vector / low-poly 3D / hand-drawn / other] |
-| Camera angle | [not decided] |
-| Font | [not decided] |
-| Mood keywords | [not decided] |
-| Reference images | [links or file names] |
-
----
-
-## 10. Asset Inventory [optional]
-
-Use the naming convention from `skill_ai_artwork_generation.md`.
-
-- **Characters:** [ ]
-- **Enemies:** [ ]
-- **Backgrounds:** [ ]
-- **UI:** [ ]
-- **Audio (SFX and music):** [ ]
-
----
-
-## 11. Session Context
-
-Update this at the start of every new session. Details in `skill_session_manager.md`.
-
-```
-Current state:     [e.g. brainstorming / Phase 1 / fixing a bug]
-Done and working:  [list]
-In progress:       [what is being built or fixed right now]
-Blockers:          [problems that are stuck]
-Goal of this chat: [what I want finished in this session]
-```
-
----
-
-## 12. Modes
-
-### Brainstorming Mode (no idea yet)
-
-Say: "I do not have a game idea yet. Help me brainstorm using this template."
-
-The AI should:
-1. Ask the questions below, a few at a time rather than all at once:
-   - Which games have you enjoyed most, and why?
-   - Solo or with friends?
-   - How long do you want the project to take (1 week / 1 month / open)?
-   - Which platform do you prefer?
-   - Which mood do you like?
-   - What size of project feels safe?
-2. Offer 3 to 5 distinct ideas, each with a one-line pitch, pros, cons, and an honest scope estimate for a solo dev using AI.
-3. Mark which ideas are best suited to solo development with vibe coding.
-4. Not choose for me.
-
-### Update Mode (existing project)
-
-Say: "Update this master prompt to match the current status," and paste what has changed.
-
-The AI should update Session Context, add new Decision Log entries, adjust Core Concept if the vision changed, update the Asset Inventory, and suggest the next step. It returns the full updated file so I can save it.
-
----
-
-## 13. Quick Commands
-
-| Command | What it does |
-|---|---|
-| `/status` | Rewrite the Session Context from what we have done |
-| `/decide [decision]` | Add an entry to the Decision Log |
-| `/next` | Recommend the next step (with reasons) |
-| `/explain [code or feature]` | Explain in detail at Level 1 |
-| `/level [1-3]` | Change how much the AI explains |
-| `/simplify` | Find a simpler way to do the current thing |
-| `/cut` | Run the scope check: what could be removed without hurting the core loop? |
-| `/review` | Run the quality checklist on the current work |
-| `/backup` | Remind me how to save a working version, and suggest a file name |
-| `/brainstorm` | Start Brainstorming Mode |
-| `/update` | Start Update Mode |
-
----
-
-**Version:** 3.0 (neutral template, English edition)
-**Based on:** version 2.0, created 2026-11-04
 </file>
 
 <file path="ai/README.md">
@@ -1021,121 +733,6 @@ export const CLAMP = {
 };
 </file>
 
-<file path="src/app/store.ts">
-import { create } from 'zustand';
-import type { GameState } from './types';
-import { START_STATS, START_TIME } from './constants';
-
-export const useGame = create<GameState>(() => ({
-  screen: 'boot',
-  stats: { ...START_STATS },
-  time: { ...START_TIME },
-  activeGigId: null,
-  lastResult: null,
-  log: [],
-}));
-
-export const patch = (p: Partial<GameState>) => useGame.setState(p);
-
-export const pushLog = (line: string) =>
-  useGame.setState(s => ({ log: [...s.log, line].slice(-50) }));
-</file>
-
-<file path="src/app/types.ts">
-export type TimeBlock = 'morning' | 'afternoon' | 'night';
-
-export type Screen =
-  | 'boot' | 'home' | 'gigBoard' | 'gigDetail'
-  | 'activeGig' | 'endOfDay' | 'gameOver' | 'gameWin';
-
-export interface Stats {
-  money: number;
-  heat: number;   // 0..100
-  rep: number;    // 1..5
-  sanity: number; // 0..100
-}
-
-export interface TimeState { day: number; block: TimeBlock; }
-
-export interface Gig {
-  id: string;
-  title: string;
-  description: string;
-  tier: 1 | 2 | 3 | 4 | 5;
-  durationBlocks: 1 | 2;
-  rewardMoney: number;
-  rewardRep: number;
-  heatGain: number;
-  sanityCost: number;
-  policeRisk: number;
-}
-
-export interface LastResult {
-  title: string;
-  lines: string[];
-}
-
-export interface GameState {
-  screen: Screen;
-  stats: Stats;
-  time: TimeState;
-  activeGigId: string | null;
-  lastResult: LastResult | null;
-  log: string[];
-}
-</file>
-
-<file path="src/data/events.ts">
-
-</file>
-
-<file path="src/data/gigs.ts">
-import type { Gig } from '../app/types';
-
-export const GIGS: Gig[] = [
-  {
-    id: 'gig-01',
-    title: 'ส่งพัสดุ "ไม่ต้องถาม"',
-    description: 'ลูกค้าฝากกล่องปิดผนึก ส่งข้ามเมือง ห้ามเขย่า',
-    tier: 1, durationBlocks: 1,
-    rewardMoney: 400, rewardRep: 0,
-    heatGain: 10, sanityCost: 5, policeRisk: 0.10,
-  },
-  {
-    id: 'gig-02',
-    title: 'ถ่ายรูปงานแต่ง (ไม่เชิญ)',
-    description: 'เจ้านายอยากได้ภาพ "บรรยากาศ" ของงานที่ไม่ให้เข้า',
-    tier: 2, durationBlocks: 2,
-    rewardMoney: 900, rewardRep: 1,
-    heatGain: 20, sanityCost: 15, policeRisk: 0.20,
-  },
-  {
-    id: 'gig-03',
-    title: 'เป็นตัวประกอบ MV ตำรวจ',
-    description: 'ถ่ายทำ 3 ชั่วโมง ไม่มีค่าตัว แต่มียืมเงิน',
-    tier: 2, durationBlocks: 2,
-    rewardMoney: 700, rewardRep: 1,
-    heatGain: 5, sanityCost: 10, policeRisk: 0.05,
-  },
-  {
-    id: 'gig-04',
-    title: 'ขนของ "ห้ามเปิด"',
-    description: 'กล่องมีเสียง...แต่ลูกค้าจ่ายดี',
-    tier: 3, durationBlocks: 2,
-    rewardMoney: 1800, rewardRep: 2,
-    heatGain: 35, sanityCost: 25, policeRisk: 0.35,
-  },
-  {
-    id: 'gig-05',
-    title: 'ปลอมตัวเป็นหมอ 1 วัน',
-    description: 'ลูกค้าอยากได้ใบรับรองสุขภาพปลอม (ไม่ต้องรักษาใคร)',
-    tier: 4, durationBlocks: 2,
-    rewardMoney: 3500, rewardRep: 3,
-    heatGain: 50, sanityCost: 40, policeRisk: 0.50,
-  },
-];
-</file>
-
 <file path="src/screens/EndOfDayScreen.tsx">
 import { useGame } from '../app/store';
 import { StatusBar } from '../ui/StatusBar';
@@ -1181,33 +778,73 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 </file>
 
-<file path="src/screens/GameOverScreen.tsx">
-import { useGame } from '../app/store';
-import { DEBT_GOAL } from '../app/constants';
+<file path="src/screens/EventScreen.tsx">
+import { useGame, patch } from '../app/store';
+import { StatusBar } from '../ui/StatusBar';
 import { Button } from '../ui/Button';
+import { goTo } from '../systems/fsm';
+import { applyEventEffect } from '../systems/eventSystem';
+import type { GameEvent } from '../data/events';
 
-export function GameOverScreen() {
-  const { screen, stats, time } = useGame(s => ({ screen: s.screen, stats: s.stats, time: s.time }));
-  const isWin = screen === 'gameWin';
-  const paidDebt = isWin && stats.money >= DEBT_GOAL;
+export function EventScreen() {
+  const activeEvent = useGame(s => s.activeEvent) as GameEvent | null;
 
-  const title = isWin
-    ? paidDebt ? '🏆 จ่ายหนี้ครบ!' : '✨ เอาตัวรอดได้!'
-    : stats.sanity <= 0 ? '🧠 สติแตก' : '💸 เงินหมด';
+  if (!activeEvent) return null;
 
-  const subtitle = isWin
-    ? paidDebt ? `เหลือเงิน $${stats.money} — เกินเป้าหมาย $${DEBT_GOAL}`
-               : `รอดชีวิตถึงวันที่ ${time.day} ด้วยเงิน $${stats.money}`
-    : `ไปไม่ถึงวันที่ ${time.day}...`;
+  const handleChoice = (choice: GameEvent['choices'][0]) => {
+    // 1. คำนวณค่าสถิติใหม่
+    const newStats = applyEventEffect(choice.effect);
+    
+    // 2. อัปเดต Store (ล้าง event และเซฟผลลัพธ์)
+    patch({
+      stats: newStats,
+      lastResult: { title: activeEvent.title, lines: [choice.resultText] },
+      activeEvent: null,
+    });
+
+    // 3. เช็คเงื่อนไขแพ้
+    if (newStats.money < 0 || newStats.sanity <= 0) {
+      goTo('gameOver');
+      return;
+    }
+
+    // 4. กลับหน้าหลัก
+    goTo('home');
+  };
 
   return (
-    <div className={`flex-1 flex flex-col items-center justify-center p-6 gap-4 ${isWin ? 'bg-emerald-950/40' : 'bg-red-950/40'}`}>
-      <h1 className="text-3xl font-bold text-center">{title}</h1>
-      <p className="text-center text-sm text-neutral-300">{subtitle}</p>
-      <Button variant="primary" onClick={() => window.location.reload()}>
-        เล่นใหม่
-      </Button>
-    </div>
+    <>
+      <StatusBar />
+      <div className="flex-1 flex flex-col items-center justify-center p-6 gap-6 bg-neutral-900/95 screen-motion">
+        {/* ไอคอนเหตุการณ์ */}
+        <div className="w-24 h-24 rounded-full bg-neutral-800 border-2 border-red-500/30 flex items-center justify-center text-5xl shadow-[0_0_30px_rgba(239,68,68,0.2)] animate-pulse">
+          {activeEvent.icon}
+        </div>
+
+        {/* ข้อความ */}
+        <div className="text-center space-y-2">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-red-400 font-bold">Unexpected Event</div>
+          <h2 className="text-xl font-bold text-white">{activeEvent.title}</h2>
+          <p className="text-sm text-neutral-300 leading-relaxed px-2">
+            {activeEvent.description}
+          </p>
+        </div>
+
+        {/* ปุ่มตัวเลือก */}
+        <div className="w-full space-y-3 mt-4">
+          {activeEvent.choices.map((choice, index) => (
+            <Button
+              key={index}
+              variant={index === 0 ? 'primary' : 'secondary'}
+              onClick={() => handleChoice(choice)}
+              className="text-left justify-start !py-4"
+            >
+              {choice.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 </file>
@@ -1274,53 +911,6 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 </file>
 
-<file path="src/screens/HomeScreen.tsx">
-import { useGame } from '../app/store';
-import { StatusBar } from '../ui/StatusBar';
-import { Button } from '../ui/Button';
-import { doNormalLife } from '../systems/lifeSystem';
-import { goTo } from '../systems/fsm';
-
-export function HomeScreen() {
-  const lastResult = useGame(s => s.lastResult);
-  const remaining = 3 - ['morning', 'afternoon', 'night'].indexOf(useGame.getState().time.block);
-
-  return (
-    <>
-      <StatusBar />
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {lastResult && (
-          <div className="rounded-xl bg-emerald-900/30 border border-emerald-700/40 p-3">
-            <div className="font-semibold text-sm text-emerald-300">{lastResult.title}</div>
-            <ul className="mt-1 text-xs text-emerald-100/80 space-y-0.5">
-              {lastResult.lines.map((l, i) => <li key={i}>{l}</li>)}
-            </ul>
-          </div>
-        )}
-
-        <div className="rounded-xl bg-neutral-800/50 border border-white/5 p-4">
-          <div className="text-xs text-neutral-400">เหลืออีก</div>
-          <div className="text-2xl font-bold">{remaining} ช่วงเวลา</div>
-          <div className="text-xs text-neutral-500 mt-1">ในวันนี้</div>
-        </div>
-
-        <div className="space-y-2">
-          <Button variant="secondary" onClick={() => doNormalLife('work')}>
-            💼 ไปทำงานประจำ (+$200)
-          </Button>
-          <Button variant="secondary" onClick={() => doNormalLife('rest')}>
-            🛏️ นอนพักผ่อน (+20🧠, -10🔥)
-          </Button>
-          <Button variant="primary" onClick={() => goTo('gigBoard')}>
-            🕶️ เปิดแอปงานเทา
-          </Button>
-        </div>
-      </div>
-    </>
-  );
-}
-</file>
-
 <file path="src/systems/endGameSystem.ts">
 import { CLAMP } from '../app/constants';
 import { useGame } from '../app/store';
@@ -1331,147 +921,6 @@ export function checkWinLoss(): boolean {
   if (stats.sanity <= CLAMP.sanity[0]) { goTo('gameOver'); return true; }
   if (stats.money < 0)                { goTo('gameOver'); return true; }
   return false;
-}
-</file>
-
-<file path="src/systems/eventSystem.ts">
-import { mulberry32 } from '../app/utils/rng';
-
-let rng = mulberry32(0xC0FFEE);
-
-export function seedRandom(seed: number): void {
-  rng = mulberry32(seed);
-}
-
-export function rollPolice(risk: number): boolean {
-  return rng() < risk;
-}
-</file>
-
-<file path="src/systems/fsm.ts">
-import { useGame } from '../app/store';
-import type { Screen } from '../app/types';
-
-const ALLOWED: Record<Screen, Screen[]> = {
-  boot: ['home'],
-  home: ['gigBoard', 'endOfDay', 'gameOver', 'gameWin'],
-  gigBoard: ['home', 'gigDetail'],
-  gigDetail: ['gigBoard', 'activeGig'],
-  activeGig: ['home', 'endOfDay', 'gameOver', 'gameWin'],
-  endOfDay: ['home', 'gameOver', 'gameWin'],
-  gameOver: [],
-  gameWin: [],
-};
-
-export function goTo(next: Screen): void {
-  const cur = useGame.getState().screen;
-  
-  if (!ALLOWED[cur] || !ALLOWED[cur].includes(next)) {
-    console.warn(`[FSM] illegal transition: ${cur} → ${next}`);
-    return;
-  }
-  
-  console.log(`[FSM] เปลี่ยนจาก ${cur} ไป ${next} สำเร็จ!`);
-  useGame.setState({ screen: next });
-}
-</file>
-
-<file path="src/systems/gigSystem.ts">
-import { CLAMP } from '../app/constants';
-import { patch, pushLog, useGame } from '../app/store';
-import type { Gig } from '../app/types';
-import { goTo } from './fsm';
-import { consumeBlocks } from './timeSystem';
-import { rollPolice } from './eventSystem';
-
-const clamp = (v: number, [lo, hi]: [number, number]) =>
-  Math.max(lo, Math.min(hi, v));
-
-export function acceptGig(gig: Gig): void {
-  patch({ activeGigId: gig.id });
-  goTo('activeGig');
-}
-
-export function resolveGig(gig: Gig): void {
-  const s = useGame.getState();
-  const lines = [
-    `💰 +$${gig.rewardMoney}`,
-    `⭐ +${gig.rewardRep}`,
-    `🔥 +${gig.heatGain}`,
-    `🧠 -${gig.sanityCost}`,
-  ];
-
-  let heat = clamp(s.stats.heat + gig.heatGain, CLAMP.heat);
-  if (rollPolice(gig.policeRisk)) {
-    heat = clamp(heat + 15, CLAMP.heat);
-    lines.push('🚨 ตำรวจโผล่กลางงาน! 🔥 +15');
-  }
-
-  const stats = {
-    money: s.stats.money + gig.rewardMoney,
-    heat,
-    rep: clamp(s.stats.rep + gig.rewardRep, CLAMP.rep),
-    sanity: clamp(s.stats.sanity - gig.sanityCost, CLAMP.sanity),
-  };
-
-  patch({
-    stats,
-    activeGigId: null,
-    lastResult: { title: `เสร็จ: ${gig.title}`, lines },
-  });
-  pushLog(`Gig "${gig.title}" เสร็จ (+$${gig.rewardMoney})`);
-
-  consumeBlocks(gig.durationBlocks);
-
-  // ถ้า system เปลี่ยน screen ไปแล้ว (endOfDay/gameOver/gameWin) → เคารพ
-  if (useGame.getState().screen !== 'activeGig') return;
-
-  const final = useGame.getState();
-  if (final.stats.sanity <= 0 || final.stats.money < 0) {
-    goTo('gameOver');
-    return;
-  }
-  goTo('home');
-}
-</file>
-
-<file path="src/systems/lifeSystem.ts">
-import { NORMAL_LIFE, CLAMP } from '../app/constants';
-import { patch, pushLog, useGame } from '../app/store';
-import { goTo } from './fsm';
-import { consumeBlocks } from './timeSystem';
-
-const clamp = (v: number, [lo, hi]: [number, number]) =>
-  Math.max(lo, Math.min(hi, v));
-
-export function doNormalLife(action: keyof typeof NORMAL_LIFE): void {
-  const s = useGame.getState();
-  const cfg = NORMAL_LIFE[action];
-
-  const stats = {
-    ...s.stats,
-    money: s.stats.money + cfg.money,
-    heat: clamp(s.stats.heat + cfg.heat, CLAMP.heat),
-    sanity: clamp(s.stats.sanity + cfg.sanity, CLAMP.sanity),
-  };
-
-  const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
-  patch({
-    stats,
-    lastResult: {
-      title: cfg.label,
-      lines: [`💰 ${sign(cfg.money)}`, `🔥 ${sign(cfg.heat)}`, `🧠 ${sign(cfg.sanity)}`],
-    },
-  });
-  pushLog(`${cfg.label} — $${cfg.money}, 🔥${cfg.heat}, 🧠${cfg.sanity}`);
-
-  consumeBlocks(1);
-
-  // ถ้า action ทำให้ sanity แตะ 0 หลัง consumeBlocks แต่ยังอยู่ home
-  const final = useGame.getState();
-  if (final.screen === 'home' && (final.stats.sanity <= 0 || final.stats.money < 0)) {
-    goTo('gameOver');
-  }
 }
 </file>
 
@@ -1650,109 +1099,600 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({ plugins: [react()] });
 </file>
 
-<file path="src/screens/ActiveGigScreen.tsx">
+<file path="src/app/store.ts">
+import { create } from 'zustand';
+import type { GameState } from './types';
+import { START_STATS, START_TIME } from './constants';
+
+export const useGame = create<GameState>(() => ({
+  screen: 'boot',
+  stats: { ...START_STATS },
+  time: { ...START_TIME },
+  activeGigId: null,
+  lastResult: null,
+  log: [],
+  activeEvent: null,
+}));
+
+export const patch = (p: Partial<GameState>) => useGame.setState(p);
+
+export const pushLog = (line: string) =>
+  useGame.setState(s => ({ log: [...s.log, line].slice(-50) }));
+</file>
+
+<file path="src/app/types.ts">
+export type TimeBlock = 'morning' | 'afternoon' | 'night';
+
+export type Screen =
+  | 'boot' | 'home' | 'gigBoard' | 'gigDetail'
+  | 'activeGig' | 'endOfDay' | 'gameOver' | 'gameWin'
+  | 'event';
+
+export interface Stats {
+  money: number;
+  heat: number;   // 0..100
+  rep: number;    // 1..5
+  sanity: number; // 0..100
+}
+
+export interface TimeState { day: number; block: TimeBlock; }
+
+export interface Gig {
+  id: string;
+  title: string;
+  description: string;
+  tier: 1 | 2 | 3 | 4 | 5;
+  durationBlocks: 1 | 2;
+  rewardMoney: number;
+  rewardRep: number;
+  heatGain: number;
+  sanityCost: number;
+  policeRisk: number;
+}
+
+export interface LastResult {
+  title: string;
+  lines: string[];
+}
+
+export interface GameState {
+  screen: Screen;
+  stats: Stats;
+  time: TimeState;
+  activeGigId: string | null;
+  lastResult: LastResult | null;
+  log: string[];
+  activeEvent: any | null;
+}
+</file>
+
+<file path="src/data/events.ts">
+import type { Stats } from '../app/types';
+
+export interface GameEvent {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  choices: {
+    label: string;
+    effect: Partial<Stats>;
+    resultText: string;
+  }[];
+}
+
+export const RANDOM_EVENTS: GameEvent[] = [
+  {
+    id: 'event-cop-bribe',
+    title: 'ตำรวจเรียกตรวจ',
+    description: 'คุณกำลังเดินอยู่ดีๆ ตำรวจก็เข้ามาขวางหน้าและขอตรวจกระเป๋า',
+    icon: '👮',
+    choices: [
+      { label: 'จ่ายเงินใต้โต๊ะ (💰 -100)', effect: { money: -100, heat: -20 }, resultText: 'คุณรอดตัวไปได้ แต่กระเป๋าแบนลง' },
+      { label: 'วิ่งหนี! (🧠 -15, 🔥 +20)', effect: { sanity: -15, heat: 20 }, resultText: 'คุณวิ่งสุดชีวิตจนปอดแทบแตก รอดมาได้แต่ตำรวจจำหน้าได้' },
+    ],
+  },
+  {
+    id: 'event-found-wallet',
+    title: 'เก็บกระเป๋าสตางค์ได้',
+    description: 'คุณเจอกระเป๋าสตางค์ตกอยู่บนพื้น ข้างในมีเงินสดและบัตรประชาชน',
+    icon: '👛',
+    choices: [
+      { label: 'เก็บเงินแล้วทิ้งกระเป๋า (💰 +200, 🔥 +10)', effect: { money: 200, heat: 10 }, resultText: 'คุณได้เงินมาใช้ แต่รู้สึกผิดนิดหน่อย' },
+      { label: 'นำไปส่งคืนตำรวจ (⭐ +1, 🧠 +10)', effect: { rep: 1, sanity: 10 }, resultText: 'เจ้าของกระเป๋าขอบคุณคุณมาก คุณรู้สึกดีกับตัวเอง' },
+    ],
+  },
+  {
+    id: 'event-nightmare',
+    title: 'ฝันร้ายเรื่องหนี้สิน',
+    description: 'คุณฝันเห็นเจ้าหนี้มาจ่อปืนที่หัว เพราะคุณส่งเงินไม่ตรงเวลา',
+    icon: '💤',
+    choices: [
+      { label: 'ตื่นขึ้นมาทำงานทั้งคืน (🧠 -20, 💰 +50)', effect: { sanity: -20, money: 50 }, resultText: 'คุณตื่นมาและทำงานจนเช้า ได้เงินมาเพิ่มแต่สภาพจิตใจย่ำแย่' },
+      { label: 'กินยานอนหลับต่อ (🧠 +10, 🔥 +5)', effect: { sanity: 10, heat: 5 }, resultText: 'คุณหลับต่อจนเช้า รู้สึกสดชื่นขึ้น แต่เริ่มติดยา' },
+    ],
+  },
+  // --- เพิ่มใหม่ ---
+  {
+    id: 'event-dumpster',
+    title: 'ข้าวกล่องข้างถังขยะ',
+    description: 'คุณหิวมาก และเห็นข้าวกล่องที่ยังดูดีวางอยู่ข้างถังขยะหลังร้านสะดวกซื้อ',
+    icon: '🍱',
+    choices: [
+      { label: 'กินมันเข้าไป (💰 +50, 🧠 -15)', effect: { money: 50, sanity: -15 }, resultText: 'คุณประหยัดค่าข้าวได้ แต่รู้สึกแย่กับตัวเองและท้องเสียเล็กน้อย' },
+      { label: 'ทิ้งไปและซื้อข้าวใหม่ (💰 -80)', effect: { money: -80 }, resultText: 'คุณยอมจ่ายแพงเพื่อรักษาศักดิ์ศรีและสุขภาพ' },
+    ],
+  },
+  {
+    id: 'event-loan-shark',
+    title: 'เจ้าหนี้โทรมา',
+    description: 'เสียงโทรศัพท์ดังขึ้น คุณเห็นชื่อ "พี่โจ" เจ้าหนี้รายใหญ่ที่คุณยังค้างเงินอยู่',
+    icon: '📱',
+    choices: [
+      { label: 'รับสายและอ้อนวอน (🧠 -20)', effect: { sanity: -20 }, resultText: 'พี่โจด่าคุณยกใหญ่ แต่ให้เวลาอีก 2 วัน' },
+      { label: 'ปิดเครื่องหนี (🔥 +15)', effect: { heat: 15 }, resultText: 'คุณปิดเครื่อง แต่รู้ว่าพี่โจต้องตามหาคุณเจอแน่' },
+    ],
+  },
+  {
+    id: 'event-cat',
+    title: 'แมวจรข้างทาง',
+    description: 'มีแมวจรสีดำตัวหนึ่งเดินเข้ามาถูขาคุณ มันดูหิวและหนาว',
+    icon: '🐈‍⬛',
+    choices: [
+      { label: 'ซื้ออาหารให้มัน (💰 -30, 🧠 +20)', effect: { money: -30, sanity: 20 }, resultText: 'แมวกินอาหารอย่างมีความสุข คุณรู้สึกใจฟูขึ้นมาก' },
+      { label: 'เตะมันออกไป (🔥 +5, 🧠 -10)', effect: { heat: 5, sanity: -10 }, resultText: 'คุณระบายความหงุดหงิดใส่แมว แต่รู้สึกผิดในใจ' },
+    ],
+  },
+  {
+    id: 'event-blood-money',
+    title: 'งานด่วนค่าเหนื่อยสูง',
+    description: 'มีสายปริศนาโทรมา เสนองานด่วนให้ "ขนของ" ในคืนนี้ จ่ายเงินสด 1,000 เหรียญ แต่ไม่บอกว่าเป็นอะไร',
+    icon: '📞',
+    choices: [
+      { label: 'รับงานทันที (💰 +1000, 🔥 +30)', effect: { money: 1000, heat: 30 }, resultText: 'คุณได้เงินก้อนโตมา แต่ต้องระแวงตลอดคืน' },
+      { label: 'ปฏิเสธ (🧠 +5)', effect: { sanity: 5 }, resultText: 'คุณวางสาย รู้สึกโล่งใจที่ไม่ต้องเสี่ยง' },
+    ],
+  },
+  {
+    id: 'event-hospital',
+    title: 'ปวดหัวอย่างรุนแรง',
+    description: 'คุณเริ่มปวดหัวตุบๆ จนมองเห็นภาพซ้อน อาจเป็นเพราะความเครียดสะสม',
+    icon: '💊',
+    choices: [
+      { label: 'ไปหาหมอ (💰 -200, 🧠 +30)', effect: { money: -200, sanity: 30 }, resultText: 'หมอให้ยาและแนะนำให้พักผ่อน คุณรู้สึกดีขึ้นเยอะ' },
+      { label: 'อดทนไว้ (🧠 -25, 💰 +0)', effect: { sanity: -25 }, resultText: 'คุณกินพาราเซตามอลและฝืนทำงานต่อ สติเริ่มหลุดลอย' },
+    ],
+  },
+  {
+    id: 'event-free-food',
+    title: 'ร้านอาหารแจกฟรี',
+    description: 'คุณเดินผ่านร้านก๋วยเตี๋ยว ร้านกำลังฉลองเปิดสาขาใหม่และแจกอาหารฟรี 1 มื้อ',
+    icon: '🍜',
+    choices: [
+      { label: 'ต่อคิวรับอาหาร (🧠 +15, 💰 +20)', effect: { sanity: 15, money: 20 }, resultText: 'คุณได้กินฟรีและประหยัดค่าข้าวไปได้ 1 มื้อ' },
+      { label: 'รีบไปทำงานต่อ (💰 +0, 🔥 -5)', effect: { heat: -5 }, resultText: 'คุณไม่สนใจอาหาร แต่ก็เดินเลี่ยงไปได้เร็วขึ้น' },
+    ],
+  },
+];
+</file>
+
+<file path="src/data/gigs.ts">
+import type { Gig } from '../app/types';
+
+export const GIGS: Gig[] = [
+  {
+    id: 'gig-01',
+    title: 'ส่งพัสดุ "ไม่ต้องถาม"',
+    description: 'ลูกค้าฝากกล่องปิดผนึก ส่งข้ามเมือง ห้ามเขย่า',
+    tier: 1, durationBlocks: 1,
+    rewardMoney: 400, rewardRep: 0,
+    heatGain: 10, sanityCost: 5, policeRisk: 0.10,
+  },
+  {
+    id: 'gig-02',
+    title: 'ถ่ายรูปงานแต่ง (ไม่เชิญ)',
+    description: 'เจ้านายอยากได้ภาพ "บรรยากาศ" ของงานที่ไม่ให้เข้า',
+    tier: 2, durationBlocks: 2,
+    rewardMoney: 900, rewardRep: 1,
+    heatGain: 20, sanityCost: 15, policeRisk: 0.20,
+  },
+  {
+    id: 'gig-03',
+    title: 'เป็นตัวประกอบ MV ตำรวจ',
+    description: 'ถ่ายทำ 3 ชั่วโมง ไม่มีค่าตัว แต่มียืมเงิน',
+    tier: 2, durationBlocks: 2,
+    rewardMoney: 700, rewardRep: 1,
+    heatGain: 5, sanityCost: 10, policeRisk: 0.05,
+  },
+  {
+    id: 'gig-04',
+    title: 'ขนของ "ห้ามเปิด"',
+    description: 'กล่องมีเสียง...แต่ลูกค้าจ่ายดี',
+    tier: 3, durationBlocks: 2,
+    rewardMoney: 1800, rewardRep: 2,
+    heatGain: 35, sanityCost: 25, policeRisk: 0.35,
+  },
+  {
+    id: 'gig-05',
+    title: 'ปลอมตัวเป็นหมอ 1 วัน',
+    description: 'ลูกค้าอยากได้ใบรับรองสุขภาพปลอม (ไม่ต้องรักษาใคร)',
+    tier: 4, durationBlocks: 2,
+    rewardMoney: 3500, rewardRep: 3,
+    heatGain: 50, sanityCost: 40, policeRisk: 0.50,
+  },
+  // --- เพิ่มใหม่ ---
+  {
+    id: 'gig-06',
+    title: 'ล้วงกระเป๋าในตลาดนัด',
+    description: 'เป้าหมายคือนักท่องเที่ยวต่างชาติที่เดินชมตลาดเพลินๆ',
+    tier: 1, durationBlocks: 1,
+    rewardMoney: 500, rewardRep: 1,
+    heatGain: 25, sanityCost: 15, policeRisk: 0.20,
+  },
+  {
+    id: 'gig-07',
+    title: 'เป็นหน้าม้าในบ่อนเถื่อน',
+    description: 'แค่ยืนถือไพ่และทำหน้าตาเฉยๆ ไม่ให้ใครจับได้',
+    tier: 3, durationBlocks: 2,
+    rewardMoney: 2000, rewardRep: 2,
+    heatGain: 40, sanityCost: 30, policeRisk: 0.40,
+  },
+  {
+    id: 'gig-08',
+    title: 'ขับรถพาหนี (Getaway Driver)',
+    description: 'รอรับคนที่วิ่งออกมาจากตึก แล้วเหยียบมิดไมล์ทันที',
+    tier: 4, durationBlocks: 2,
+    rewardMoney: 4000, rewardRep: 4,
+    heatGain: 60, sanityCost: 45, policeRisk: 0.60,
+  },
+  {
+    id: 'gig-09',
+    title: 'ส่งสารขู่เจ้าหนี้',
+    description: 'แค่เอากล่องปริศนาไปวางหน้าบ้าน ไม่ต้องพูดอะไร',
+    tier: 2, durationBlocks: 1,
+    rewardMoney: 800, rewardRep: 1,
+    heatGain: 15, sanityCost: 20, policeRisk: 0.15,
+  },
+  {
+    id: 'gig-10',
+    title: 'ลักลอบขน SIM Card',
+    description: 'ซ่อนซิมการ์ดในรองเท้า แล้วเดินผ่านด่านตรวจ',
+    tier: 5, durationBlocks: 2,
+    rewardMoney: 5500, rewardRep: 5,
+    heatGain: 75, sanityCost: 50, policeRisk: 0.70,
+  },
+];
+</file>
+
+<file path="src/screens/GameOverScreen.tsx">
 import { useGame } from '../app/store';
-import { GIGS } from '../data/gigs';
+import { DEBT_GOAL, TOTAL_DAYS } from '../app/constants';
+import { Button } from '../ui/Button';
+
+export function GameOverScreen() {
+  const { screen, stats, time } = useGame(s => ({ screen: s.screen, stats: s.stats, time: s.time }));
+  
+  // เงื่อนไขการชนะ
+  const isWin = screen === 'gameWin';
+  const paidDebt = isWin && stats.money >= DEBT_GOAL;
+
+  // หาสาเหตุการตาย (ถ้าแพ้)
+  let deathReason = "";
+  if (!isWin) {
+    if (stats.sanity <= 0) deathReason = "สติแตก! คุณทนความกดดันไม่ไหวจนต้องยอมแพ้ทุกอย่าง";
+    else if (stats.money < 0) deathReason = "เงินหมดตัว! คุณถูกไล่ที่และไม่มีเงินจ่ายค่ากินอยู่";
+    else deathReason = "คุณปล่อยเวลาให้ล่วงเลยจนเลยเดดไลน์";
+  }
+
+  const title = isWin
+    ? paidDebt ? '🏆 จ่ายหนี้ครบ!' : '✨ เอาตัวรอดได้!'
+    : '💀 GAME OVER';
+
+  return (
+    <div className={`flex-1 flex flex-col items-center justify-center p-6 gap-6 ${isWin ? 'bg-emerald-950/40' : 'bg-red-950/40'}`}>
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-2">{title}</h1>
+        {isWin ? (
+          <p className="text-emerald-200">คุณรอดชีวิตและใช้หนี้หมดภายใน {time.day} วัน</p>
+        ) : (
+          <p className="text-red-300 font-semibold text-lg">{deathReason}</p>
+        )}
+      </div>
+
+      <div className="bg-black/30 rounded-xl p-4 w-full max-w-xs text-sm space-y-2 border border-white/10">
+        <div className="flex justify-between"><span className="text-neutral-400">วันที่ไปถึง:</span> <span>Day {time.day} / {TOTAL_DAYS}</span></div>
+        <div className="flex justify-between"><span className="text-neutral-400">เงินคงเหลือ:</span> <span>${stats.money} / ${DEBT_GOAL}</span></div>
+        <div className="flex justify-between"><span className="text-neutral-400">สติคงเหลือ:</span> <span>{stats.sanity}</span></div>
+        <div className="flex justify-between"><span className="text-neutral-400">ระดับความเสี่ยง:</span> <span>{stats.heat}</span></div>
+      </div>
+
+      <Button variant="primary" onClick={() => window.location.reload()} className="max-w-xs">
+        เริ่มเกมใหม่
+      </Button>
+    </div>
+  );
+}
+</file>
+
+<file path="src/screens/HomeScreen.tsx">
+import { useGame } from '../app/store';
 import { StatusBar } from '../ui/StatusBar';
 import { Button } from '../ui/Button';
-import { resolveGig } from '../systems/gigSystem';
+import { doNormalLife } from '../systems/lifeSystem';
+import { goTo } from '../systems/fsm';
+import { DEBT_GOAL, TOTAL_DAYS, DAILY_COST } from '../app/constants';
 
-export function ActiveGigScreen() {
-  const activeId = useGame(s => s.activeGigId);
-  const gig = GIGS.find(g => g.id === activeId);
-
-  if (!gig) return null;
+export function HomeScreen() {
+  const lastResult = useGame(s => s.lastResult);
+  const { time, stats } = useGame(s => ({ time: s.time, stats: s.stats }));
+  
+  const remainingBlocks = 3 - ['morning', 'afternoon', 'night'].indexOf(time.block);
+  const daysLeft = TOTAL_DAYS - time.day;
+  const moneyNeeded = DEBT_GOAL - stats.money;
+  
+  // คำนวณว่าต้องหาเงินเฉลี่ยวันละเท่าไหร่
+  const dailyTarget = Math.ceil(Math.max(0, moneyNeeded) / Math.max(1, daysLeft));
 
   return (
     <>
       <StatusBar />
-      <div className="active-gig-screen flex-1 flex flex-col items-center justify-center p-6 gap-4">
-        <div className="gig-orbit" aria-hidden="true">
-          <span className="gig-orbit-ring" />
-          <span className="text-5xl relative z-10">🕶️</span>
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        
+        {/* แจ้งเตือนอันตราย */}
+        {(stats.sanity <= 20 || stats.heat >= 80 || stats.money < DAILY_COST) && (
+          <div className="rounded-xl bg-red-950/60 border border-red-500/50 p-3 text-red-200 animate-pulse">
+            <div className="font-bold text-xs flex items-center gap-1">⚠️ คำเตือนอันตราย</div>
+            <ul className="text-[11px] mt-1 space-y-0.5 opacity-90">
+              {stats.sanity <= 20 && <li>- สติคุณใกล้แตก (เหลือ {stats.sanity}) ถ้าถึง 0 คุณจะแพ้ทันที</li>}
+              {stats.heat >= 80 && <li>- ตำรวจกำลังจับตาคุณอย่างหนัก (Heat {stats.heat}/100) ระวังตัวด้วย</li>}
+              {stats.money < DAILY_COST && <li>- เงินคุณไม่พอจ่ายค่ากินอยู่พรุ่งนี้ (${DAILY_COST})!</li>}
+            </ul>
+          </div>
+        )}
+
+        {/* ผลลัพธ์จาก action ล่าสุด */}
+        {lastResult && (
+          <div className="rounded-xl bg-emerald-900/30 border border-emerald-700/40 p-3">
+            <div className="font-semibold text-sm text-emerald-300">{lastResult.title}</div>
+            <ul className="mt-1 text-xs text-emerald-100/80 space-y-0.5">
+              {lastResult.lines.map((l, i) => <li key={i}>{l}</li>)}
+            </ul>
+          </div>
+        )}
+
+        {/* การ์ดเป้าหมายหลัก */}
+        <div className="rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-900 border border-neutral-700 p-4 shadow-lg">
+          <div className="flex justify-between items-start">
+            <div>
+              <div className="text-[10px] uppercase tracking-wider text-red-400 font-bold mb-1">Deadline</div>
+              <div className="text-xl font-bold text-white">เป้าหมาย: จ่ายหนี้ ${DEBT_GOAL}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-emerald-400">{daysLeft}</div>
+              <div className="text-[10px] text-neutral-400">วันที่เหลือ</div>
+            </div>
+          </div>
+          
+          <div className="mt-3 w-full bg-neutral-950 rounded-full h-2.5">
+            <div 
+              className="bg-emerald-500 h-2.5 rounded-full transition-all duration-1000" 
+              style={{ width: `${Math.min(100, (stats.money / DEBT_GOAL) * 100)}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-[11px] text-neutral-400 mt-1.5">
+            <span>เก็บได้แล้ว ${stats.money}</span>
+            <span>ต้องหาเพิ่มวันละ ~${dailyTarget}</span>
+          </div>
         </div>
-        <div className="text-center">
-          <div className="active-kicker text-[10px] uppercase tracking-[0.28em] text-emerald-400/70">Contract in progress</div>
-          <div className="text-xs text-neutral-400 mt-2">กำลังทำงาน...</div>
-          <h2 className="text-lg font-bold mt-1">{gig.title}</h2>
+
+        {/* ปุ่มแอคชั่น */}
+        <div className="space-y-2 mt-4">
+          <div className="text-[10px] uppercase tracking-widest text-neutral-500 mb-2">เหลือเวลาวันนี้ {remainingBlocks} ช่วง</div>
+          <Button variant="secondary" onClick={() => doNormalLife('work')}>
+            💼 ไปทำงานประจำ (+$200, -5🧠)
+          </Button>
+          <Button variant="secondary" onClick={() => doNormalLife('rest')}>
+            🛏️ นอนพักผ่อน (+20🧠, -10🔥)
+          </Button>
+          <Button variant="primary" onClick={() => goTo('gigBoard')} className="mt-2">
+            🕶️ เปิดแอปงานเทา (หาเงินก้อนโต)
+          </Button>
         </div>
-        <div className="active-progress" aria-label="งานกำลังดำเนินการ">
-          <span />
-          <span />
-          <span />
-        </div>
-        <Button variant="primary" onClick={() => resolveGig(gig)}>
-          เสร็จงาน
-        </Button>
       </div>
     </>
   );
 }
 </file>
 
-<file path="src/screens/GigBoardScreen.tsx">
+<file path="src/systems/eventSystem.ts">
+import { mulberry32 } from '../app/utils/rng';
+import { useGame } from '../app/store'; // <-- เพิ่ม import ตัวนี้
+import { CLAMP } from '../app/constants';
+import { RANDOM_EVENTS, type GameEvent } from '../data/events';
+import type { Stats } from '../app/types';
+
+let rng = mulberry32(0xC0FFEE);
+
+export function seedRandom(seed: number): void {
+  rng = mulberry32(seed);
+}
+
+export function rollPolice(risk: number): boolean {
+  return rng() < risk;
+}
+
+// ฟังก์ชันสำหรับสุ่มเหตุการณ์ (โอกาส 30%)
+export function rollRandomEvent(): GameEvent | null {
+  const chance = 0.3;
+  if (rng() > chance) return null; 
+
+  const randomIndex = Math.floor(rng() * RANDOM_EVENTS.length);
+  return RANDOM_EVENTS[randomIndex];
+}
+
+// ฟังก์ชันสำหรับคำนวณผลลัพธ์เมื่อผู้เล่นเลือก
+export function applyEventEffect(effect: Partial<Stats>): Stats {
+  const s = useGame.getState().stats;
+
+  const clamp = (v: number, [lo, hi]: [number, number]) =>
+    Math.max(lo, Math.min(hi, v));
+
+  return {
+    money: s.money + (effect.money || 0),
+    heat: clamp(s.heat + (effect.heat || 0), CLAMP.heat),
+    rep: clamp(s.rep + (effect.rep || 0), CLAMP.rep),
+    sanity: clamp(s.sanity + (effect.sanity || 0), CLAMP.sanity),
+  };
+}
+</file>
+
+<file path="src/systems/fsm.ts">
 import { useGame } from '../app/store';
-import { GIGS } from '../data/gigs';
-import { StatusBar } from '../ui/StatusBar';
-import { Button } from '../ui/Button';
-import { goTo } from '../systems/fsm';
-import { remainingBlocksInDay } from '../systems/timeSystem';
+import type { Screen } from '../app/types';
 
-export function GigBoardScreen() {
-  const rep = useGame(s => s.stats.rep);
-  const remaining = remainingBlocksInDay();
+const ALLOWED: Record<Screen, Screen[]> = {
+  boot: ['home'],
+  home: ['gigBoard', 'endOfDay', 'gameOver', 'gameWin', 'event'],
+  gigBoard: ['home', 'gigDetail'],
+  gigDetail: ['gigBoard', 'activeGig'],
+  activeGig: ['home', 'endOfDay', 'gameOver', 'gameWin'],
+  endOfDay: ['home', 'gameOver', 'gameWin', 'event'],
+  gameOver: [],
+  gameWin: [],
+  event: ['home', 'gameOver', 'gameWin'],
+};
 
-  const visible = GIGS.filter(g => g.tier <= rep + 1);
+export function goTo(next: Screen): void {
+  const cur = useGame.getState().screen;
+  
+  if (!ALLOWED[cur] || !ALLOWED[cur].includes(next)) {
+    console.warn(`[FSM] illegal transition: ${cur} → ${next}`);
+    return;
+  }
+  
+  console.log(`[FSM] เปลี่ยนจาก ${cur} ไป ${next} สำเร็จ!`);
+  useGame.setState({ screen: next });
+}
+</file>
 
-  return (
-    <>
-      <StatusBar />
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-[10px] uppercase tracking-[0.22em] text-emerald-400/70">Dark network</div>
-            <h2 className="font-bold tracking-tight">งานเทาที่เปิดอยู่</h2>
-          </div>
-          <Button variant="ghost" className="!w-auto !py-1.5 !px-3 !text-xs" onClick={() => goTo('home')}>
-            ← กลับ
-          </Button>
-        </div>
+<file path="src/systems/gigSystem.ts">
+import { CLAMP } from '../app/constants';
+import { patch, pushLog, useGame } from '../app/store';
+import type { Gig } from '../app/types';
+import { goTo } from './fsm';
+import { consumeBlocks } from './timeSystem';
+import { rollPolice, rollRandomEvent } from './eventSystem'; // <-- เพิ่ม rollRandomEvent
 
-        <div className="board-caption">
-          <span className="board-live-dot" />
-          <span>AVAILABLE CONTRACTS</span>
-          <span className="ml-auto">{visible.length} LISTED</span>
-        </div>
+const clamp = (v: number, [lo, hi]: [number, number]) =>
+  Math.max(lo, Math.min(hi, v));
 
-        {visible.map(gig => {
-          const fits = gig.durationBlocks <= remaining;
-          return (
-            <button
-              key={gig.id}
-              disabled={!fits}
-              onClick={() => {
-                useGame.setState({ activeGigId: gig.id });
-                goTo('gigDetail');
-              }}
-              className="gig-card w-full text-left rounded-xl bg-neutral-800/50 border border-white/5 hover:border-emerald-600/50 disabled:opacity-40 p-3 transition-all duration-200 active:scale-[0.99]"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="font-semibold text-sm">{gig.title}</div>
-                <div className="gig-tier text-[10px] shrink-0">TIER {gig.tier}</div>
-              </div>
-              <div className="text-xs text-neutral-400 mt-1 line-clamp-2">{gig.description}</div>
-              <div className="text-[11px] text-neutral-500 mt-3 flex flex-wrap gap-x-3 gap-y-1">
-                <span>💰 ${gig.rewardMoney}</span>
-                <span>⏱ {gig.durationBlocks} ช่วง</span>
-                <span>🔥 +{gig.heatGain}</span>
-              </div>
-              {!fits && <div className="text-[11px] text-red-400 mt-2">เวลาเหลือไม่พอ</div>}
-            </button>
-          );
-        })}
-      </div>
-    </>
-  );
+export function acceptGig(gig: Gig): void {
+  patch({ activeGigId: gig.id });
+  goTo('activeGig');
+}
+
+export function resolveGig(gig: Gig): void {
+  const s = useGame.getState();
+  const lines = [
+    `💰 +$${gig.rewardMoney}`,
+    `⭐ +${gig.rewardRep}`,
+    `🔥 +${gig.heatGain}`,
+    `🧠 -${gig.sanityCost}`,
+  ];
+
+  let heat = clamp(s.stats.heat + gig.heatGain, CLAMP.heat);
+  if (rollPolice(gig.policeRisk)) {
+    heat = clamp(heat + 15, CLAMP.heat);
+    lines.push('🚨 ตำรวจโผล่กลางงาน! 🔥 +15');
+  }
+
+  const stats = {
+    money: s.stats.money + gig.rewardMoney,
+    heat,
+    rep: clamp(s.stats.rep + gig.rewardRep, CLAMP.rep),
+    sanity: clamp(s.stats.sanity - gig.sanityCost, CLAMP.sanity),
+  };
+
+  // อัปเดต Stats และล้างค่า Gig ให้เสร็จก่อน (ย้ายมาอยู่ก่อนเปลี่ยนหน้าจอ)
+  patch({
+    stats,
+    activeGigId: null, 
+    lastResult: { title: `เสร็จ: ${gig.title}`, lines },
+  });
+  pushLog(`Gig "${gig.title}" เสร็จ (+$${gig.rewardMoney})`);
+
+  consumeBlocks(gig.durationBlocks);
+
+  // ถ้า system เปลี่ยน screen ไปแล้ว (endOfDay/gameOver/gameWin) → เคารพ
+  const currentScreen = useGame.getState().screen;
+  if (currentScreen !== 'activeGig') return;
+
+  const final = useGame.getState();
+  // เช็คเงื่อนไขแพ้ก่อน
+  if (final.stats.sanity <= 0 || final.stats.money < 0) {
+    goTo('gameOver');
+    return;
+  }
+
+  // เช็คสุ่ม Event
+  const ev = rollRandomEvent();
+  if (ev) {
+    patch({ activeEvent: ev });
+    goTo('event');
+    return;
+  }
+
+  goTo('home');
+}
+</file>
+
+<file path="src/systems/lifeSystem.ts">
+import { NORMAL_LIFE, CLAMP } from '../app/constants';
+import { patch, pushLog, useGame } from '../app/store';
+import { goTo } from './fsm';
+import { consumeBlocks } from './timeSystem';
+import { rollRandomEvent } from './eventSystem';
+
+const clamp = (v: number, [lo, hi]: [number, number]) =>
+  Math.max(lo, Math.min(hi, v));
+
+export function doNormalLife(action: keyof typeof NORMAL_LIFE): void {
+  const s = useGame.getState();
+  const cfg = NORMAL_LIFE[action];
+
+  const stats = {
+    ...s.stats,
+    money: s.stats.money + cfg.money,
+    heat: clamp(s.stats.heat + cfg.heat, CLAMP.heat),
+    sanity: clamp(s.stats.sanity + cfg.sanity, CLAMP.sanity),
+  };
+
+  const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
+  patch({
+    stats,
+    lastResult: {
+      title: cfg.label,
+      lines: [`💰 ${sign(cfg.money)}`, `🔥 ${sign(cfg.heat)}`, `🧠 ${sign(cfg.sanity)}`],
+    },
+  });
+  pushLog(`${cfg.label} — $${cfg.money}, 🔥${cfg.heat}, 🧠${cfg.sanity}`);
+
+  consumeBlocks(1);
+
+  // ถ้า action ทำให้ sanity แตะ 0 หลัง consumeBlocks แต่ยังอยู่ home
+  const final = useGame.getState();
+  if (final.screen === 'home' && (final.stats.sanity <= 0 || final.stats.money < 0)) {
+    goTo('gameOver');
+    return;
+  }
+  // เช็คสุ่ม Event (ถ้าจบวันแล้วจะไม่ทำงาน)
+  if (final.screen === 'home') {
+    const ev = rollRandomEvent();
+    if (ev) {
+      patch({ activeEvent: ev });
+      goTo('event'); // เด้งไปหน้า Event
+    }
+  }
 }
 </file>
 
@@ -1799,60 +1739,6 @@ export function PhoneFrame({ children }: { children: ReactNode }) {
 }
 </file>
 
-<file path="src/ui/StatusBar.tsx">
-import { useGame } from '../app/store';
-import { BLOCK_LABEL } from '../app/constants';
-
-export function StatusBar() {
-  const { time, stats } = useGame(s => ({ time: s.time, stats: s.stats }));
-
-  return (
-    <div className="status-bar shrink-0 px-3 py-2.5 border-b border-white/10 text-[11px] flex items-center justify-between gap-2">
-      <div className="font-semibold tracking-wide whitespace-nowrap">
-        Day {time.day} · {BLOCK_LABEL[time.block]}
-      </div>
-      <div className="flex items-center gap-1.5 min-w-0">
-        <span className="status-stat" title="Money">💰 ${stats.money}</span>
-        <span className="status-stat" title="Heat">🔥 {stats.heat}</span>
-        <span className="status-stat" title="Sanity">🧠 {stats.sanity}</span>
-        <span className="status-stat" title="Rep">⭐ {stats.rep}</span>
-      </div>
-    </div>
-  );
-}
-</file>
-
-<file path="src/App.tsx">
-import { useGame } from './app/store';
-import { PhoneFrame } from './ui/PhoneFrame';
-import { ScreenMotion } from './ui/ScreenMotion';
-import { BootScreen } from './screens/BootScreen';
-import { HomeScreen } from './screens/HomeScreen';
-import { GigBoardScreen } from './screens/GigBoardScreen';
-import { GigDetailScreen } from './screens/GigDetailScreen';
-import { ActiveGigScreen } from './screens/ActiveGigScreen';
-import { EndOfDayScreen } from './screens/EndOfDayScreen';
-import { GameOverScreen } from './screens/GameOverScreen';
-
-export function App() {
-  const screen = useGame(s => s.screen);
-
-  return (
-    <PhoneFrame>
-      <ScreenMotion key={screen}>
-        {screen === 'boot'      && <BootScreen />}
-        {screen === 'home'      && <HomeScreen />}
-        {screen === 'gigBoard'  && <GigBoardScreen />}
-        {screen === 'gigDetail' && <GigDetailScreen />}
-        {screen === 'activeGig' && <ActiveGigScreen />}
-        {screen === 'endOfDay'  && <EndOfDayScreen />}
-        {(screen === 'gameOver' || screen === 'gameWin') && <GameOverScreen />}
-      </ScreenMotion>
-    </PhoneFrame>
-  );
-}
-</file>
-
 <file path=".gitignore">
 node_modules
 dist
@@ -1862,6 +1748,306 @@ dist
 <file path="README.md">
 # gray-gig-1
 Created with Codespaces
+</file>
+
+<file path="ai/master_prompt.md">
+# Game Director: Master Prompt Template
+
+> For a solo developer who builds a game entirely with AI (100% vibe coding).
+> This template is neutral. It does not push any genre or direction.
+
+**How to use:** Paste this whole file at the start of a project, and again in any new chat. Fill in what you know. Anything left as `[not decided]` is something the AI should help you decide, not decide for you.
+
+---
+
+## 1. Role and Identity
+
+You are the **Game Director** of this project.
+
+- I am a **solo developer with no coding background**. I use AI as my main tool.
+- You think through the **technical side for me**, but you **decide according to my vision**, and I make every final decision.
+- Explain everything so that someone who has never coded can follow it.
+- Always recommend the **simplest and fastest** option that works.
+- **Never assume the direction of the game.** Offer options and trade-offs, then let me choose.
+- If you spot a risk (scope too big, a feature that does not serve the core loop, a tool that costs money), say so clearly and briefly, then follow my decision.
+
+### My preferences (edit these)
+
+| Setting | Value |
+|---|---|
+| Language for replies | Thai |
+| Language for code comments | Thai |
+| Explanation level | 1 (see below) |
+| Budget | Free tools only |
+| Hours per week I can spend | [not decided] |
+
+**Explanation levels** (change anytime with `/level N`):
+- **Level 1, Beginner:** explain every step and every technical term in plain words.
+- **Level 2, Brief:** explain only new concepts and anything risky.
+- **Level 3, Minimal:** code and test steps only. I will ask if I need more.
+
+---
+
+## 2. Core Concept
+
+Fill in what you can. If you cannot yet, say `/brainstorm`.
+
+| Item | Answer |
+|---|---|
+| Game name | Gray Gig |
+| Genre | Simulation RPG / Survival |
+| Elevator pitch (one sentence) | รับจ็อบเทาเพื่อหาเงินใช้หนี้ 10,000 ดอลลาร์ ภายใน 14 วัน โดยต้องรักษาสติและหลบเลี่ยงตำรวจ |
+| What makes it different | เป็นเกมบริหารทรัพยากรที่กดดันเรื่องเวลาและสติ มีระบบ Heat ที่ยิ่งทำงานเสี่ยงมากตำรวจยิ่งจับตาดู |
+| Target audience | คนที่ชอบเกมแนวตัดสินใจ (Decision-making) และเกมเล่าเรื่องสไตล์ดาร์ก |
+| Reference games | Reigns, Papers Please, Text-based RPG |
+| Mood and tone | Dark, gritty, slightly humorous (ดาร์ก หม่นๆ แต่แอบขำ) |
+| Main platform | Web (Mobile-first UI) |
+| Camera or view | Phone Interface (หน้าจอแนวตั้งแบบมือถือ) |
+| Length of one play session | 10-15 นาที (จบใน 14 วัน) |
+| Scope | Small (Prototype) |
+
+---
+
+## 3. Architecture Philosophy
+
+**Local-first, multiplayer-optional.** If the game is 100% single-player, skip everything about multiplayer.
+Phase 1: Single-player, fully playable alone
+v
+Phase 2: Local co-op on one device [optional]
+v
+Phase 3: Online multiplayer, room-based [optional]
+
+Rules (details in `skill_architecture.md`):
+1. Single-player must be complete and fun before any multiplayer work.
+2. Multiplayer is a layer added later, never a rewrite.
+3. Use room-based sessions, not a persistent world.
+4. Every piece of game state has one clear owner.
+5. In online play, the host or server has the final say.
+
+### Multiplayer model [optional, delete if unused]
+
+- [ ] Co-op, 2 to 4 players
+- [ ] Competitive, 2 to 8 players
+- [ ] Team-based (2v2, 5v5, etc.)
+- [ ] Asynchronous (turn-taking, no need to be online together)
+
+Session flow: `Create/Join room -> Wait for players -> Start -> Play to the end -> Room closes`
+
+---
+
+## 4. Game Design Principles
+
+Adjust to fit your game. Details in `skill_game_design.md`.
+
+1. **Fun is the main goal.**
+2. **The core loop is clear.** The player always knows what to do next.
+3. **Immediate feedback.** Every action has a visible, audible, or felt result.
+4. **Progression.** The player feels they are getting somewhere.
+5. **No needless complexity.** Simple is better.
+
+Example core loop (replace with yours):
+Start -> เลือกงานใน Gig Board -> ทำงาน -> อัปเดตค่าสถานะ -> เจอ Random Event -> จบวัน -> ตรวจสอบแพ้/ชนะ -> Repeat
+
+---
+
+## 5. Tech Stack Options
+
+These are options, not decisions. Ask the Game Director to recommend one based on my game, then record the choice in the Decision Log.
+
+**Web game (easiest to vibe code, nothing to install)**
+
+| Part | Options |
+|---|---|
+| Engine | React 18 + Vite + TypeScript |
+| State Management | Zustand |
+| Styling | Tailwind CSS + Custom CSS Animations |
+| Online play (only if needed) | Firebase, Supabase, PeerJS, Socket.io |
+| Hosting | GitHub Pages, Netlify, Vercel, itch.io |
+
+---
+
+## 6. Development Phases
+
+Adjust to fit your game.
+
+### Phase 1: Core Gameplay MVP (rules in "Prototype mode")
+- [x] Core loop playable from start to end of one session (จบได้ทั้ง Win/Lose)
+- [x] Player character and controls (กดเลือกการกระทำผ่าน UI)
+- [x] One basic enemy, obstacle, or challenge (ระบบเวลา, ค่าใช้จ่ายรายวัน, Random Events)
+- [x] Basic level, room, or stage (หน้าจอหลักๆ ครบแล้ว)
+- [x] Minimal UI (start, pause, game over)
+- [x] Placeholder art and sound are fine
+
+### Phase 2: Content and Polish (rules in "Polish mode")
+- [ ] Variety (characters, enemies, items, levels)
+- [ ] Progression system
+- [ ] Sound effects and music
+- [ ] Visual polish and animation
+- [ ] Playtests with other people
+
+---
+
+## 7. AI Workflow Rules
+
+1. **One prompt = one feature.**
+2. **Test after every step.** Do not stack features on untested code.
+3. **Keep it simple.** If a solution looks complicated, propose a simpler one first.
+4. **Explain at my chosen level** (see section 1).
+5. **Save a working version after every feature.** The simplest way is to download the project as a ZIP and name it with the date and a short note (e.g. `game_2026-11-04_player-moves.zip`). If I later choose to use Git, set it up for me step by step.
+6. **Ask before building.** For any new feature, confirm: what problem it solves, what existing code it touches, and whether a simpler way exists.
+
+### The AI must
+- Say what each part of the code does.
+- Say exactly how to run and test it.
+- State limits and trade-offs honestly, including when something might not work.
+- Suggest the next step, and wait for my approval.
+
+### The AI must not
+- Write code without explaining it (unless I am on Level 3).
+- Use complicated libraries when a simple solution exists.
+- Assume I know technical terms.
+- Steer the direction of the game. Advise, then let me decide.
+- Recommend paid tools or tools that need local installation without asking first.
+
+---
+
+## 8. Decision Log
+
+Record every important decision. Use `/decide`.
+
+| Date | Decision | Reason | Impact |
+|---|---|---|---|
+| 2026-11-04 | ใช้ React + Vite + Zustand | เบา รองรับ State Management ที่ซับซ้อนได้ดี และไม่ต้องติดตั้งอะไร | โค้ดแยกส่วนชัดเจน จัดการ State เกมง่าย |
+| 2026-11-04 | ใช้ FSM (Finite State Machine) ในการเปลี่ยนหน้าจอ | ป้องกันบั๊กการข้ามหน้าจอผิดปกติ | โค้ดใน `fsm.ts` บังคับทิศทางการเปลี่ยนหน้าจอที่ชัดเจน |
+| 2026-11-04 | ใช้ Repomix ในการแพ็คโค้ดส่ง AI | แก้ปัญหา AI อ่านไฟล์ ZIP ไม่ลึก | AI เห็นโค้ดทั้งโปรเจกต์และแก้ไขได้ตรงจุดขึ้น |
+| 2026-11-04 | เพิ่มระบบสุ่มงาน (Gig Board) และระบบ Random Events | ทำให้เกมมี Replayability ไม่ซ้ำซาก และเพิ่มความกดดัน | เกมมีมิติขึ้น แต่ยังต้องปรับ Balance เรื่องความยาก |
+
+---
+
+## 9. Style Guide [optional, fill in when your vision is clear]
+
+| Item | Value |
+|---|---|
+| Palette (hex codes) | Dark theme (Emerald/Green accents, Neutral Dark backgrounds) |
+| Art style | UI based, minimal, glassmorphism |
+| Camera angle | N/A (2D UI) |
+| Font | Noto Sans Thai |
+| Mood keywords | Dark, Cyberpunk, Gritty, Tech |
+| Reference images | [links or file names] |
+
+---
+
+## 10. Asset Inventory [optional]
+
+Use the naming convention from `skill_ai_artwork_generation.md`.
+
+- **Characters:** [ ]
+- **Enemies:** [ ]
+- **Backgrounds:** [ ]
+- **UI:** (ใช้ Emoji เป็น Placeholder ไปก่อน)
+- **Audio (SFX and music):** [ ]
+
+---
+
+## 11. Session Context
+
+Update this at the start of every new session. Details in `skill_session_manager.md`.
+Current state: Phase 1: Core Gameplay MVP (Gameplay Loop สมบูรณ์แล้ว แต่เกมง่ายเกินไป)
+Done and working: ระบบเวลา, ระบบสุ่มงานใน Gig Board (4 งาน/วัน), ระบบ Random Events (9 เหตุการณ์), UI แจ้งเตือนเป้าหมายและหลอดสถานะ
+In progress: กำลัง Brainstorm วิธีเพิ่มความยาก (Difficulty) และเพิ่มมิติของเกม
+Blockers: ยังไม่มีการลงโทษที่รุนแรงพอเมื่อผู้เล่นเลือกทางที่เสี่ยง หรือระบบที่บังคับให้ผู้เล่นต้องตัดสินใจภายใต้ความกดดัน
+Goal of this chat: หาไอเดียและเลือกแนวทาง (เช่น RNG ที่โหดขึ้น, QTE, ระบบหนี้สิน) เพื่อนำมาทำเป็นฟีเจอร์เพิ่มความยากใน Step ถัดไป
+
+---
+
+## 12. Modes
+
+### Brainstorming Mode (no idea yet)
+
+Say: "I do not have a game idea yet. Help me brainstorm using this template."
+
+The AI should:
+1. Ask the questions below, a few at a time rather than all at once:
+   - Which games have you enjoyed most, and why?
+   - Solo or with friends?
+   - How long do you want the project to take (1 week / 1 month / open)?
+   - Which platform do you prefer?
+   - Which mood do you like?
+   - What size of project feels safe?
+2. Offer 3 to 5 distinct ideas, each with a one-line pitch, pros, cons, and an honest scope estimate for a solo dev using AI.
+3. Mark which ideas are best suited to solo development with vibe coding.
+4. Not choose for me.
+
+### Update Mode (existing project)
+
+Say: "Update this master prompt to match the current status," and paste what has changed.
+
+The AI should update Session Context, add new Decision Log entries, adjust Core Concept if the vision changed, update the Asset Inventory, and suggest the next step. It returns the full updated file so I can save it.
+
+---
+
+## 13. Quick Commands
+
+| Command | What it does |
+|---|---|
+| `/status` | Rewrite the Session Context from what we have done |
+| `/decide [decision]` | Add an entry to the Decision Log |
+| `/next` | Recommend the next step (with reasons) |
+| `/explain [code or feature]` | Explain in detail at Level 1 |
+| `/level [1-3]` | Change how much the AI explains |
+| `/simplify` | Find a simpler way to do the current thing |
+| `/cut` | Run the scope check: what could be removed without hurting the core loop? |
+| `/review` | Run the quality checklist on the current work |
+| `/backup` | Remind me how to save a working version, and suggest a file name |
+| `/brainstorm` | Start Brainstorming Mode |
+| `/update` | Start Update Mode |
+
+---
+
+**Version:** 3.2 (Updated for Difficulty Brainstorming)
+**Based on:** version 3.1, updated on 2026-11-04
+</file>
+
+<file path="src/screens/ActiveGigScreen.tsx">
+import { useGame } from '../app/store';
+import { GIGS } from '../data/gigs';
+import { StatusBar } from '../ui/StatusBar';
+import { Button } from '../ui/Button';
+import { resolveGig } from '../systems/gigSystem';
+
+export function ActiveGigScreen() {
+  const activeId = useGame(s => s.activeGigId);
+  const screen = useGame(s => s.screen); // <-- เพิ่มบรรทัดนี้
+  const gig = GIGS.find(g => g.id === activeId);
+
+  // ถ้าไม่มีงาน หรือหน้าจอไม่ใช่ activeGig แล้ว (เช่น เด้งไป Event) ให้หยุดแสดงผล
+  if (!gig || screen !== 'activeGig') return null;
+
+  return (
+    <>
+      <StatusBar />
+      <div className="active-gig-screen flex-1 flex flex-col items-center justify-center p-6 gap-4">
+        <div className="gig-orbit" aria-hidden="true">
+          <span className="gig-orbit-ring" />
+          <span className="text-5xl relative z-10">🕶️</span>
+        </div>
+        <div className="text-center">
+          <div className="active-kicker text-[10px] uppercase tracking-[0.28em] text-emerald-400/70">Contract in progress</div>
+          <div className="text-xs text-neutral-400 mt-2">กำลังทำงาน...</div>
+          <h2 className="text-lg font-bold mt-1">{gig.title}</h2>
+        </div>
+        <div className="active-progress" aria-label="งานกำลังดำเนินการ">
+          <span />
+          <span />
+          <span />
+        </div>
+        <Button variant="primary" onClick={() => resolveGig(gig)}>
+          เสร็จงาน
+        </Button>
+      </div>
+    </>
+  );
+}
 </file>
 
 <file path="src/screens/BootScreen.tsx">
@@ -1890,6 +2076,167 @@ export function BootScreen() {
         v0.1.0 — prototype
       </div>
     </div>
+  );
+}
+</file>
+
+<file path="src/screens/GigBoardScreen.tsx">
+import { useState, useEffect } from 'react';
+import { useGame } from '../app/store';
+import { GIGS } from '../data/gigs';
+import type { Gig } from '../app/types';
+import { StatusBar } from '../ui/StatusBar';
+import { Button } from '../ui/Button';
+import { goTo } from '../systems/fsm';
+import { remainingBlocksInDay } from '../systems/timeSystem';
+
+export function GigBoardScreen() {
+  const rep = useGame(s => s.stats.rep);
+  const time = useGame(s => s.time);
+  const remaining = remainingBlocksInDay();
+  
+  const [dailyGigs, setDailyGigs] = useState<Gig[]>([]);
+
+  // สุ่มงานใหม่ทุกครั้งที่เข้าหน้านี้ หรือเปลี่ยนวัน/ช่วงเวลา
+  useEffect(() => {
+    const visible = GIGS.filter(g => g.tier <= rep + 1);
+    
+    // สลับลำดับ (Shuffle) แบบง่ายๆ
+    const shuffled = [...visible].sort(() => Math.random() - 0.5);
+    
+    // หยิบมาแค่ 4 งานแรก (ถ้างานมีไม่ถึง 4 ก็เอาทั้งหมด)
+    setDailyGigs(shuffled.slice(0, 4));
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time.day, time.block, rep]); // รีเฟรชเมื่อวันหรือ rep เปลี่ยน
+
+  return (
+    <>
+      <StatusBar />
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.22em] text-emerald-400/70">Dark network</div>
+            <h2 className="font-bold tracking-tight">งานเทาที่เปิดอยู่</h2>
+          </div>
+          <Button variant="ghost" className="!w-auto !py-1.5 !px-3 !text-xs" onClick={() => goTo('home')}>
+            ← กลับ
+          </Button>
+        </div>
+
+        <div className="board-caption">
+          <span className="board-live-dot" />
+          <span>AVAILABLE CONTRACTS</span>
+          <span className="ml-auto">{dailyGigs.length} LISTED</span>
+        </div>
+
+        {dailyGigs.map(gig => {
+          const fits = gig.durationBlocks <= remaining;
+          return (
+            <button
+              key={gig.id}
+              disabled={!fits}
+              onClick={() => {
+                useGame.setState({ activeGigId: gig.id });
+                goTo('gigDetail');
+              }}
+              className="gig-card w-full text-left rounded-xl bg-neutral-800/50 border border-white/5 hover:border-emerald-600/50 disabled:opacity-40 p-3 transition-all duration-200 active:scale-[0.99]"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="font-semibold text-sm">{gig.title}</div>
+                <div className="gig-tier text-[10px] shrink-0">TIER {gig.tier}</div>
+              </div>
+              <div className="text-xs text-neutral-400 mt-1 line-clamp-2">{gig.description}</div>
+              <div className="text-[11px] text-neutral-500 mt-3 flex flex-wrap gap-x-3 gap-y-1">
+                <span>💰 ${gig.rewardMoney}</span>
+                <span>⏱ {gig.durationBlocks} ช่วง</span>
+                <span>🔥 +{gig.heatGain}</span>
+              </div>
+              {!fits && <div className="text-[11px] text-red-400 mt-2">เวลาเหลือไม่พอ</div>}
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+</file>
+
+<file path="src/ui/StatusBar.tsx">
+import { useGame } from '../app/store';
+import { BLOCK_LABEL, DEBT_GOAL } from '../app/constants';
+
+export function StatusBar() {
+  const { time, stats } = useGame(s => ({ time: s.time, stats: s.stats }));
+
+  // ฟังก์ชันช่วยเลือกสีตามค่าสถานะ
+  const getSanityColor = (v: number) => v <= 20 ? 'text-red-400' : v <= 50 ? 'text-yellow-400' : 'text-emerald-400';
+  const getHeatColor = (v: number) => v >= 80 ? 'text-red-400' : v >= 50 ? 'text-orange-400' : 'text-neutral-400';
+
+  return (
+    <div className="status-bar shrink-0 px-3 py-2.5 border-b border-white/10 text-[11px] flex flex-col gap-1.5 bg-neutral-900/90 backdrop-blur-sm z-50">
+      {/* แถวบน: เวลา และเป้าหมายเงิน */}
+      <div className="flex items-center justify-between">
+        <div className="font-semibold tracking-wide whitespace-nowrap text-emerald-400">
+          Day {time.day} · {BLOCK_LABEL[time.block]}
+        </div>
+        <div className="font-semibold text-emerald-300">
+          🎯 เป้าหมาย: ${stats.money} / ${DEBT_GOAL}
+        </div>
+      </div>
+
+      {/* แถวล่าง: หลอดสถานะ */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className={`font-bold ${getHeatColor(stats.heat)}`}>🔥 {stats.heat}</span>
+          <div className="w-12 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+            <div className="h-full bg-orange-500" style={{ width: `${stats.heat}%` }} />
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <span className={`font-bold ${getSanityColor(stats.sanity)}`}>🧠 {stats.sanity}</span>
+          <div className="w-12 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+            <div className={`h-full ${stats.sanity <= 20 ? 'bg-red-500' : 'bg-blue-400'}`} style={{ width: `${stats.sanity}%` }} />
+          </div>
+        </div>
+
+        <div className="font-bold text-neutral-300">⭐ Rep {stats.rep}</div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/App.tsx">
+import { useGame } from './app/store';
+import { PhoneFrame } from './ui/PhoneFrame';
+import { ScreenMotion } from './ui/ScreenMotion';
+import { BootScreen } from './screens/BootScreen';
+import { HomeScreen } from './screens/HomeScreen';
+import { GigBoardScreen } from './screens/GigBoardScreen';
+import { GigDetailScreen } from './screens/GigDetailScreen';
+import { ActiveGigScreen } from './screens/ActiveGigScreen';
+import { EndOfDayScreen } from './screens/EndOfDayScreen';
+import { GameOverScreen } from './screens/GameOverScreen';
+import { EventScreen } from './screens/EventScreen';
+
+export function App() {
+  const screen = useGame(s => s.screen);
+
+  return (
+    <PhoneFrame>
+      <ScreenMotion key={screen}>
+        {screen === 'boot'      && <BootScreen />}
+        {screen === 'home'      && <HomeScreen />}
+        {screen === 'gigBoard'  && <GigBoardScreen />}
+        {screen === 'gigDetail' && <GigDetailScreen />}
+        {screen === 'activeGig' && <ActiveGigScreen />}
+        {screen === 'endOfDay'  && <EndOfDayScreen />}
+        {screen === 'event'     && <EventScreen />}
+        {(screen === 'gameOver' || screen === 'gameWin') && <GameOverScreen />}
+      </ScreenMotion>
+    </PhoneFrame>
   );
 }
 </file>

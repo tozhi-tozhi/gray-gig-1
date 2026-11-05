@@ -82,4 +82,4 @@ export const GIGS: Gig[] = [
     rewardMoney: 5500, rewardRep: 5,
     heatGain: 75, sanityCost: 50, policeRisk: 0.70,
   },
-];
+];  

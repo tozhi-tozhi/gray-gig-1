@@ -6,7 +6,7 @@ const ALLOWED: Record<Screen, Screen[]> = {
   home: ['gigBoard', 'endOfDay', 'gameOver', 'gameWin', 'event'],
   gigBoard: ['home', 'gigDetail'],
   gigDetail: ['gigBoard', 'activeGig'],
-  activeGig: ['home', 'endOfDay', 'gameOver', 'gameWin'],
+  activeGig: ['home', 'endOfDay', 'gameOver', 'gameWin', 'event'],
   endOfDay: ['home', 'gameOver', 'gameWin', 'event'],
   gameOver: [],
   gameWin: [],
@@ -15,12 +15,10 @@ const ALLOWED: Record<Screen, Screen[]> = {
 
 export function goTo(next: Screen): void {
   const cur = useGame.getState().screen;
-  
   if (!ALLOWED[cur] || !ALLOWED[cur].includes(next)) {
     console.warn(`[FSM] illegal transition: ${cur} → ${next}`);
     return;
   }
-  
   console.log(`[FSM] เปลี่ยนจาก ${cur} ไป ${next} สำเร็จ!`);
   useGame.setState({ screen: next });
 }

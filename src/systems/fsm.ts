@@ -7,7 +7,8 @@ const ALLOWED: Record<Screen, Screen[]> = {
   gigBoard: ['home', 'gigDetail'],
   gigDetail: ['gigBoard', 'gigCutscene'],
   gigCutscene: ['activeGig'],
-  activeGig: ['home', 'endOfDay', 'gameOver', 'gameWin', 'event'],
+  activeGig: ['gigResult', 'endOfDay', 'gameOver', 'gameWin', 'event'], // เปลี่ยนจาก home เป็น gigResult
+  gigResult: ['home', 'event', 'endOfDay', 'gameOver', 'gameWin'], // เพิ่มบรรทัดนี้
   endOfDay: ['home', 'gameOver', 'gameWin', 'event'],
   gameOver: [],
   gameWin: [],

@@ -7,24 +7,26 @@ import { GigBoardScreen } from './screens/GigBoardScreen';
 import { GigDetailScreen } from './screens/GigDetailScreen';
 import { GigCutsceneScreen } from './screens/GigCutsceneScreen';
 import { ActiveGigScreen } from './screens/ActiveGigScreen';
+import { GigResultScreen } from './screens/GigResultScreen';
 import { EndOfDayScreen } from './screens/EndOfDayScreen';
 import { GameOverScreen } from './screens/GameOverScreen';
 import { EventScreen } from './screens/EventScreen';
 
 export function App() {
   const screen = useGame(s => s.screen);
-
+  
   return (
     <PhoneFrame>
       <ScreenMotion key={screen}>
-        {screen === 'boot'         && <BootScreen />}
-        {screen === 'home'         && <HomeScreen />}
-        {screen === 'gigBoard'     && <GigBoardScreen />}
-        {screen === 'gigDetail'    && <GigDetailScreen />}
-        {screen === 'gigCutscene'  && <GigCutsceneScreen />}
-        {screen === 'activeGig'    && <ActiveGigScreen />}
-        {screen === 'endOfDay'     && <EndOfDayScreen />}
-        {screen === 'event'        && <EventScreen />}
+        {screen === 'boot'          && <BootScreen />}
+        {screen === 'home'          && <HomeScreen />}
+        {screen === 'gigBoard'      && <GigBoardScreen />}
+        {screen === 'gigDetail'     && <GigDetailScreen />}
+        {screen === 'gigCutscene'   && <GigCutsceneScreen />}
+        {screen === 'activeGig'     && <ActiveGigScreen />}
+        {screen === 'gigResult'     && <GigResultScreen />}
+        {screen === 'endOfDay'      && <EndOfDayScreen />}
+        {screen === 'event'         && <EventScreen />}
         {(screen === 'gameOver' || screen === 'gameWin') && <GameOverScreen />}
       </ScreenMotion>
     </PhoneFrame>

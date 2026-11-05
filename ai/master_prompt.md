@@ -151,41 +151,47 @@ Ask before building — confirm: solves what, touches what, simpler way?
 - **ข้ามขั้นตอน** เช่นทำ cutscene ก่อนมีบ้าน
 
 ## 8. Decision Log
-
-| Date | Decision | Reason | Impact |
-| --- | --- | --- | --- |
-| 2026-11-04 | React + Vite + Zustand | เบา, state management ดี | โค้ดแยกส่วนชัดเจน |
-| 2026-11-04 | FSM เปลี่ยนหน้าจอ | ป้องกันบั๊กข้ามจอ | `fsm.ts` บังคับทิศทาง |
-| 2026-11-04 | Repomix แพ็คโค้ดส่ง AI | AI เห็นทั้งโปรเจกต์ | ใส่ `.gitignore` |
-| 2026-11-05 | Gig Outcome Roulette | ความไม่แน่นอน | 5 แบบ, weight ตาม risk |
-| 2026-11-05 | ระบบหนี้ + Joe | เส้นตายมีพลวัต | DebtState + mood |
-| 2026-11-05 | QTE+RNG แนวทาง B | ฝีมือมีผล | rollGigOutcome รับ score |
-| 2026-11-05 | Visual Feedback + QTE | ยกระดับ game feel | shake/flash/beep |
-| 2026-11-05 | ไม่ทำ Push-your-luck | QTE พอแล้ว | ตัดออก |
-| 2026-11-05 | Countdown Event | กดดันเวลา | timeLimit + timeout |
-| 2026-11-05 | Gig Board ไม่ reroll | ปิดช่องโหว่ | dailyGigIds ใน store |
-| 2026-11-05 | Heat 100 = แพ้ | Heat มีน้ำหนักจริง | ตัวเตือนก่อนรับงาน |
-| 2026-11-05 | Story + Epilogue | ตัวเลือกมีผลยาว | flags + 7 เรื่อง + epilogue |
-| 2026-11-05 | สไตล์ภาพ: pixel art ทั้งเกม | 5 gig bg เป็น pixel แล้ว, consistency > flat card | Joe+Room ต้องเป็น pixel |
-| 2026-11-05 | สมดุลทดสอบแล้ว OK | session นี้ | ตัวเลขปัจจุบันใช้ได้ |
-| 2026-11-05 | **HomeScreen ผิด** — Joe อยู่ในห้องเรา | ไม่เมคเซนส์, Joe ควรอยู่ Event เท่านั้น | **ต้อง redesign HomeScreen** |
-| 2026-11-05 | **ลำดับทำผิด** — ทำ cutscene ก่อนมีบ้าน | ควรทำ Player+Room ก่อน | ตั้งแผน 5 phase ใหม่ |
-| 2026-11-05 | รื้อ Joe+Room ใหม่ | 风格 clash, ลำดับผิด | เก็บ 5 gig bg, รื้อแค่ Joe+Room |
+| Date|Decision|Reason|Impact|
+| ---|---|---|---|
+| 2026-11-04|React + Vite + Zustand|เบา, state management ดี|โค้ดแยกส่วนชัดเจน|
+| 2026-11-04|FSM เปลี่ยนหน้าจอ|ป้องกันบั๊กข้ามจอ|fsm.ts  บังคับทิศทาง|
+| 2026-11-04|Repomix แพ็คโค้ดส่ง AI|AI เห็นทั้งโปรเจกต์|ใส่  .gitignore|
+| 2026-11-05|Gig Outcome Roulette|ความไม่แน่นอน|5 แบบ, weight ตาม risk|
+| 2026-11-05|ระบบหนี้ + Joe|เส้นตายมีพลวัต|DebtState + mood|
+| 2026-11-05|QTE+RNG แนวทาง B|ฝีมือมีผล|rollGigOutcome รับ score|
+| 2026-11-05|Visual Feedback + QTE|ยกระดับ game feel|shake/flash/beep|
+| 2026-11-05|ไม่ทำ Push-your-luck|QTE พอแล้ว|ตัดออก|
+| 2026-11-05|Countdown Event|กดดันเวลา|timeLimit + timeout|
+| 2026-11-05|Gig Board ไม่ reroll|ปิดช่องโหว่|dailyGigIds ใน store|
+| 2026-11-05|Heat 100 = แพ้|Heat มีน้ำหนักจริง|ตัวเตือนก่อนรับงาน|
+| 2026-11-05|Story + Epilogue|ตัวเลือกมีผลยาว|flags + 7 เรื่อง + epilogue|
+| 2026-11-05|สไตล์ภาพ: pixel art ทั้งเกม|5 gig bg เป็น pixel แล้ว, consistency  > flat card|Joe+Room ต้องเป็น pixel|
+| 2026-11-05|สมดุลทดสอบแล้ว OK|session นี้|ตัวเลขปัจจุบันใช้ได้|
+| 2026-11-05|HomeScreen ผิด  — Joe อยู่ในห้องเรา|ไม่เมคเซนส์, Joe ควรอยู่ Event เท่านั้น|ต้อง redesign HomeScreen|
+| 2026-11-05|ลำดับทำผิด  — ทำ cutscene ก่อนมีบ้าน|ควรทำ Player+Room ก่อน|ตั้งแผน 5 phase ใหม่|
+| 2026-11-05|รื้อ Joe+Room ใหม่|风格 clash, ลำดับผิด|เก็บ 5 gig bg, รื้อแค่ Joe+Room|
+| 2026-11-05|HomeScreen minimal + visual-first|UI เดิมรก, text เยอะเกินไป|ใช้ icon + progress bar แทนคำบรรยาย|
+| 2026-11-05|เพิ่ม GigResultScreen|ผู้เล่นไม่เห็นผลลัพธ์งาน|หลังจบงานต้องเห็นสรุปแบบเต็มจอก่อนกลับ home|
+| 2026-11-05|แก้ gigSystem.ts → gigResult|activeGig ไป home ทันที ทำให้ไม่เห็นสรุป|เปลี่ยนปลายทางเป็น gigResult, เก็บ event ใน pendingEvent|
+| 2026-11-05|เลือก Player Identity แบบ B (เห็นหน้า)|ไม่เอาเงาดำ ไม่เอา first-person|ต้องเจนรูปตัวละครเต็มตัว ยืนในห้อง|
+| 2026-11-05|ใช้ AI Gen รูปแทน CSS Art|CSS Art ดูง่อย ไม่สวยเท่า Pixel Art จริง|ต้องใช้ Prompt เจนรูปห้องและตัวละคร แล้วไดคัทใส่เกม|
+| 2026-11-05|Parallax 3 ชั้น (จะทำ)|ฉากมีมิติ ไม่ใช่ภาพแบนๆ|รอ asset เสร็จก่อน: room layer1 + player + room layer2|
+| 2026-11-05|Web-First Asset Pipeline|ผู้ใช้ไม่มีความรู้กราฟิก|เจนด้วย Bing/Leonardo → ไดคัทด้วย Photopea → วางโค้ด|
 
 ## 9. Style Guide
+| Item|Value|
+| ---|---|
+| Palette (hex codes)|UI: Dark theme (Emerald/Green + Neutral Dark) / ภาพ: pixel art 12-16 สี [รอล็อก hex กลาง]|
+| Art style|Pixel art ทั้งเกม  — Joe, Room, Event, Walker, Player ทุกอย่างเป็น pixel เพื่อ consistency กับ 5 gig bg ที่มีแล้ว|
+| Camera angle|Side view สำหรับฉากห้องและตัวละคร, 2D UI แนวตั้ง 9:16|
+| Font|Noto Sans Thai|
+| Mood keywords|Dark, Gritty, Slightly humorous, Cyberpunk-tech (UI)|
+| Tool|Qwen (credit หมด), Bing Image Creator / Leonardo.ai (ฟรี 100%, ได้ JPG/PNG)|
+| Do-not-use list|Flat card style (风格 clash กับ pixel), JFIF format, gradients ในภาพ, CSS Art สำหรับฉากหลัก (ใช้เฉพาะ UI และ micro-animations)|
+| Asset Pipeline|Web-First: เจนรูป → ไดคัท (Photopea/remove.bg) → ตั้งชื่อตาม pattern → วางใน /public/assets/|
 
-| Item | Value |
-| --- | --- |
-| Palette (hex codes) | UI: Dark theme (Emerald/Green + Neutral Dark) / ภาพ: pixel art 12 สี [รอล็อก hex กลาง] |
-| Art style | **Pixel art ทั้งเกม** — Joe, Room, Event, Walker ทุกอย่างเป็น pixel เพื่อ consistency กับ 5 gig bg ที่มีแล้ว |
-| Camera angle | N/A (2D UI) ฉากแนวตั้ง 9:16, portrait 1:1 |
-| Font | Noto Sans Thai |
-| Mood keywords | Dark, Gritty, Slightly humorous, Cyberpunk-tech (UI) |
-| Tool | Qwen (credit หมด), Bing (สำรอง, ฟรี 100%, ได้ JPG) |
-| Do-not-use list | Flat card style (风格 clash กับ pixel), JFIF format, gradients ในภาพ |
-
-**5 gig backgrounds ที่มีแล้ว** — เป็น anchor ของ风格ทั้งเกม:
-- `gig_alley.png` (Tier 1), `gig_market.png` (Tier 2), `gig_warehouse.png` (Tier 3), `gig_rooftop.png` (Tier 4), `gig_dock.png` (Tier 5)
+5 gig backgrounds ที่มีแล้ว — เป็น anchor ของ风格ทั้งเกม:
+`gig_alley.png` (Tier 1), `gig_market.png` (Tier 2), `gig_warehouse.png` (Tier 3), `gig_rooftop.png` (Tier 4), `gig_dock.png` (Tier 5)
 
 ## 10. Asset Inventory
 

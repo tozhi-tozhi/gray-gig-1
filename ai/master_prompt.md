@@ -37,31 +37,25 @@ Explanation levels (change anytime with `/level N`):
 | Game name | Gray Gig |
 | Genre | Simulation RPG / Survival |
 | Elevator pitch (one sentence) | รับจ็อบเทาเพื่อหาเงินใช้หนี้ 10,000 ดอลลาร์ ภายใน 14 วัน โดยต้องรักษาสติและหลบเลี่ยงตำรวจ |
-| What makes it different | เป็นเกมบริหารทรัพยากรที่กดดันเรื่องเวลาและสติ มีระบบ Heat ที่ยิ่งทำงานเสี่ยงมากตำรวจยิ่งจับตาดู มีระบบหนี้สินที่เจ้าหนี้เป็นตัวละครกดดันจริง และระบบ QTE ที่ทำให้การทำงานมีจังหวะตื่นเต้น |
+| What makes it different | เกมบริหารทรัพยากรที่กดดันเรื่องเวลาและสติ มีระบบ Heat ที่ยิ่งทำงานเสี่ยงมากตำรวจยิ่งจับตาดู มีระบบหนี้สินที่เจ้าหนี้เป็นตัวละครกดดันจริง และระบบ QTE ที่ทำให้การทำงานมีจังหวะตื่นเต้น |
 | Target audience | คนที่ชอบเกมแนวตัดสินใจ (Decision-making) และเกมเล่าเรื่องสไตล์ดาร์ก |
 | Reference games | Reigns, Papers Please, Text-based RPG |
 | Mood and tone | Dark, gritty, slightly humorous (ดาร์ก หม่นๆ แต่แอบขำ) |
 | Main platform | Web (Mobile-first UI) |
 | Camera or view | Phone Interface (หน้าจอแนวตั้งแบบมือถือ) |
 | Length of one play session | 10-15 นาที (จบใน 14 วัน) |
-| Scope | Small (Prototype) |
+| Scope | Small (Prototype) — กำลังขยับเป็นจริงจัง |
 
 ## 3. Architecture Philosophy
 
-Local-first, multiplayer-optional. If the game is 100% single-player, skip everything about multiplayer.
-
-Phase 1: Single-player, fully playable alone
-Phase 2: Local co-op on one device [optional]
-Phase 3: Online multiplayer, room-based [optional]
+Local-first, multiplayer-optional. เกมนี้ single-player 100%
 
 Rules (details in `skill_architecture.md`):
-- Single-player must be complete and fun before any multiplayer work.
-- Multiplayer is a layer added later, never a rewrite.
-- Use room-based sessions, not a persistent world.
-- Every piece of game state has one clear owner.
-- In online play, the host or server has the final say.
+- Single-player ต้องสมบูรณ์และสนุกก่อน
+- ทุก state มีเจ้าของชัดเจน
+- ใช้ Zustand, FSM ควบคุมการเปลี่ยนหน้าจอ
 
-Multiplayer model [optional, delete if unused]: N/A (เกมนี้เป็น single-player 100%)
+Multiplayer model: N/A (เกมนี้เป็น single-player 100%)
 
 ## 4. Game Design Principles
 
@@ -72,27 +66,32 @@ Multiplayer model [optional, delete if unused]: N/A (เกมนี้เป็
 - No needless complexity. Simple is better.
 
 ### Core loop:
-เริ่มวัน (งานของวันถูกสุ่มครั้งเดียว) → เลือกงานใน Gig Board (เห็นคำเตือนโอกาสแพ้) → ทำงานผ่าน QTE (สุ่ม 1 ใน 4 ชนิด) → สุ่มผลลัพธ์งาน (คะแนน QTE ปรับน้ำหนัก) → อัปเดตค่าสถานะ
-→ เจอ Random Event (บางตัวจับเวลา) / เหตุการณ์ต่อเนื่อง / เจ้าหนี้โทรมา → จบวัน (สุ่มงานชุดใหม่)
+เริ่มวัน → เลือกงานใน Gig Board → **[cutscene สั้น]** → ทำงานผ่าน QTE → สุ่มผลลัพธ์งาน → อัปเดต stats
+→ Random Event (บางตัวจับเวลา) / เหตุการณ์ต่อเนื่อง / เจ้าหนี้โทรมา → จบวัน (สุ่มงานชุดใหม่)
 → ตรวจหนี้/เส้นตาย → ตรวจแพ้/ชนะ → Repeat → จบเกมแล้วขึ้นบทส่งท้าย
 
-### ระบบหลักที่มีแล้ว:
-- **Gig Outcome Roulette**: ผลลัพธ์งานสุ่ม 5 แบบ (ปกติ, โบนัส, ลูกค้าเบี้ยว, ตำรวจตรวจ, งานพัง) ใช้ `policeRisk` เป็นน้ำหนัก และ **คะแนน QTE ปรับน้ำหนัก** (แนวทาง B): ฝีมือดีเพิ่มโอกาสโบนัส ลดโอกาสพัง/ตำรวจ
-- **QTE 4 ชนิด** (สุ่มต่อรอบ): ⏱️ จับจังหวะ, 🔢 รหัสผ่าน (ปุ่มสุ่มตำแหน่ง งานเทียร์ 4+ สลับทุกครั้งที่กด), 🎯 เล็งเป้า, 👁️ สังเกตการณ์ ความยากปรับตามเทียร์ของงาน
-- **Visual Feedback**: จอสั่น, แฟลชสี, เสียง Beep สร้างด้วย Web Audio (ไม่ใช้ไฟล์เสียง)
-- **Countdown Event**: อีเวนต์ที่ตั้ง `timeLimit` ได้ ถ้าหมดเวลาจะโดนผลลงโทษ (`timeout`)
-- **Gig Board รายวัน**: งานสุ่มเมื่อขึ้นวันใหม่เท่านั้น (ปิดช่องโหว่ reroll) งานที่ทำแล้วหายจากรายการของวันนั้น
-- **ตัวเตือนความเสี่ยงแพ้**: คำนวณจากตารางผลลัพธ์จริง บอก % โอกาสแพ้จาก Heat เต็ม / สติหมด และเตือน "แพ้แน่นอน" เมื่อทุกผลลัพธ์พาไปจบ
-- **เงื่อนไขแพ้**: สติ 0, **Heat 100 (ถูกจับ)**, เงินติดลบ, เลยเส้นตายหนี้ / เงื่อนไขชนะ: เงินครบเป้าหนี้
-- **ระบบหนี้สินและเจ้าหนี้ "พี่โจ"**: ทวงหนี้เป็นระยะ, ขยายหนี้ (มีต้นทุน + จำกัดครั้ง), เร่งหนี้, อารมณ์เจ้าหนี้ (`creditorMood`)
-- **ระบบเรื่องราว**: ธง (flags) จำการตัดสินใจ + เหตุการณ์ต่อเนื่อง 7 เรื่อง (ขึ้นเมื่อธงและวันตรงเงื่อนไข) + ประวัติเหตุการณ์
-- **บทส่งท้าย (Epilogue)**: ขึ้นทุกแบบจบ (ชนะ/สติแตก/ถูกจับ/เงินหมด/เลยเส้นตาย) สรุปการเดินทาง เรื่องที่ตามมา และฉากที่ยังจำได้ จากสิ่งที่ผู้เล่นทำจริง
+### ระบบหลักที่ทำเสร็จแล้ว ทดสอบแล้ว:
+- **Gig Outcome Roulette**: 5 แบบ, ปรับน้ำหนักด้วย QTE score + policeRisk
+- **QTE 4 ชนิด** (จับจังหวะ / รหัสผ่าน / เล็งเป้า / สังเกตการณ์)
+- **Visual Feedback**: shake / flash / Web Audio beep
+- **Countdown Event**: timeLimit + timeout
+- **Gig Board รายวัน**: ไม่ reroll, งานที่ทำแล้วหาย
+- **ตัวเตือนความเสี่ยงแพ้** ก่อนรับงาน
+- **เงื่อนไขแพ้/ชนะ**: สติ 0, Heat 100, เงินติดลบ, เลยเส้นตาย / เงินครบเป้าหนี้
+- **ระบบหนี้สิน + เจ้าหนี้ "พี่โจ"**: ทวง/ขยาย/เร่ง/mood/ล็อกงาน/ค่าปรับ — Active Threat ครบแล้ว
+- **ระบบเรื่องราว**: flags + เหตุการณ์ต่อเนื่อง 7 เรื่อง + history
+- **บทส่งท้าย (Epilogue)**: ทุกแบบจบ
+- **Gig Cutscene**: ฉากหลังตาม tier + walker + narrative + skip (5 ฉาก pixel art)
+- **สมดุลเกม**: ทดสอบแล้ว OK
 
 ### แผนที่วางไว้ (ยังไม่ได้ทำ):
-- **เจ้าหนี้เป็น Active Threat**: ส่งผลต่อ Heat, ค่าใช้จ่าย, งานที่เปิด (ไม่ใช่แค่ข้อความ)
-- **กราฟิกและตัวละคร** (ดูสไตล์ในหัวข้อ 9): พอร์เทรตตัวละคร + ฉากหลัง + อนิเมชันด้วยโค้ด (หายใจ, จอสั่น, กลิตช์, พาราแลกซ์) ภายหลังขยับเป็นสไปรต์เฟรม
-- **เนื้อหาเพิ่ม**: เหตุการณ์ต่อเนื่องสายใหม่, งานเพิ่ม, ผูกชนิด QTE กับประเภทงาน (ถ้าต้องการ)
-- **เสียงดนตรี/SFX จริง** และ Progression system
+- **HomeScreen redesign**: ลบ Joe ออกจากห้อง (ไม่เมคเซนส์), ทำห้องให้เป็น "บ้านของผู้เล่น" จริง ๆ
+- **Player identity**: ไม่มี portrait / silhouette / full portrait — ยังไม่ตัดสิน
+- **Event Cutscene**: Event มีฉากหลัง + popup ตัวละคร (Joe/ตำรวจ)
+- **Joe 4 อารมณ์**: ตาม creditorMood (0-100)
+- **ตำรวจ 1 ตัว**
+- **Event backgrounds**: 6 ฉาก (ถ้าจำเป็น)
+- **เนื้อหาเพิ่ม**: gig ใหม่, story chain ใหม่, random event ใหม่
 
 ## 5. Tech Stack
 
@@ -106,135 +105,165 @@ Multiplayer model [optional, delete if unused]: N/A (เกมนี้เป็
 
 ## 6. Development Phases
 
-### Phase 1: Core Gameplay MVP (rules in "Prototype mode")
-- [x] Core loop playable from start to end of one session (จบได้ทั้ง Win/Lose)
-- [x] Player character and controls (กดเลือกการกระทำผ่าน UI)
-- [x] One basic enemy, obstacle, or challenge (ระบบเวลา, ค่าใช้จ่ายรายวัน, Random Events)
-- [x] Basic level, room, or stage (หน้าจอหลักๆ ครบแล้ว)
-- [x] Minimal UI (start, pause, game over)
-- [x] Placeholder art and sound are fine
-- [x] ระบบสุ่มผลลัพธ์งาน (Gig Outcome Roulette)
-- [x] ระบบหนี้สินและเจ้าหนี้ (ทวงหนี้, ขยายหนี้, เร่งหนี้)
-- [x] Visual Feedback (จอสั่น, แฟลชสี, เสียง Beep)
-- [x] QTE System (4 ชนิด เชื่อมกับ RNG แบบปรับน้ำหนัก)
-- [x] Countdown Timer ใน Event
-- [x] Gig Board รายวัน (ไม่ reroll) + ตัวเตือนความเสี่ยงแพ้ + Heat 100 = แพ้
-- [x] ระบบเรื่องราว (ธง + เหตุการณ์ต่อเนื่อง) + บทส่งท้ายทุกแบบจบ
-- [ ] ระบบหนี้แบบ Active (เจ้าหนี้ส่งผลต่อ gameplay จริง)
+### Phase 1: Core Gameplay MVP — ✅ เสร็จแล้ว
+ทุกอย่างในหัวข้อ 4 "ทำเสร็จแล้ว" ครบ — เล่นจบได้ทั้ง Win/Lose, สมดุลผ่าน
 
-### Phase 2: Content and Polish (rules in "Polish mode")
-- [ ] กราฟิก: ล็อก Style Guide → พอร์เทรตตัวละคร + ฉากหลัง + อนิเมชันด้วยโค้ด
-- [ ] Variety (งานเพิ่ม, เหตุการณ์เพิ่ม, สายเรื่องต่อเนื่องเพิ่ม) [เริ่มแล้วบางส่วน: QTE 4 ชนิด, เรื่องต่อเนื่อง 7 เรื่อง]
-- [ ] Progression system
-- [ ] Sound effects and music (ตอนนี้มีเฉพาะ Beep จาก Web Audio)
-- [ ] Visual polish and animation (ขยับเป็นสไปรต์เฟรมภายหลัง)
-- [ ] Playtests with other people
+### Phase 2: Visual Identity — 🚧 กำลังทำ
+- [x] 5 gig backgrounds (pixel art) — `gig_alley`, `gig_market`, `gig_warehouse`, `gig_rooftop`, `gig_dock`
+- [x] GigCutsceneScreen (fallback → ภาพจริง)
+- [ ] **HomeScreen redesign** — Room เป็นบ้านของผู้เล่น, ลบ Joe
+- [ ] Player identity (silhouette / portrait / none)
+- [ ] Joe 4 อารมณ์ + ตำรวจ 1 ตัว
+- [ ] Event Cutscene (ฉาก + popup)
+- [ ] Event backgrounds (ถ้าจำเป็น)
+- [ ] Walker sprite (แทน 🚶)
+
+### Phase 3: Content & Polish — ยังไม่เริ่ม
+- [ ] Gig ใหม่ 3-5
+- [ ] Story chain ใหม่ 2-3
+- [ ] Random event ใหม่ 3-4
+- [ ] SFX/ดนตรีจริง
+- [ ] Playtest กับคนอื่น
 
 ## 7. AI Workflow Rules
 
 One prompt = one feature.
-Test after every step. Do not stack features on untested code.
-Keep it simple. If a solution looks complicated, propose a simpler one first.
-Explain at my chosen level (see section 1).
-Save a working version after every feature. The simplest way is to download the project as a ZIP and name it with the date and a short note (e.g. `game_2026-11-04_player-moves.zip`). If I later choose to use Git, set it up for me step by step.
-Ask before building. For any new feature, confirm: what problem it solves, what existing code it touches, and whether a simpler way exists.
+Test after every step. ห้าม stack features บนโค้ดที่ยังไม่ทดสอบ
+Keep it simple.
+Explain at my chosen level.
+Save working version หลังทุก feature (ZIP + วันที่)
+Ask before building — confirm: solves what, touches what, simpler way?
+**ห้ามออกแบบผิดลำดับ** — ถ้าจะทำ A ต้องมั่นใจว่า B ที่ A พึ่งพาทำเสร็จแล้ว
 
 ### The AI must:
-- Say what each part of the code does.
-- Say exactly how to run and test it.
-- State limits and trade-offs honestly, including when something might not work.
-- Suggest the next step, and wait for my approval.
+- Say what each part does
+- Say exactly how to run and test
+- State limits and trade-offs honestly
+- Suggest next step, wait for approval
+- **บอกลำดับการทำที่ถูกต้อง** ก่อนเริ่มทุก feature
 
 ### The AI must not:
-- Write code without explaining it (unless I am on Level 3).
-- Use complicated libraries when a simple solution exists.
-- Assume I know technical terms.
-- Steer the direction of the game. Advise, then let me decide.
-- Recommend paid tools or tools that need local installation without asking first.
+- Write code without explaining (Level 1-2)
+- Assume I know technical terms
+- Steer direction
+- Recommend paid tools
+- **ทำ fallback ซ้ำ ๆ** เมื่อมี asset พร้อมแล้ว — ใช้ของจริงเลย
+- **ข้ามขั้นตอน** เช่นทำ cutscene ก่อนมีบ้าน
 
 ## 8. Decision Log
 
 | Date | Decision | Reason | Impact |
 | --- | --- | --- | --- |
-| 2026-11-04 | ใช้ React + Vite + Zustand | เบา รองรับ State Management ที่ซับซ้อนได้ดี และไม่ต้องติดตั้งอะไร | โค้ดแยกส่วนชัดเจน จัดการ State เกมง่าย |
-| 2026-11-04 | ใช้ FSM (Finite State Machine) ในการเปลี่ยนหน้าจอ | ป้องกันบั๊กการข้ามหน้าจอผิดปกติ | โค้ดใน `fsm.ts` บังคับทิศทางการเปลี่ยนหน้าจอที่ชัดเจน |
-| 2026-11-04 | ใช้ Repomix ในการแพ็คโค้ดส่ง AI | แก้ปัญหา AI อ่านไฟล์ ZIP ไม่ลึก | AI เห็นโค้ดทั้งโปรเจกต์และแก้ไขได้ตรงจุดขึ้น (ระวัง: ไม่ให้ `repomix-output.xml` ซ้อนอยู่ในโปรเจกต์ ใส่ใน `.gitignore`) |
-| 2026-11-04 | เพิ่มระบบสุ่มงาน (Gig Board) และระบบ Random Events | ทำให้เกมมี Replayability ไม่ซ้ำซาก และเพิ่มความกดดัน | เกมมีมิติขึ้น แต่ยังต้องปรับ Balance เรื่องความยาก |
-| 2026-11-05 | เพิ่มระบบสุ่มผลลัพธ์หลังเสร็จงาน (Gig Outcome Roulette) | ทำให้การทำงานไม่การันตีผลลัพธ์ เพิ่มความลุ้นและลดการวางแผนตายตัว | ผลลัพธ์งานสุ่ม 5 แบบ เชื่อมกับ policeRisk ของงาน |
-| 2026-11-05 | เพิ่มระบบหนี้สินและเจ้าหนี้ "พี่โจ" (ทวงหนี้, ขยายหนี้, เร่งหนี้) | ทำให้เส้นตายมีพลวัต และสร้างแรงกดดันจากตัวละคร ไม่ใช่แค่ตัวเลข | เพิ่ม DebtState, ระบบอารมณ์เจ้าหนี้, เหตุการณ์ทวงหนี้, ปุ่มขยายหนี้ |
-| 2026-11-05 | เลือกแนวทาง B สำหรับ QTE+RNG (QTE ปรับน้ำหนัก RNG) | รักษาความไม่แน่นอนของเกม แต่ยังให้ผู้เล่นรู้สึกว่าฝีมือมีผล | ทำเสร็จแล้ว (`rollGigOutcome` รับคะแนน QTE) |
-| 2026-11-05 | ทำ Visual Feedback + QTE พร้อมกัน | ยกระดับเกมทั้งการรับรู้และความตื่นเต้นในคราวเดียว | ทำเสร็จแล้ว: QTE 4 ชนิด (จับจังหวะ/รหัสผ่านปุ่มสุ่ม/เล็งเป้า/สังเกตการณ์), เอฟเฟกต์ shake/flash/beep |
-| 2026-11-05 | ไม่ทำ Push-your-luck | มี QTE แล้ว ซึ่งให้ความตื่นเต้นเพียงพอ | ตัดออกจากแผน |
-| 2026-11-05 | เพิ่ม Countdown Timer ใน Event (`timeLimit` + `timeout`) | เพิ่มแรงกดดันให้ตัดสินใจเร็ว | ตำรวจเรียกตรวจ, เจ้าหนี้โทร, งานด่วน และเหตุการณ์ต่อเนื่องบางตัวจับเวลา |
-| 2026-11-05 | Gig Board สุ่มเมื่อขึ้นวันใหม่เท่านั้น งานที่ทำแล้วหายจากรายการ | ปิดช่องโหว่กดเข้าออกเพื่อ reroll งาน | งานของวันเก็บใน store (`dailyGigIds`) |
-| 2026-11-05 | เพิ่มตัวเตือนความเสี่ยงแพ้ก่อนรับงาน และ Heat 100 = ถูกจับ (แพ้) | ให้ผู้เล่นตัดสินใจโดยรู้ความเสี่ยง และทำให้ Heat มีน้ำหนักจริง | ตอนจบเพิ่ม "ถูกจับกุม" ต้องดูสมดุล Heat ตอนเล่นจริง (ลด Heat ได้วันละ 5 + นอนพัก 10) |
-| 2026-11-05 | โครงเรื่องแบบเหตุการณ์ผูกกัน (ธง + เงื่อนไข) + บทส่งท้ายทุกแบบจบ | ให้ตัวเลือกมีผลระยะยาว และตอนจบรู้สึกเป็นของผู้เล่น | ทำเสร็จแล้ว (เรื่องต่อเนื่อง 7 เรื่อง, บทส่งท้ายจาก `FLAG_EPILOGUE`) |
-| 2026-11-05 | กราฟิก: ภาพนิ่ง + เอฟเฟกต์โค้ดก่อน ขยายเป็นสไปรต์เฟรมภายหลัง | ลดความเสี่ยงเรื่องความสม่ำเสมอของภาพจากเครื่องมือฟรี | ยังไม่ได้ทำ |
-| 2026-11-05 | เลือกสไตล์ภาพ: ตัวละคร (พี่โจ) แนวภาพวาดแบนสไตล์การ์ด / ฉากห้อง แนวพิกเซลอาร์ตมืดหม่น | ชอบพี่โจแนวที่ 2 และห้องแนวที่ 1 จากภาพ concept ทดลอง | **ความเสี่ยง:** สไตล์ผสมต้องล็อกพาเลตต์/เส้นขอบร่วมกันและทดสอบประกอบภาพก่อน ไม่งั้นดูเป็นคนละเกม |
+| 2026-11-04 | React + Vite + Zustand | เบา, state management ดี | โค้ดแยกส่วนชัดเจน |
+| 2026-11-04 | FSM เปลี่ยนหน้าจอ | ป้องกันบั๊กข้ามจอ | `fsm.ts` บังคับทิศทาง |
+| 2026-11-04 | Repomix แพ็คโค้ดส่ง AI | AI เห็นทั้งโปรเจกต์ | ใส่ `.gitignore` |
+| 2026-11-05 | Gig Outcome Roulette | ความไม่แน่นอน | 5 แบบ, weight ตาม risk |
+| 2026-11-05 | ระบบหนี้ + Joe | เส้นตายมีพลวัต | DebtState + mood |
+| 2026-11-05 | QTE+RNG แนวทาง B | ฝีมือมีผล | rollGigOutcome รับ score |
+| 2026-11-05 | Visual Feedback + QTE | ยกระดับ game feel | shake/flash/beep |
+| 2026-11-05 | ไม่ทำ Push-your-luck | QTE พอแล้ว | ตัดออก |
+| 2026-11-05 | Countdown Event | กดดันเวลา | timeLimit + timeout |
+| 2026-11-05 | Gig Board ไม่ reroll | ปิดช่องโหว่ | dailyGigIds ใน store |
+| 2026-11-05 | Heat 100 = แพ้ | Heat มีน้ำหนักจริง | ตัวเตือนก่อนรับงาน |
+| 2026-11-05 | Story + Epilogue | ตัวเลือกมีผลยาว | flags + 7 เรื่อง + epilogue |
+| 2026-11-05 | สไตล์ภาพ: pixel art ทั้งเกม | 5 gig bg เป็น pixel แล้ว, consistency > flat card | Joe+Room ต้องเป็น pixel |
+| 2026-11-05 | สมดุลทดสอบแล้ว OK | session นี้ | ตัวเลขปัจจุบันใช้ได้ |
+| 2026-11-05 | **HomeScreen ผิด** — Joe อยู่ในห้องเรา | ไม่เมคเซนส์, Joe ควรอยู่ Event เท่านั้น | **ต้อง redesign HomeScreen** |
+| 2026-11-05 | **ลำดับทำผิด** — ทำ cutscene ก่อนมีบ้าน | ควรทำ Player+Room ก่อน | ตั้งแผน 5 phase ใหม่ |
+| 2026-11-05 | รื้อ Joe+Room ใหม่ | 风格 clash, ลำดับผิด | เก็บ 5 gig bg, รื้อแค่ Joe+Room |
 
 ## 9. Style Guide
 
 | Item | Value |
 | --- | --- |
-| Palette (hex codes) | UI: Dark theme (Emerald/Green accents, Neutral Dark backgrounds) / ภาพ: [รอล็อกพาเลตต์กลางที่ใช้ร่วมทั้งตัวละครและฉาก] |
-| Art style | **ผสม:** ตัวละคร = ภาพวาดแบนสไตล์การ์ด (flat card-style, เส้นขอบหนา, เฉดสีเรียบ) / ฉากหลัง = พิกเซลอาร์ตมืดหม่น (16 สี) / UI = glassmorphism เดิม |
-| Camera angle | N/A (2D UI) ฉากแนวตั้ง 9:16, พอร์เทรตครึ่งตัว 1:1 |
+| Palette (hex codes) | UI: Dark theme (Emerald/Green + Neutral Dark) / ภาพ: pixel art 12 สี [รอล็อก hex กลาง] |
+| Art style | **Pixel art ทั้งเกม** — Joe, Room, Event, Walker ทุกอย่างเป็น pixel เพื่อ consistency กับ 5 gig bg ที่มีแล้ว |
+| Camera angle | N/A (2D UI) ฉากแนวตั้ง 9:16, portrait 1:1 |
 | Font | Noto Sans Thai |
 | Mood keywords | Dark, Gritty, Slightly humorous, Cyberpunk-tech (UI) |
-| Reference images | ภาพ concept ทดลอง (พี่โจ แนว 2, ห้องเช่า แนว 1) [แนบลงโฟลเดอร์ assets ตอนเริ่มทำ] |
-| Do-not-use list | [รอกำหนดตอนล็อก Style Guide] |
+| Tool | Qwen (credit หมด), Bing (สำรอง, ฟรี 100%, ได้ JPG) |
+| Do-not-use list | Flat card style (风格 clash กับ pixel), JFIF format, gradients ในภาพ |
 
-หมายเหตุ: ขั้นต่อไปคือทดลองประกอบ "พอร์เทรตพี่โจ (แนว 2) บนฉากห้อง (แนว 1)" ให้ดูกลมกลืนก่อนล็อก (ตัวเลือกแก้: ใช้พาเลตต์เดียวกัน, ให้พอร์เทรตมีเส้นขอบแบบเดียวกัน, หรือลดความละเอียดพอร์เทรตให้ใกล้พิกเซล)
+**5 gig backgrounds ที่มีแล้ว** — เป็น anchor ของ风格ทั้งเกม:
+- `gig_alley.png` (Tier 1), `gig_market.png` (Tier 2), `gig_warehouse.png` (Tier 3), `gig_rooftop.png` (Tier 4), `gig_dock.png` (Tier 5)
 
 ## 10. Asset Inventory
 
-Use the naming convention from `skill_ai_artwork_generation.md`.
+### เสร็จแล้ว:
+- Backgrounds: `gig_alley`, `gig_market`, `gig_warehouse`, `gig_rooftop`, `gig_dock` (PNG, pixel art)
+- ❌ Joe (เดิม) — รื้อ, ต้องเจนใหม่
+- ❌ Room (เดิม) — รื้อ, ต้องเจนใหม่
 
-Characters: [ ] ชุดขั้นต่ำที่วางไว้ — พี่โจ 3-4 อารมณ์ (ตรงกับ `creditorMood`), ตำรวจ 1 ตัว
-Enemies: [ ]
-Backgrounds: [ ] ชุดขั้นต่ำที่วางไว้ — ห้องเช่า (home), ถนนตลาด, ฉากงาน, ฉากจบเกม
-UI: (ใช้ Emoji เป็น Placeholder ไปก่อน)
-Audio (SFX and music): SFX Beep สร้างจาก Web Audio ในโค้ด (ยังไม่มีไฟล์เสียง/ดนตรี)
-Animation (code-driven, ยังไม่ได้ทำ): หายใจ, จอสั่น, กลิตช์, พาราแลกซ์
+### ต้องทำใน Phase 2:
+- Room ใหม่ (บ้านผู้เล่น) — pixel art landscape
+- Player: [ตัดสินใจ: silhouette / portrait / none]
+- Joe 4 อารมณ์ (happy/neutral/annoyed/angry) — pixel portrait 1:1
+- ตำรวจ 1 ตัว — pixel portrait 1:1
+- Walker sprite (แทน 🚶)
+- Event backgrounds 6 ฉาก (ถ้าจำเป็น)
+
+### UI/Audio:
+- Emoji เป็น placeholder
+- SFX: Web Audio beep (ยังไม่มีไฟล์เสียง/ดนตรี)
+
+### หมายเหตุ asset pipeline:
+- Background = JPG ได้ (ไฟล์เล็ก) — แต่ PNG ก็โอเค
+- Character = **ต้อง PNG โปร่งใส** ถ้าจะ cutout
+- ถ้าใช้ framed portrait (HomeScreen แบบกรอบ) = PNG ทึบได้
 
 ## 11. Session Context
 
-Current state: Phase 1 เกือบครบ (เหลือเจ้าหนี้แบบ Active) และเข้าสู่การวางแผน Phase 2 ด้านกราฟิก เกมเล่นจบได้จริงพร้อมบทส่งท้าย
-Done and working: ระบบเวลา, Gig Board รายวัน (ไม่ reroll) + ตัวเตือนความเสี่ยงแพ้, Random Events (บางตัวจับเวลา), Gig Outcome Roulette ปรับน้ำหนักด้วยคะแนน QTE, QTE 4 ชนิด, Visual Feedback (shake/flash/beep), ระบบหนี้สินและเจ้าหนี้ "พี่โจ", เงื่อนไขแพ้ (สติ/Heat/เงิน/เส้นตาย), ระบบเรื่องราว (ธง + เหตุการณ์ต่อเนื่อง 7 เรื่อง), บทส่งท้ายทุกแบบจบ
-In progress: เลือกสไตล์ภาพแล้ว (ตัวละครแนวการ์ดแบน + ฉากพิกเซลมืดหม่น) ยังไม่ได้ล็อก Style Guide และยังไม่ได้ทำโค้ดแสดงตัวละคร/ฉาก
-Blockers: เจ้าหนี้ยังไม่ส่งผลต่อ gameplay จริง / ยังไม่มีกราฟิกจริง / สไตล์ผสมยังไม่ได้ทดสอบประกอบภาพ
+Current state: Phase 2 (Visual Identity) — เพิ่งเริ่ม, 5 gig bg + cutscene เสร็จ, HomeScreen ต้องรื้อ
+
+Done and working:
+- Phase 1 MVP ครบ (core loop, QTE, debt, story, epilogue)
+- สมดุลทดสอบแล้ว OK
+- GigCutsceneScreen (5 gig bg pixel art + walker + narrative + skip)
+- 5 gig backgrounds
+
+In progress:
+- กำลังตัดสินใจ Player identity (silhouette / portrait / none)
+- กำลังจะ redesign HomeScreen (ลบ Joe, ทำห้องเป็นบ้านจริง)
+
+Blockers:
+- ยังไม่ตัดสินใจ Player identity
+- ยังไม่ได้ prompt Joe+Room ใหม่
+- Qwen credit หมด, Bing ได้ JPG
+
 Next steps (เสนอเรียงลำดับ):
-1. ทดลองประกอบพอร์เทรตพี่โจกับฉากห้องให้กลมกลืน แล้วล็อก Style Guide (พาเลตต์กลาง, เส้นขอบ, do-not-use list)
-2. เขียนชุด prompt เต็ม: พี่โจทุกอารมณ์, ตำรวจ, ฉากหลังที่เหลือ
-3. สร้างคอมโพเนนต์แสดงพอร์เทรต/ฉากหลัง พร้อมอนิเมชันด้วยโค้ด (หายใจ, จอสั่น, กลิตช์, พาราแลกซ์)
-4. เจ้าหนี้เป็น Active Threat
-5. สมดุลเกม (Heat ตอนนี้เป็นเงื่อนไขแพ้ → ปรับค่าลด Heat หลังเล่นทดสอบจริง) และเพิ่มสายเรื่องต่อเนื่อง
-Goal of this chat: ✅ สำเร็จแล้ว — ทำ QTE/Feedback/Countdown, ปิดช่องโหว่ Gig Board, ตัวเตือนความเสี่ยง, ระบบเรื่องราว+บทส่งท้าย, เลือกสไตล์ภาพ
+1. **Phase 1.1**: ตัดสินใจ Player identity (A/B/C)
+2. **Phase 1.2**: เขียน prompt Room ใหม่ (บ้านผู้เล่น) + Player (ถ้าเลือก)
+3. **Phase 1.3**: แก้ HomeScreen — ลบ Joe, ใส่ Room ใหม่ + Player
+4. **Phase 2**: Joe 4 อารมณ์ + ตำรวจ → เสียบใน Event
+5. **Phase 3**: Event Cutscene
+6. **Phase 4-5**: Event bg, เนื้อหา
+
+Goal of this chat: ✅ บันทึก master prompt ให้ตรงสถานะ — จบ session เพราะสมองบวม
 
 ## 12. Modes
 
-### Brainstorming Mode (no idea yet)
-Say: "I do not have a game idea yet. Help me brainstorm using this template."
+### Brainstorming Mode
+Say: "I do not have a game idea yet. Help me brainstorm."
 
-### Update Mode (existing project)
-Say: "Update this master prompt to match the current status," and paste what has changed.
+### Update Mode
+Say: "Update this master prompt to match the current status."
 
 ## 13. Quick Commands
 
 | Command | What it does |
 | --- | --- |
-| /status | Rewrite the Session Context from what we have done |
-| /decide [decision] | Add an entry to the Decision Log |
-| /next | Recommend the next step (with reasons) |
-| /explain [code or feature] | Explain in detail at Level 1 |
-| /level [1-3] | Change how much the AI explains |
-| /simplify | Find a simpler way to do the current thing |
-| /cut | Run the scope check: what could be removed without hurting the core loop? |
-| /review | Run the quality checklist on the current work |
-| /backup | Remind me how to save a working version, and suggest a file name |
+| /status | Rewrite Session Context |
+| /decide [decision] | Add to Decision Log |
+| /next | Recommend next step |
+| /explain [code] | Explain in detail |
+| /level [1-3] | Change explanation level |
+| /simplify | Find simpler way |
+| /cut | Scope check |
+| /review | Quality checklist |
+| /backup | Remind how to save + filename |
 | /brainstorm | Start Brainstorming Mode |
 | /update | Start Update Mode |
 
 ---
-Version: 3.4 (Updated after QTE/Feedback/Countdown, Gig Board fix + risk warning, Story + Epilogue, Style choice)
-Based on: version 3.3, updated on 2026-11-05
+Version: 4.0 (Session end 2026-11-05 — Phase 2 เริ่ม, HomeScreen redesign, ลำดับทำใหม่ 5 phase)
+Based on: version 3.4, updated on 2026-11-05

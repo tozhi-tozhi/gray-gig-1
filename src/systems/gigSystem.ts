@@ -13,7 +13,7 @@ const clamp = (v: number, [lo, hi]: [number, number]) =>
 
 export function acceptGig(gig: Gig): void {
   patch({ activeGigId: gig.id });
-  goTo('activeGig');
+  goTo('gigCutscene');
 }
 
 export function resolveGig(gig: Gig, qteScore = 50): void {

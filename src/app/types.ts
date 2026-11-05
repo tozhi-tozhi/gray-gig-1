@@ -1,7 +1,7 @@
 export type TimeBlock = 'morning' | 'afternoon' | 'night';
 
 export type Screen =
-  | 'boot' | 'home' | 'gigBoard' | 'gigDetail'
+  | 'boot' | 'home' | 'gigBoard' | 'gigDetail' | 'gigCutscene'
   | 'activeGig' | 'endOfDay' | 'gameOver' | 'gameWin'
   | 'event';
 
@@ -14,6 +14,15 @@ export interface Stats {
 
 export interface TimeState { day: number; block: TimeBlock; }
 
+// ฉากหลังของงาน (ใช้ใน GigCutsceneScreen)
+export type GigBackground = 'alley' | 'market' | 'warehouse' | 'rooftop' | 'dock';
+
+// ฉากหลังของอีเวนต์ (ใช้ใน EventScreen)
+export type EventBackground = 'police' | 'creditor' | 'found' | 'dream' | 'food' | 'mystery';
+
+// ตัวละครที่โผล่ในอีเวนต์ (ถ้ามี)
+export type EventCharacter = 'joe' | 'police';
+
 export interface Gig {
   id: string;
   title: string;
@@ -25,6 +34,7 @@ export interface Gig {
   heatGain: number;
   sanityCost: number;
   policeRisk: number;
+  background: GigBackground; // ← ใหม่
 }
 
 export interface LastResult {
@@ -66,7 +76,7 @@ export interface GameState {
   log: string[];
   activeEvent: any | null;
   debt: DebtState; // เพิ่มระบบหนี้เข้าไปในเกม
-    dailyGigIds: string[]; // งานที่เปิดอยู่วันนี้ (สุ่มใหม่เมื่อขึ้นวันใหม่ ทำแล้วหายไป)
-      flags: Record<string, FlagValue>; // ธงเรื่องราว + ตัวนับ
+  dailyGigIds: string[]; // งานที่เปิดอยู่วันนี้ (สุ่มใหม่เมื่อขึ้นวันใหม่ ทำแล้วหายไป)
+  flags: Record<string, FlagValue>; // ธงเรื่องราว + ตัวนับ
   history: HistoryEntry[];
 }

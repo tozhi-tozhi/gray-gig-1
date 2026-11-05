@@ -379,3 +379,11 @@ button:focus-visible {
   z-index: 9999;
   animation: fx-flash-out 0.4s ease-out forwards;
 }
+/* แอนิเมชันหายใจเบาๆ สำหรับพอร์เทรตตัวละคร */
+@keyframes breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.01); }
+}
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}

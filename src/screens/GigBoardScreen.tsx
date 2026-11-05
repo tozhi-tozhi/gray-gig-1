@@ -10,7 +10,13 @@ import { assessGigRisk, pct } from '../systems/gigRisk';
 export function GigBoardScreen() {
   const stats = useGame(s => s.stats);
   const gigIds = useGame(s => s.dailyGigIds);
+  const debt = useGame(s => s.debt);
+  const time = useGame(s => s.time);
   const remaining = remainingBlocksInDay();
+
+  // เงื่อนไขพี่โจคุมเข้ม: อารมณ์ต่ำกว่า 30 หรือเหลือเวลาอีก 2 วันสุดท้าย
+  const daysLeft = debt.deadlineDay - time.day;
+  const isThreatened = debt.creditorMood < 30 || daysLeft <= 2;
 
   // งานของวันนี้ มาจาก store (ไม่สุ่มใหม่เมื่อเปิดหน้านี้)
   const dailyGigs = gigIds
@@ -45,11 +51,12 @@ export function GigBoardScreen() {
 
         {dailyGigs.map(gig => {
           const fits = gig.durationBlocks <= remaining;
+          const isLockedByCreditor = isThreatened && gig.tier >= 3; // ล็อกงาน Tier 3 ขึ้นไป
           const risk = assessGigRisk(gig, stats);
           return (
             <button
               key={gig.id}
-              disabled={!fits}
+              disabled={!fits || isLockedByCreditor}
               onClick={() => {
                 useGame.setState({ activeGigId: gig.id });
                 goTo('gigDetail');
@@ -66,12 +73,13 @@ export function GigBoardScreen() {
                 <span>⏱ {gig.durationBlocks} ช่วง</span>
                 <span>🔥 +{gig.heatGain}</span>
               </div>
-              {risk.total > 0 && (
+              {risk.total > 0 && !isLockedByCreditor && (
                 <div className={`text-[11px] mt-2 font-semibold ${risk.total >= 0.3 ? 'text-red-400' : 'text-amber-400'}`}>
                   ⚠️ เสี่ยงแพ้ {pct(risk.total)}
                 </div>
               )}
               {!fits && <div className="text-[11px] text-red-400 mt-2">เวลาเหลือไม่พอ</div>}
+              {isLockedByCreditor && <div className="text-[11px] text-orange-400 mt-2">🔒 พี่โจสั่งล็อกงานใหญ่ (ต้องรีบเคลียร์หนี้)</div>}
             </button>
           );
         })}

@@ -16,16 +16,13 @@ export function HomeScreen() {
   const moneyNeeded = debt.goal - stats.money;
   const dailyTarget = Math.ceil(Math.max(0, moneyNeeded) / Math.max(1, daysLeft));
 
-  // คำอธิบายอารมณ์เจ้าหนี้แบบสั้นๆ
   const moodLabel =
     debt.creditorMood >= 70 ? '😌 ใจดี' :
     debt.creditorMood >= 40 ? '😐 กลางๆ' :
     debt.creditorMood >= 20 ? '😠 ไม่พอใจ' : '🤬 โกรธจัด';
 
-  // กันการเช็คซ้ำใน mount เดียว (รองรับ StrictMode)
   const checkedRef = useRef(false);
 
-  // เมื่อเข้าหน้านี้ เช็คว่าพี่โจจะโทรมาทวงหนี้ไหม
   useEffect(() => {
     if (checkedRef.current) return;
     checkedRef.current = true;
@@ -39,6 +36,41 @@ export function HomeScreen() {
     <>
       <StatusBar />
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        
+        {/* --- โซนแสดงภาพห้องเช่าและตัวละคร (Visual Area) --- */}
+        <div className="relative w-full h-44 rounded-xl overflow-hidden border border-white/10 bg-neutral-950 flex items-end justify-center shadow-inner">
+          {/* ฉากหลังห้องเช่า (Pixel Art Background) */}
+          <div className="absolute inset-0 bg-neutral-900 bg-cover bg-center opacity-60" style={{ backgroundImage: `url('/assets/backgrounds/room_night.jfif')` }}>
+            {/* Fallback pattern ถ้ายังไม่มีรูป */}
+            <div className="w-full h-full flex items-center justify-center text-neutral-700 text-xs tracking-widest">
+              [ ROOM BACKGROUND ]
+            </div>
+          </div>
+
+          {/* เงาไล่ระดับเพื่อให้ตัวละครเด่นขึ้น */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+          {/* พอร์เทรตพี่โจ / ตัวละคร (Card-style Portrait พร้อมแอนิเมชันหายใจ) */}
+          <div className="relative z-10 mb-2 w-28 h-28 rounded-lg border border-emerald-500/30 bg-neutral-800/80 flex items-center justify-center overflow-hidden shadow-lg animate-breathe">
+            <img 
+              src="/assets/characters/joe_normal.png" 
+              alt="พี่โจ" 
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // ถ้ายังไม่มีรูป ให้แสดง Emoji แทนชั่วคราว
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+            <span className="absolute text-2xl select-none opacity-40">🕴️</span>
+          </div>
+
+          {/* ป้ายบอกสถานะสั้นๆ ทับบนภาพ */}
+          <div className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm text-[10px] text-emerald-400 border border-white/5">
+            🏠 ห้องเช่าเขตเสื่อมโทรม
+          </div>
+        </div>
+        {/* ----------------------------------------------- */}
+
         {/* แจ้งเตือนอันตราย */}
         {(stats.sanity <= 20 || stats.heat >= 80 || stats.money < DAILY_COST) && (
           <div className="rounded-xl bg-red-950/60 border border-red-500/50 p-3 text-red-200 animate-pulse">
